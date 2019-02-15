@@ -9,16 +9,12 @@
     <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/button_name"
-            android:id="@+id/activity1_button"
+            android:text="@string/button_activity2"
+            android:id="@+id/activity2_button"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="@string/result_view"
-            android:id="@+id/result_view"/>
+    />
 
 </android.support.constraint.ConstraintLayout>

@@ -23,18 +23,17 @@ class Activity2: AppCompatActivity() {
             startService(intentService)
             Log.d("testApp","try to start")
         }
-
     }
+
     private var mMessageReceiver = object : BroadcastReceiver(){
         override fun onReceive(context: Context?, intent: Intent?) {
             val message = intent?.getStringExtra("KEY")
-            Log.d("testApp","Got messsage " + message)
+            Log.d("testApp", "Got message: $message")
             val intent = Intent()
             intent.putExtra("result",message)
             setResult(Activity.RESULT_OK,intent)
             finish()
         }
-
     }
 
     override fun onDestroy() {

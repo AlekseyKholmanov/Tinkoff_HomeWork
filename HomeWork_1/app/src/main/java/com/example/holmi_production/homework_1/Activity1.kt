@@ -20,7 +20,7 @@ class Activity1 : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(data==null)return
+        if (data==null) return
         val resultText:String = data.getStringExtra("result")
         val toast = Toast.makeText(this, resultText, Toast.LENGTH_LONG)
         toast.show()

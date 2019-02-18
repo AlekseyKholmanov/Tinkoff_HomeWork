@@ -21,26 +21,29 @@ class MyService: IntentService("MyService") {
 
     override fun onHandleIntent(intent: Intent?) {
         Log.d("TestApp", "Intent handle")
-        getContacs()
+        val contactsNAme:String = getContacs()
         val respIntent = Intent("testApp")
-        respIntent.putExtra("KEY","MESSAGE FOR FIRST ACTIVITY")
+        respIntent.putExtra("KEY",contactsNAme)
         LocalBroadcastManager.getInstance(this).sendBroadcast(respIntent)
         Log.d("testApp","responce sended")
     }
 
-    private fun getContacs(){
+    private fun getContacs(): String {
         val cr = contentResolver.query(ContactsContract.Contacts.CONTENT_URI,null, null, null, null)
-        Log.d("testApp", "count:" + cr.count.toString())
-
+        var builder = StringBuilder()
         if(cr.count >= 1) {
             while (cr.moveToNext()) {
                 val name: String = cr.getString(
-                    cr.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)
-                )
+                    cr.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME))
+                builder.append("$name ")
                 Log.d("testApp", name)
             }
             cr.close()
         }
+        else {
+            builder.append("contacts not found")
+        }
         Log.d("testApp","cursor closed")
+        return builder.toString()
     }
 }

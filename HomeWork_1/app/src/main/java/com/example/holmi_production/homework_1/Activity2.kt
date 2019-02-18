@@ -19,6 +19,7 @@ class Activity2: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity2)
+        getPermission()
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, IntentFilter("testApp"))
         val createServiceButton = findViewById<Button>(R.id.activity2_button)
         createServiceButton.setOnClickListener{
@@ -26,7 +27,6 @@ class Activity2: AppCompatActivity() {
             Log.d("testApp","try to start")
             startService(intentService)
         }
-        getPermission()
 
     }
 

@@ -21,16 +21,16 @@ class MyService: IntentService("MyService") {
 
     override fun onHandleIntent(intent: Intent?) {
         Log.d("TestApp", "Intent handle")
-        val contactsNAme:String = getContacs()
+        val contactsName:String = getContacs()
         val respIntent = Intent("testApp")
-        respIntent.putExtra("KEY",contactsNAme)
+        respIntent.putExtra("KEY",contactsName)
         LocalBroadcastManager.getInstance(this).sendBroadcast(respIntent)
         Log.d("testApp","responce sended")
     }
 
     private fun getContacs(): String {
         val cr = contentResolver.query(ContactsContract.Contacts.CONTENT_URI,null, null, null, null)
-        var builder = StringBuilder()
+        val builder = StringBuilder()
         if(cr.count >= 1) {
             while (cr.moveToNext()) {
                 val name: String = cr.getString(

@@ -21,31 +21,26 @@ class MyService: IntentService("MyService") {
 
     override fun onHandleIntent(intent: Intent?) {
         Log.d("TestApp", "Intent handle")
+        getContacs()
         val respIntent = Intent("testApp")
         respIntent.putExtra("KEY","MESSAGE FOR FIRST ACTIVITY")
-        getPermission()
-        getContacs()
         LocalBroadcastManager.getInstance(this).sendBroadcast(respIntent)
         Log.d("testApp","responce sended")
     }
 
     private fun getContacs(){
         val cr = contentResolver.query(ContactsContract.Contacts.CONTENT_URI,null, null, null, null)
-        do
-        {
-            val name:String = cr.getString(
-                cr.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME))
-            Log.d("tesApp", name)
-        }
-            while (cr.moveToNext())
-        cr.close()
-        Log.d("testApp", "count contacts: " + cr.count)
-    }
+        Log.d("testApp", "count:" + cr.count.toString())
 
-    private fun getPermission(){
-        if(ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_CONTACTS)!= PackageManager.PERMISSION_GRANTED)
-        {
-            requestPermissions(Activity(), arrayOf(android.Manifest.permission.READ_CONTACTS), 2)
+        if(cr.count >= 1) {
+            while (cr.moveToNext()) {
+                val name: String = cr.getString(
+                    cr.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)
+                )
+                Log.d("testApp", name)
+            }
+            cr.close()
         }
+        Log.d("testApp","cursor closed")
     }
 }

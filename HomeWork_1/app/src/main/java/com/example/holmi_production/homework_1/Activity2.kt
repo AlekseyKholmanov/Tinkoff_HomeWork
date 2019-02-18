@@ -5,7 +5,10 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
@@ -20,9 +23,11 @@ class Activity2: AppCompatActivity() {
         val createServiceButton = findViewById<Button>(R.id.activity2_button)
         createServiceButton.setOnClickListener{
             val intentService = Intent(this, MyService::class.java)
-            startService(intentService)
             Log.d("testApp","try to start")
+            startService(intentService)
         }
+        getPermission()
+
     }
 
     private var mMessageReceiver = object : BroadcastReceiver(){
@@ -41,4 +46,10 @@ class Activity2: AppCompatActivity() {
         super.onDestroy()
     }
 
+    private fun getPermission(){
+            if(ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_CONTACTS)!= PackageManager.PERMISSION_GRANTED)
+            {
+                ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.READ_CONTACTS), 2)
+            }
+    }
 }

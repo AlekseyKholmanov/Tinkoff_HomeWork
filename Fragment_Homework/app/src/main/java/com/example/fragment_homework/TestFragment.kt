@@ -7,9 +7,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.*
+import kotlinx.android.synthetic.main.fragment.view.*
 
 class TestFragment: Fragment(){
-
     companion object {
         @JvmStatic
         fun newInstance(documentNumber:Int):TestFragment {
@@ -22,16 +22,24 @@ class TestFragment: Fragment(){
 
         private const val ARG_DOCUMENT_NUMBER = "page_count"
     }
-
-    private var number:Int=0
+    private var mNumber: Int? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment, container,false)
-        val text = view.findViewById<TextView>(R.id.fragment_text)
-        if(savedInstanceState!=null){
-            number = savedInstanceState.getInt(ARG_DOCUMENT_NUMBER)
-        }
-        text.text = number.toString()
         return view
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if(arguments!=null){
+            mNumber = arguments!!.getInt(ARG_DOCUMENT_NUMBER)
+        }
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        val view = view?.findViewById<TextView>(R.id.fragment_text)
+        view!!.setText("Документ №" + mNumber.toString())
+
     }
 }

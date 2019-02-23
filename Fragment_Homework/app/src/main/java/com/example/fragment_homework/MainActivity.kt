@@ -2,35 +2,18 @@ package com.example.fragment_homework
 
 
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.FragmentManager
 
 class MainActivity : AppCompatActivity() {
 
-    private var count: Int = 1
     private var optionsMenu: Menu? = null
-    private var SAVE_KEY = "key_number"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-    }
-
-    override fun onSaveInstanceState(outState: Bundle?) {
-        outState?.putInt(SAVE_KEY,count)
-        super.onSaveInstanceState(outState)
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
-        if(savedInstanceState!=null){
-            count = savedInstanceState.getInt(SAVE_KEY)
-        }
-        super.onRestoreInstanceState(savedInstanceState)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -39,51 +22,62 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
+    override fun onResume() {
+        super.onResume()
+        supportFragmentManager.addOnBackStackChangedListener {
+            updateStack()
+        }
+    }
+
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-        menu!!.getItem(1).setEnabled(false)
+        if(supportFragmentManager.backStackEntryCount == 0)
+            menu!!.findItem(R.id.action_delete).isEnabled = false
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val manager = supportFragmentManager
-        val fragment = TestFragment.newInstance(count)
+        val count = manager.backStackEntryCount
         if (item.itemId == R.id.action_add){
+            val fragment = TestFragment.newInstance(count+1)
+            if(count==0){
             manager.beginTransaction()
-                .add(R.id.container, fragment)
+                .add(R.id.container, fragment, count.toString())
                 .addToBackStack(count.toString())
                 .commit()
-            count++
-            Log.d("qwerty","add")
+                }
+            else{
+                val fr = manager.findFragmentByTag((count-1).toString())
+                manager.beginTransaction()
+                    .replace(fr?.id!!, fragment, count.toString())
+                    .addToBackStack(count.toString())
+                    .commit()
+            }
+            Log.d("qwerty","add" + count.toString())
         }
         if(item.itemId == R.id.action_delete)
         {
-            onBackPressed()
-            Log.d("qwerty", "delete")
+            manager.beginTransaction()
+                .remove(manager.findFragmentByTag((count-1).toString())!!)
+                .commit()
+            manager.popBackStack()
+            Log.d("qwerty", "delete" + count.toString())
         }
-        updateButtonState()
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun updateStack() {
+        Log.d("qwerty","stack was changed")
+        val manager = supportFragmentManager
+        for (entry in 0 until manager.backStackEntryCount) {
+            Log.i("qwerty", "Found fragment: " + manager.getBackStackEntryAt(entry).name)
+        }
+        Log.d("qwerty", "currentVariable count :" + manager.backStackEntryCount.toString())
+        updateButtonState()
     }
 
     private fun updateButtonState(){
         val button = optionsMenu!!.findItem(R.id.action_delete)
-        if(count<1)
-            return
-        if (count==1){
-            button?.setEnabled(false)
-        }
-        else{
-            button?.setEnabled(true)
-        }
-    }
-
-    override fun onBackPressed() {
-        if(supportFragmentManager.backStackEntryCount>0) {
-            supportFragmentManager.popBackStack()
-            --count
-            updateButtonState()
-            Log.d("qwerty", "back pressed")
-        }
-        if (supportFragmentManager.backStackEntryCount == 0)
-        finish()
+        button?.isEnabled = supportFragmentManager.backStackEntryCount>0
     }
 }

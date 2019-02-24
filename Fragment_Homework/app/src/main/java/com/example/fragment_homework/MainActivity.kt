@@ -24,9 +24,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        supportFragmentManager.addOnBackStackChangedListener {
-            updateStack()
-        }
+        supportFragmentManager.addOnBackStackChangedListener (this::updateButtonState)
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
@@ -64,16 +62,6 @@ class MainActivity : AppCompatActivity() {
             Log.d("qwerty", "delete" + count.toString())
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    private fun updateStack() {
-        Log.d("qwerty","stack was changed")
-        val manager = supportFragmentManager
-        for (entry in 0 until manager.backStackEntryCount) {
-            Log.i("qwerty", "Found fragment: " + manager.getBackStackEntryAt(entry).name)
-        }
-        Log.d("qwerty", "currentVariable count :" + manager.backStackEntryCount.toString())
-        updateButtonState()
     }
 
     private fun updateButtonState(){

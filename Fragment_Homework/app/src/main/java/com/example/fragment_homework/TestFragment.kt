@@ -35,6 +35,6 @@ class TestFragment: Fragment(){
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         val view = view?.findViewById<TextView>(R.id.fragment_text)
-        view!!.text = getString(R.string.fragment_start_text) + mNumber.toString()
+        view!!.text = getString(R.string.fragment_start_text,mNumber)
     }
 }

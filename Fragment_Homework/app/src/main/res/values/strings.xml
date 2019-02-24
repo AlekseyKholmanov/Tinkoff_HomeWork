@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">Fragment_Homework</string>
     <string name="hint">hint</string>
-    <string name="fragment_start_text">Документ №</string>
+    <string name="fragment_start_text">Документ №%d</string>
 </resources>

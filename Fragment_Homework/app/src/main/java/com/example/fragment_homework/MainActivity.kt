@@ -34,38 +34,53 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val manager = supportFragmentManager
-        val count = manager.backStackEntryCount
-        if (item.itemId == R.id.action_add){
-            val fragment = TestFragment.newInstance(count+1)
-            if(count==0){
-            manager.beginTransaction()
-                .add(R.id.container, fragment, count.toString())
-                .addToBackStack(count.toString())
-                .commit()
-                }
-            else{
-                val fr = manager.findFragmentByTag((count-1).toString())
-                manager.beginTransaction()
-                    .replace(fr?.id!!, fragment, count.toString())
-                    .addToBackStack(count.toString())
+//        val manager = supportFragmentManager
+//        val count = manager.backStackEntryCount
+
+        return when(item.itemId){
+            R.id.action_add ->{
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.container, TestFragment.newInstance(supportFragmentManager.backStackEntryCount +1))
+                    .addToBackStack(null)
                     .commit()
+                true
             }
-            Log.d("qwerty","add" + count.toString())
+            R.id.action_delete -> {
+                supportFragmentManager.popBackStack()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
-        if(item.itemId == R.id.action_delete)
-        {
-            manager.beginTransaction()
-                .remove(manager.findFragmentByTag((count-1).toString())!!)
-                .commit()
-            manager.popBackStack()
-            Log.d("qwerty", "delete" + count.toString())
-        }
-        return super.onOptionsItemSelected(item)
+//        if (item.itemId == R.id.action_add){
+//            val fragment = TestFragment.newInstance(count+1)
+//            if(count==0){
+//            manager.beginTransaction()
+//                .add(R.id.container, fragment, count.toString())
+//                .addToBackStack(count.toString())
+//                .commit()
+//                }
+//            else{
+//                val fr = manager.findFragmentByTag((count-1).toString())
+//                manager.beginTransaction()
+//                    .replace(fr?.id!!, fragment, count.toString())
+//                    .addToBackStack(count.toString())
+//                    .commit()
+//            }
+//            Log.d("qwerty","add" + count.toString())
+//        }
+//        if(item.itemId == R.id.action_delete)
+//        {
+//            manager.beginTransaction()
+//                .remove(manager.findFragmentByTag((count-1).toString())!!)
+//                .commit()
+//            manager.popBackStack()
+//            Log.d("qwerty", "delete" + count.toString())
+//        }
+//        return super.onOptionsItemSelected(item)
     }
 
     private fun updateButtonState(){
         val button = optionsMenu!!.findItem(R.id.action_delete)
-        button?.isEnabled = supportFragmentManager.backStackEntryCount>0
+        button?.isEnabled = supportFragmentManager.backStackEntryCount > 0
     }
 }

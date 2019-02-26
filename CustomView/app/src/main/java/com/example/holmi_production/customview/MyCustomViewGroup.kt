@@ -2,11 +2,17 @@ package com.example.holmi_production.customview
 
 import android.content.Context
 import android.graphics.Canvas
+import android.util.AttributeSet
 import android.util.TypedValue
+import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.NonNull
 
-class MyCustomViewGroup(context:Context?) : ViewGroup(context){
+class MyCustomViewGroup:ViewGroup
+{
+    constructor(context: Context) : super(context)
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     private fun init(@NonNull context: Context?) {
 
@@ -17,6 +23,16 @@ class MyCustomViewGroup(context:Context?) : ViewGroup(context){
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+
+        val count = childCount
+
+        for (i in 0..count){
+            val child: View = getChildAt(i)
+            if (child.visibility!= View.GONE){
+
+            }
+        }
+
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
     }
 

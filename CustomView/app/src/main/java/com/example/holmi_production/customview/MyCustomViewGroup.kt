@@ -23,6 +23,7 @@ class MyCustomViewGroup:ViewGroup
 
     val paddingHorizontal = dpToPx(8)
     val paddingVertical = dpToPx(8)
+    val heightChild = dpToPx(30)
     private fun init(@NonNull context: Context?) {
 
     }
@@ -31,14 +32,17 @@ class MyCustomViewGroup:ViewGroup
 
         val count = childCount
 
-        for (i in 0..count){
+        for (i in 0 until count){
             val child: View = getChildAt(i)
             if (child.visibility!= View.GONE){
-
+                val childWidthMeas =MeasureSpec.makeMeasureSpec(child.width + 2 * paddingHorizontal, MeasureSpec.AT_MOST)
+                val childHeightMeas = MeasureSpec.makeMeasureSpec(heightChild+ 2*paddingVertical, MeasureSpec.AT_MOST)
+                child.measure(childWidthMeas,childHeightMeas)
             }
         }
-
-       setMeasuredDimension(widthMeasureSpec,heightMeasureSpec/2)
+        val width = MeasureSpec.getSize(widthMeasureSpec)
+        val height = MeasureSpec.getSize(heightMeasureSpec)
+       setMeasuredDimension(width,height/2)
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
@@ -49,7 +53,7 @@ class MyCustomViewGroup:ViewGroup
         val botPos = b-t-paddingVertical
         var widthTmp = leftPos
         var heightTmp = topPos
-        for(i in 0..count){
+        for(i in 0 until count){
             val child: View = getChildAt(i)
             if (child.visibility!= View.GONE){
                 if(i==0){
@@ -74,6 +78,6 @@ class MyCustomViewGroup:ViewGroup
     }
 
     private  fun dpToPx(dp:Int): Int {
-        return (dp * Resources.getSystem().displayMetrics.density) as Int
+        return (dp * Resources.getSystem().displayMetrics.density).toInt()
     }
 }

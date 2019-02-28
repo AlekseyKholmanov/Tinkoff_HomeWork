@@ -31,17 +31,18 @@ class MyCustomViewGroup:ViewGroup
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
 
         val count = childCount
+        val width = MeasureSpec.getSize(widthMeasureSpec)
+        val height = MeasureSpec.getSize(heightMeasureSpec)
 
         for (i in 0 until count){
             val child: View = getChildAt(i)
             if (child.visibility!= View.GONE){
-                val childWidthMeas =MeasureSpec.makeMeasureSpec(child.width + 2 * paddingHorizontal, MeasureSpec.AT_MOST)
-                val childHeightMeas = MeasureSpec.makeMeasureSpec(heightChild+ 2*paddingVertical, MeasureSpec.AT_MOST)
-                child.measure(childWidthMeas,childHeightMeas)
+                val childWidthMeas = width - 2 * paddingHorizontal
+                val childHeightMeas = heightChild + paddingVertical
+                measureChild(child,childWidthMeas,childHeightMeas)
             }
         }
-        val width = MeasureSpec.getSize(widthMeasureSpec)
-        val height = MeasureSpec.getSize(heightMeasureSpec)
+
        setMeasuredDimension(width,height/2)
     }
 
@@ -49,7 +50,7 @@ class MyCustomViewGroup:ViewGroup
         val count = childCount
         val leftPos = paddingHorizontal
         val rightPos = r-l-paddingHorizontal
-        val topPos = paddingVertical
+        val topPos = paddingVertical+t
         val botPos = b-t-paddingVertical
         var widthTmp = leftPos
         var heightTmp = topPos
@@ -57,17 +58,19 @@ class MyCustomViewGroup:ViewGroup
             val child: View = getChildAt(i)
             if (child.visibility!= View.GONE){
                 if(i==0){
-                    child.layout(leftPos,topPos,leftPos + child.width, topPos + child.height)
+                    child.layout(leftPos,topPos,leftPos + child.measuredWidth, topPos + child.measuredHeight)
+                    widthTmp+=child.measuredWidth
+                    continue
                 }
-                widthTmp+=child.width
+                widthTmp+=child.measuredWidth
                 if(widthTmp > rightPos){
                     heightTmp += child.height + topPos
                     widthTmp = child.width + leftPos
                     child.layout(leftPos,heightTmp, widthTmp, heightTmp+child.width)
                 }
                 else{
-                    child.layout(widthTmp + leftPos , heightTmp , widthTmp + child.width + leftPos, heightTmp + child.height )
-                    widthTmp +=child.width + leftPos
+                    child.layout(widthTmp + leftPos , heightTmp , widthTmp + child.measuredWidth + leftPos, heightTmp + child.measuredHeight )
+                    widthTmp +=child.measuredWidth + leftPos
                 }
             }
         }

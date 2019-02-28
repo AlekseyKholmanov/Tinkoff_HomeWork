@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.res.Resources
 import android.graphics.Canvas
 import android.util.AttributeSet
+import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
@@ -59,19 +60,22 @@ class MyCustomViewGroup:ViewGroup
             if (child.visibility!= View.GONE){
                 if(i==0){
                     child.layout(leftPos,topPos,leftPos + child.measuredWidth, topPos + child.measuredHeight)
-                    widthTmp+=child.measuredWidth
+                    Log.d("qwerty", "Number:$i L:$leftPos T:$topPos R:$right B:$bottom  tempWidth:$widthTmp, temH:$heightTmp")
+                    widthTmp += child.measuredWidth + leftPos
                     continue
-                }
-                widthTmp+=child.measuredWidth
-                if(widthTmp > rightPos){
-                    heightTmp += child.height + topPos
-                    widthTmp = child.width + leftPos
-                    child.layout(leftPos,heightTmp, widthTmp, heightTmp+child.width)
+               }
+                //Переход на новую строку
+                if(widthTmp + child.measuredWidth > rightPos){
+                    heightTmp += child.measuredHeight + paddingHorizontal
+                    widthTmp = leftPos
+                    child.layout(leftPos, heightTmp, leftPos + child.measuredWidth, heightTmp + child.measuredHeight)
+                    Log.d("qwerty", "Number:$i || L:$leftPos || T:$heightTmp || R:$right || B:$bottom || tempWidth:$widthTmp || tempH:$heightTmp || childWidt: ${child.measuredWidth}")
                 }
                 else{
-                    child.layout(widthTmp + leftPos , heightTmp , widthTmp + child.measuredWidth + leftPos, heightTmp + child.measuredHeight )
-                    widthTmp +=child.measuredWidth + leftPos
+                    child.layout(widthTmp, heightTmp, widthTmp + child.measuredWidth, heightTmp + child.measuredHeight)
+                    Log.d("qwerty", "Number:$i || L:$left || T:$top || R:$right || B:$bottom || tempWidth:$widthTmp || temH:$heightTmp || childWidt: ${child.measuredWidth}")
                 }
+                widthTmp += child.measuredWidth + leftPos
             }
         }
     }

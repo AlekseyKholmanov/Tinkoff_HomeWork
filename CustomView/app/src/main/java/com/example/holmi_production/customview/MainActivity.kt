@@ -1,26 +1,22 @@
 package com.example.holmi_production.customview
 
-import android.content.Context
 import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val customView = findViewById<MyCustomViewGroup>(R.id.custom_flight_view)
-//        var textView  = TextView(applicationContext)
-//        textView.textSize = 24f
-//        for(i in 0..9){
-//            val textView  = TextView(applicationContext)
-//            textView.text = "$i мволов?"
-//            textView.setTextColor(Color.RED)
-//            textView.layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT
-//            customView.addView(textView)
-//        }
+        val customView = findViewById<MyCustomViewGroup>(R.id.custom_view_group)
+        for(i in 0..16){
+            val textView  = TextView(applicationContext)
+            val text: String = if(i%3 == 0) "LONG TEST TEXT" else "short"
+            textView.text = text
+            customView.addView(textView)
+        }
     }
+
 }

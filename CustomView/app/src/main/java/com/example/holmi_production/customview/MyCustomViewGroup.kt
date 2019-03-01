@@ -11,22 +11,24 @@ import androidx.annotation.NonNull
 class MyCustomViewGroup:ViewGroup
 {
     constructor(context: Context) : super(context) {
-        init(context)
+
     }
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs){
-        init(context)
+        initAttrs(context, attrs)
     }
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr){
-        init(context)
+        initAttrs(context, attrs)
     }
 
-    private val paddingHorizontal = dpToPx(8)
+    fun initAttrs(context: Context, attrs: AttributeSet) {
+        val typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.MyCustomViewGroup)
+        val padding = typedArray.getIndex(R.styleable.MyCustomViewGroup_mcvg_paddingHorizontalDP)
+        typedArray.recycle()
+    }
+
+    private val paddingHorizontal = 0
     private val paddingVertical = dpToPx(8)
     private val heightChild = dpToPx(50)
-
-    private fun init(@NonNull context: Context?) {
-
-    }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
 
@@ -40,9 +42,10 @@ class MyCustomViewGroup:ViewGroup
                 val childWidthMeas = child.measuredWidth
                 val childHeightMeas = heightChild
                 measureChild(child,childWidthMeas,childHeightMeas)
+                val layoutParams = child.layoutParams as LayoutParams
 
                 if( i == 0 ){
-                    tWidth += child.measuredWidth + paddingHorizontal
+                    tWidth += child.measuredWidth + layoutParams.horizontalPadding
                     continue
                 }
                 if(tWidth + child.measuredWidth > width)
@@ -50,7 +53,7 @@ class MyCustomViewGroup:ViewGroup
                     tHeight+= heightChild + paddingVertical
                     tWidth = paddingHorizontal
                 }
-                tWidth+= child.measuredWidth + paddingHorizontal
+                tWidth+= child.measuredWidth + layoutParams.horizontalPadding
             }
         }
        setMeasuredDimension(width,tHeight + paddingVertical)
@@ -64,9 +67,10 @@ class MyCustomViewGroup:ViewGroup
         for(i in 0 until count){
             val child: View = getChildAt(i)
             if (child.visibility!= View.GONE){
+                val layoutParams = child.layoutParams as LayoutParams
                 if(i==0){
                     child.layout(paddingHorizontal,paddingVertical,paddingHorizontal + child.measuredWidth, paddingVertical + heightChild)
-                    widthTmp+= child.measuredWidth + paddingHorizontal
+                    widthTmp+= child.measuredWidth + layoutParams.horizontalPadding
                     continue
                }
                 //Переход на новую строку
@@ -78,7 +82,7 @@ class MyCustomViewGroup:ViewGroup
                 else{
                     child.layout(widthTmp, heightTmp, widthTmp + child.measuredWidth, heightTmp + heightChild)
                 }
-                widthTmp+= child.measuredWidth + paddingHorizontal
+                widthTmp+= child.measuredWidth + layoutParams.horizontalPadding
             }
         }
     }
@@ -90,4 +94,24 @@ class MyCustomViewGroup:ViewGroup
     private  fun dpToPx(dp:Int): Int {
         return (dp * Resources.getSystem().displayMetrics.density).toInt()
     }
+
+    public class LayoutParams:ViewGroup.LayoutParams{
+
+        var horizontalPadding = 0
+
+        constructor(context: Context, attrs: AttributeSet) : super(context,attrs){
+            val typedArray = context.obtainStyledAttributes(attrs,R.styleable.MyCustomViewGroup)
+            horizontalPadding = typedArray.getInt(R.styleable.MyCustomViewGroup_mcvg_paddingHorizontalDP, 10)
+            typedArray.recycle()
+        }
+        constructor(params: LayoutParams) : super(params){
+            if(params is LayoutParams){
+                val MCVGparams = params as LayoutParams
+                horizontalPadding = MCVGparams.horizontalPadding
+
+            }
+        }
+    }
+
+
 }

@@ -4,8 +4,6 @@ import android.content.Context
 import android.content.res.Resources
 import android.graphics.Canvas
 import android.util.AttributeSet
-import android.util.Log
-import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.NonNull
@@ -22,9 +20,10 @@ class MyCustomViewGroup:ViewGroup
         init(context)
     }
 
-    val paddingHorizontal = dpToPx(8)
-    val paddingVertical = dpToPx(8)
-    val heightChild = dpToPx(30)
+    private val paddingHorizontal = dpToPx(8)
+    private val paddingVertical = dpToPx(8)
+    private val heightChild = dpToPx(50)
+
     private fun init(@NonNull context: Context?) {
 
     }
@@ -33,49 +32,53 @@ class MyCustomViewGroup:ViewGroup
 
         val count = childCount
         val width = MeasureSpec.getSize(widthMeasureSpec)
-        val height = MeasureSpec.getSize(heightMeasureSpec)
-
+        var tWidth = paddingHorizontal
+        var tHeight = paddingVertical + heightChild
         for (i in 0 until count){
             val child: View = getChildAt(i)
             if (child.visibility!= View.GONE){
-                val childWidthMeas = width - 2 * paddingHorizontal
-                val childHeightMeas = heightChild + paddingVertical
+                val childWidthMeas = child.measuredWidth
+                val childHeightMeas = heightChild
                 measureChild(child,childWidthMeas,childHeightMeas)
+
+                if( i == 0 ){
+                    tWidth += child.measuredWidth + paddingHorizontal
+                    continue
+                }
+                if(tWidth + child.measuredWidth > width)
+                {
+                    tHeight+= heightChild + paddingVertical
+                    tWidth = paddingHorizontal
+                }
+                tWidth+= child.measuredWidth + paddingHorizontal
             }
         }
-
-       setMeasuredDimension(width,height/2)
+       setMeasuredDimension(width,tHeight + paddingVertical)
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
         val count = childCount
-        val leftPos = paddingHorizontal
-        val rightPos = r-l-paddingHorizontal
-        val topPos = paddingVertical+t
-        val botPos = b-t-paddingVertical
-        var widthTmp = leftPos
-        var heightTmp = topPos
+        val rightPos = r - l - paddingHorizontal
+        var widthTmp = paddingHorizontal
+        var heightTmp = paddingVertical
         for(i in 0 until count){
             val child: View = getChildAt(i)
             if (child.visibility!= View.GONE){
                 if(i==0){
-                    child.layout(leftPos,topPos,leftPos + child.measuredWidth, topPos + child.measuredHeight)
-                    Log.d("qwerty", "Number:$i L:$leftPos T:$topPos R:$right B:$bottom  tempWidth:$widthTmp, temH:$heightTmp")
-                    widthTmp += child.measuredWidth + leftPos
+                    child.layout(paddingHorizontal,paddingVertical,paddingHorizontal + child.measuredWidth, paddingVertical + heightChild)
+                    widthTmp+= child.measuredWidth + paddingHorizontal
                     continue
                }
                 //Переход на новую строку
                 if(widthTmp + child.measuredWidth > rightPos){
-                    heightTmp += child.measuredHeight + paddingHorizontal
-                    widthTmp = leftPos
-                    child.layout(leftPos, heightTmp, leftPos + child.measuredWidth, heightTmp + child.measuredHeight)
-                    Log.d("qwerty", "Number:$i || L:$leftPos || T:$heightTmp || R:$right || B:$bottom || tempWidth:$widthTmp || tempH:$heightTmp || childWidt: ${child.measuredWidth}")
+                    heightTmp+= heightChild + paddingVertical
+                    widthTmp = paddingHorizontal
+                    child.layout(paddingHorizontal, heightTmp, paddingHorizontal + child.measuredWidth, heightTmp + heightChild)
                 }
                 else{
-                    child.layout(widthTmp, heightTmp, widthTmp + child.measuredWidth, heightTmp + child.measuredHeight)
-                    Log.d("qwerty", "Number:$i || L:$left || T:$top || R:$right || B:$bottom || tempWidth:$widthTmp || temH:$heightTmp || childWidt: ${child.measuredWidth}")
+                    child.layout(widthTmp, heightTmp, widthTmp + child.measuredWidth, heightTmp + heightChild)
                 }
-                widthTmp += child.measuredWidth + leftPos
+                widthTmp+= child.measuredWidth + paddingHorizontal
             }
         }
     }

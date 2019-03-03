@@ -9,10 +9,10 @@
                 android:id="@+id/custom_view_group_up"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="right"
                 custom:cvg_height="60dp"
                 custom:cvg_padding_vertical="20dp"
-                custom:cvg_padding_horizontal="20dp">
+                custom:cvg_padding_horizontal="20dp"
+                custom:cvg_gravity="right">
         </com.example.holmi_production.customview.MyCustomViewGroup>
         <View
                 android:layout_width="match_parent"

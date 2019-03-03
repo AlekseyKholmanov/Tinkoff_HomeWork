@@ -3,5 +3,6 @@
         <attr name="cvg_height" format="dimension"/>
         <attr name="cvg_padding_vertical" format="dimension"/>
         <attr name="cvg_padding_horizontal" format="dimension"/>
+        <attr name="cvg_gravity" format="string"/>
     </declare-styleable>
 </resources>

@@ -22,11 +22,18 @@ class MyCustomViewGroup:ViewGroup
             paddingHorizontal = a.getDimensionPixelSize(R.styleable.MyCustomViewGroup_cvg_padding_horizontal, dpToPx(10))
             customChildHeight = a.getDimensionPixelOffset(R.styleable.MyCustomViewGroup_cvg_height, dpToPx(20))
             paddingVertical = a.getDimensionPixelOffset(R.styleable.MyCustomViewGroup_cvg_padding_vertical, dpToPx(10))
+            val customGravity = a.getString(R.styleable.MyCustomViewGroup_cvg_gravity)
+            if(customGravity == null)
+                mGravity = GRAVITY_LEFT
+            else
+                mGravity = customGravity
         } finally {
             a.recycle()
         }
     }
-
+    private var mGravity =""
+    private val GRAVITY_LEFT = "left"
+    private val GRAVITY_RIGHT = "right"
     private var paddingHorizontal = 0
     private var customChildHeight = 0
     private var paddingVertical = 0

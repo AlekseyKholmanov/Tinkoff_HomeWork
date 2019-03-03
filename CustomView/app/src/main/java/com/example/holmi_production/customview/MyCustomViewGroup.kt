@@ -67,28 +67,26 @@ class MyCustomViewGroup:ViewGroup
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
         val count = childCount
-        val rightPos = r - l - paddingHorizontal
-        var widthTmp = paddingHorizontal
-        var heightTmp = paddingVertical
+        val width = r-l-paddingHorizontal
+        var tHeight = paddingVertical
+        var usedWidth = paddingHorizontal
         for(i in 0 until count){
             val child: View = getChildAt(i)
-            if (child.visibility!= View.GONE){
-                if(i==0){
-                    child.layout(paddingHorizontal,paddingVertical,paddingHorizontal + child.measuredWidth, paddingVertical + customChildHeight)
-                    widthTmp+= child.measuredWidth + paddingHorizontal
-                    continue
-               }
-                //Переход на новую строку
-                if(widthTmp + child.measuredWidth >= rightPos){
-                    heightTmp+= customChildHeight + paddingVertical
-                    widthTmp = paddingHorizontal
-                    child.layout(paddingHorizontal, heightTmp, paddingHorizontal + child.measuredWidth, heightTmp + customChildHeight)
-                }
-                else{
-                    child.layout(widthTmp, heightTmp, widthTmp + child.measuredWidth, heightTmp + customChildHeight)
-                }
-                widthTmp+= child.measuredWidth + paddingHorizontal
-            }
+             if (child.visibility!= View.GONE){
+                 //вычисление длины ряда с текущим ребёнком
+                 usedWidth+=child.measuredWidth
+
+                 //проверка на переход
+                 if(usedWidth >= width)
+                 {
+                     tHeight += customChildHeight + paddingVertical
+                     usedWidth = child.measuredWidth + paddingHorizontal
+                 }
+                 var LeftPos = if (mGravity == GRAVITY_RIGHT) width - usedWidth else usedWidth-child.measuredWidth
+                 var RightPos = if(mGravity == GRAVITY_RIGHT) width - usedWidth + child.measuredWidth else usedWidth
+                 child.layout(LeftPos,tHeight,RightPos,tHeight+customChildHeight)
+                 usedWidth+= paddingHorizontal
+             }
         }
     }
 

@@ -6,15 +6,22 @@
               android:layout_height="match_parent"
               tools:context=".MainActivity" android:orientation="vertical">
         <com.example.holmi_production.customview.MyCustomViewGroup
-            android:id="@+id/custom_view_group_up"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            custom:paddingHorizontalDP="15">
+                android:id="@+id/custom_view_group_up"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                custom:cvg_height="60dp"
+                custom:cvg_padding_vertical="20dp"
+                custom:cvg_padding_horizontal="20dp">
         </com.example.holmi_production.customview.MyCustomViewGroup>
+        <View
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:background="@android:color/black" />
         <com.example.holmi_production.customview.MyCustomViewGroup
                 android:id="@+id/custom_view_group_down"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                custom:paddingHorizontalDP="15">
+                custom:cvg_height="30dp">
         </com.example.holmi_production.customview.MyCustomViewGroup>
 </LinearLayout>

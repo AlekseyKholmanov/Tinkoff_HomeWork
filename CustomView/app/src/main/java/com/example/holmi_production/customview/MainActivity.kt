@@ -3,6 +3,7 @@ package com.example.holmi_production.customview
 import android.os.Bundle
 import android.util.Log
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.google.android.material.chip.Chip
@@ -19,7 +20,6 @@ class MainActivity : AppCompatActivity() {
             val chip = Chip(this)
             chip.setOnCloseIconClickListener { v ->
                 run {
-
                     val parent = v.parent as ViewGroup
                     val id = parent.id
                     parent.removeView(v)

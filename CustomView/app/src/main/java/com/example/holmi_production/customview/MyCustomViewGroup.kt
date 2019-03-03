@@ -2,7 +2,6 @@ package com.example.holmi_production.customview
 
 import android.content.Context
 import android.content.res.Resources
-import android.graphics.Canvas
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
@@ -20,39 +19,40 @@ class MyCustomViewGroup:ViewGroup
     private fun initAttrs(context: Context, attrs: AttributeSet , defStyleAttr: Int) {
         val a = context.theme.obtainStyledAttributes(attrs, R.styleable.MyCustomViewGroup, 0, 0)
         try {
-            val paddingInt = a.getInt(R.styleable.MyCustomViewGroup_paddingHorizontalDP, 10)
-            paddingBetweenView = dpToPx(paddingInt)
+            paddingHorizontal = a.getDimensionPixelSize(R.styleable.MyCustomViewGroup_cvg_padding_horizontal, dpToPx(10))
+            customChildHeight = a.getDimensionPixelOffset(R.styleable.MyCustomViewGroup_cvg_height, dpToPx(20))
+            paddingVertical = a.getDimensionPixelOffset(R.styleable.MyCustomViewGroup_cvg_padding_vertical, dpToPx(10))
         } finally {
             a.recycle()
         }
     }
 
-    private var paddingHorizontal = dpToPx(8)
-    private var paddingBetweenView = 0
-    private val paddingVertical = dpToPx(8)
-    private val heightChild = dpToPx(50)
+    private var paddingHorizontal = 0
+    private var customChildHeight = 0
+    private var paddingVertical = 0
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
 
         val count = childCount
         val width = MeasureSpec.getSize(widthMeasureSpec)
         var tWidth = paddingHorizontal
-        var tHeight = paddingVertical + heightChild
+        var tHeight = paddingVertical + customChildHeight
         for (i in 0 until count){
             val child: View = getChildAt(i)
             if (child.visibility!= View.GONE){
-                measureChild(child,child.measuredWidth,heightChild)
+
+                measureChild(child,child.measuredWidth,customChildHeight)
                 if( i == 0 ){
-                    tWidth += child.measuredWidth + paddingBetweenView
+                    tWidth += child.measuredWidth + paddingHorizontal
                     continue
                 }
                 //переход на новую строку
-                if(tWidth + child.measuredWidth > width)
+                if(tWidth + child.measuredWidth >= width)
                 {
-                    tHeight+= heightChild + paddingVertical
+                    tHeight+= customChildHeight + paddingVertical
                     tWidth = paddingHorizontal
                 }
-                tWidth+= child.measuredWidth + paddingBetweenView
+                tWidth+= child.measuredWidth + paddingHorizontal
             }
         }
        setMeasuredDimension(width,tHeight + paddingVertical)
@@ -67,52 +67,26 @@ class MyCustomViewGroup:ViewGroup
             val child: View = getChildAt(i)
             if (child.visibility!= View.GONE){
                 if(i==0){
-                    child.layout(paddingHorizontal,paddingVertical,paddingHorizontal + child.measuredWidth, paddingVertical + heightChild)
-                    widthTmp+= child.measuredWidth + paddingBetweenView
+                    child.layout(paddingHorizontal,paddingVertical,paddingHorizontal + child.measuredWidth, paddingVertical + customChildHeight)
+                    widthTmp+= child.measuredWidth + paddingHorizontal
                     continue
                }
                 //Переход на новую строку
-                if(widthTmp + child.measuredWidth > rightPos){
-                    heightTmp+= heightChild + paddingVertical
+                if(widthTmp + child.measuredWidth >= rightPos){
+                    heightTmp+= customChildHeight + paddingVertical
                     widthTmp = paddingHorizontal
-                    child.layout(paddingHorizontal, heightTmp, paddingHorizontal + child.measuredWidth, heightTmp + heightChild)
+                    child.layout(paddingHorizontal, heightTmp, paddingHorizontal + child.measuredWidth, heightTmp + customChildHeight)
                 }
                 else{
-                    child.layout(widthTmp, heightTmp, widthTmp + child.measuredWidth, heightTmp + heightChild)
+                    child.layout(widthTmp, heightTmp, widthTmp + child.measuredWidth, heightTmp + customChildHeight)
                 }
-                widthTmp+= child.measuredWidth + paddingBetweenView
+                widthTmp+= child.measuredWidth + paddingHorizontal
             }
         }
     }
 
     private  fun dpToPx(dp:Int): Int {
         return (dp * Resources.getSystem().displayMetrics.density).toInt()
-    }
-
-    //Всё что ниже для основного задания не нужно, но кажется нужно для доп. задания.
-    override fun generateLayoutParams(attrs: AttributeSet): LayoutParams {
-        return MyCustomViewGroup.LayoutParams(context, attrs)
-    }
-
-    override fun generateDefaultLayoutParams(): LayoutParams {
-        return LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT)
-    }
-
-    override fun generateLayoutParams(p: ViewGroup.LayoutParams): ViewGroup.LayoutParams {
-        return LayoutParams(p)
-    }
-
-    override fun checkLayoutParams(p: ViewGroup.LayoutParams): Boolean {
-        return p is LayoutParams
-    }
-
-    class LayoutParams : ViewGroup.LayoutParams {
-
-        constructor(c: Context, attrs: AttributeSet) : super(c, attrs) {}
-
-        constructor(source: ViewGroup.LayoutParams) : super(source) {}
-
-        constructor(width: Int, height: Int) : super(width, height) {}
     }
 }
 

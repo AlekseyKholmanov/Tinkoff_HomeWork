@@ -1,11 +1,10 @@
 package com.example.holmi_production.customview
 
-import android.graphics.Color
 import android.os.Bundle
-import android.widget.TextView
+import android.util.Log
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.view.marginBottom
 import com.google.android.material.chip.Chip
 
 class MainActivity : AppCompatActivity() {
@@ -15,18 +14,30 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         val customViewUp = findViewById<MyCustomViewGroup>(R.id.custom_view_group_up)
         val customViewDown = findViewById<MyCustomViewGroup>(R.id.custom_view_group_down)
+
         for(i in 0..16){
-            val textView  = TextView(this)
-            val text: String = if(i%3 == 0) "LONG TEST TEXT" else "short"
-            textView.text = text
-            customViewUp.addView(textView)
-        }
-        for (i in 0..5){
             val chip = Chip(this)
-            chip.text = "textoteron implem"
+            chip.setOnCloseIconClickListener { v ->
+                run {
+
+                    val parent = v.parent as ViewGroup
+                    val id = parent.id
+                    parent.removeView(v)
+                    if(id == R.id.custom_view_group_up)
+                        customViewDown.addView(v)
+                    else
+                        customViewUp.addView(v)
+                    Log.d("qwerty", "clicked")
+                }
+            }
             chip.chipIcon = ContextCompat.getDrawable(this, R.color.colorPrimary)
             chip.isCloseIconEnabled = true
-            customViewDown.addView(chip)
+            val text: String = if(i%3 == 0) "$i LONG TEST TEXT" else "$i short"
+            chip.text = text
+            if (i>8)
+                customViewUp.addView(chip)
+            else
+                customViewDown.addView(chip)
         }
 
     }

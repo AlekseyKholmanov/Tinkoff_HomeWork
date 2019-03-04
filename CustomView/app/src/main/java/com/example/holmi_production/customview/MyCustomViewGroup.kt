@@ -3,6 +3,7 @@ package com.example.holmi_production.customview
 import android.content.Context
 import android.content.res.Resources
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 
@@ -38,27 +39,25 @@ class MyCustomViewGroup:ViewGroup
 
         val count = childCount
         val width = MeasureSpec.getSize(widthMeasureSpec)
-        var tWidth = paddingHorizontal
+        var tWidth = width - paddingHorizontal
         var tHeight = paddingVertical + customChildHeight
+        var usedWidth = 0
         for (i in 0 until count){
             val child: View = getChildAt(i)
             if (child.visibility!= View.GONE){
-
+                usedWidth+=child.measuredWidth
                 measureChild(child,child.measuredWidth,customChildHeight)
-                if( i == 0 ){
-                    tWidth += child.measuredWidth + paddingHorizontal
-                    continue
-                }
                 //переход на новую строку
-                if(tWidth + child.measuredWidth >= width)
+                if(usedWidth >= tWidth)
                 {
-                    tHeight+= customChildHeight + paddingVertical
-                    tWidth = paddingHorizontal
+                    tHeight += customChildHeight + paddingVertical
+                    usedWidth = child.measuredWidth + paddingHorizontal
                 }
-                tWidth+= child.measuredWidth + paddingHorizontal
+                usedWidth+= paddingHorizontal
             }
         }
-       setMeasuredDimension(width,tHeight + paddingVertical)
+        Log.d("qwerty","gravity  $mGravity, width: $width,  height: $tHeight")
+       setMeasuredDimension(width,tHeight + paddingVertical )
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
@@ -81,6 +80,8 @@ class MyCustomViewGroup:ViewGroup
                  var LeftPos = if (mGravity == GRAVITY_RIGHT) width - usedWidth else usedWidth-child.measuredWidth
                  var RightPos = if(mGravity == GRAVITY_RIGHT) width - usedWidth + child.measuredWidth else usedWidth
                  child.layout(LeftPos,tHeight,RightPos,tHeight+customChildHeight)
+                 var top = tHeight+customChildHeight
+                 Log.d("qwerty","gravit: $mGravity, left: $LeftPos, leftH: $tHeight, right: $RightPos,  rightH: $top, element: $i")
                  usedWidth+= paddingHorizontal
              }
         }

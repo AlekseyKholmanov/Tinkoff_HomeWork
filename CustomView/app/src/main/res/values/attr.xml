@@ -3,6 +3,9 @@
         <attr name="cvg_height" format="dimension"/>
         <attr name="cvg_padding_vertical" format="dimension"/>
         <attr name="cvg_padding_horizontal" format="dimension"/>
-        <attr name="cvg_gravity" format="string"/>
+        <attr name="cvg_gravity" format="enum">
+            <enum name="left" value="0"/>
+            <enum name="right" value="1"/>
+        </attr>
     </declare-styleable>
 </resources>

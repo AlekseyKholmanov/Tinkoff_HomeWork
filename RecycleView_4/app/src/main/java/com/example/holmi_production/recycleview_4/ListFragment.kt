@@ -15,7 +15,7 @@ class ListFragment: Fragment(){
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.list_item, container, false)
+        val view = inflater.inflate(R.layout.news_item, container, false)
         val recycleView = view.findViewById<RecyclerView>(R.id.listRecycleView)
         recycleView.adapter
         return view

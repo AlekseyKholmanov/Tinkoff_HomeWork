@@ -24,8 +24,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupViewPager(viewPager:ViewPager) {
         val adapter = ViewPagerAdapter(supportFragmentManager)
-        adapter.addFragment(SimpleFragment(), "Последние")
-        adapter.addFragment(SimpleFragment(), "Избранное")
+        adapter.addFragment(ListFragment(), "Последние")
+        adapter.addFragment(ListFragment(), "Избранное")
         viewPager.adapter = adapter
 
     }

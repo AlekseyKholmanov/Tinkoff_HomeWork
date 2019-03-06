@@ -7,9 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 
-class NewsAdapter (val news: ArrayList<News>
-): RecyclerView.Adapter<NewsAdapter.NewsHolder>() {
-
+class NewsAdapter(_news: ArrayList<News>): RecyclerView.Adapter<NewsAdapter.NewsHolder>() {
+     private var news = _news
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsHolder {
         val inflater = LayoutInflater.from(parent.context)
         val view = inflater.inflate(R.layout.news_item,parent,false)

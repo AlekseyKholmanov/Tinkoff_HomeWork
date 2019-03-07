@@ -1,5 +1,6 @@
 package com.example.holmi_production.recycleview_4
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -9,27 +10,33 @@ import android.view.View
 import android.view.ViewGroup
 
 
-class ListFragment: Fragment(){
+class ListFragment : Fragment() {
     var news: ArrayList<News> = ArrayList()
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var viewAdapter: RecyclerView.Adapter<*>
+    private lateinit var viewManager: RecyclerView.LayoutManager
+
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.news_item, container, false)
-        val recycleView = view.findViewById<RecyclerView>(R.id.listRecycleView)
+
+        val view = inflater.inflate(R.layout.fragment_list, container, false)
+        val recyclerView = view.findViewById<RecyclerView>(R.id.listRecyclerView)
+        recyclerView.layoutManager = LinearLayoutManager(activity)
         initializeNews()
         val adapter = NewsAdapter(news)
-        recycleView.adapter = adapter
-        val layoutManager = LinearLayoutManager(context)
-        recycleView.layoutManager = layoutManager
+        recyclerView.adapter = adapter
         return view
 
     }
 
     private fun initializeNews() {
-        news.add(0, News("theme1","22-09-2018","content1"))
-        news.add(1,News("theme2","23-09-2018","content2"))
-        news.add(2,News("theme3","24-09-2018","content3"))
+        val string = resources.getString(R.string.lorem)
+        for (i in 0 until 15) {
+            news.add(0, News("$i. Why is Lorem?", "$i-09-2018", string))
+        }
     }
 }

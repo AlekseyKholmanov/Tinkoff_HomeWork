@@ -11,10 +11,7 @@ import android.view.ViewGroup
 
 
 class ListFragment : Fragment() {
-    var news: ArrayList<News> = ArrayList()
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var viewAdapter: RecyclerView.Adapter<*>
-    private lateinit var viewManager: RecyclerView.LayoutManager
+    private var news: ArrayList<News> = ArrayList()
 
 
     override fun onCreateView(
@@ -26,17 +23,21 @@ class ListFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_list, container, false)
         val recyclerView = view.findViewById<RecyclerView>(R.id.listRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(activity)
-        initializeNews()
-        val adapter = NewsAdapter(news)
+        val isFav = if(arguments == null) false else arguments!!.getBoolean("isFavorite")
+        initializeNews(isFav)
+        val adapter = NewsAdapter(news, isFav)
         recyclerView.adapter = adapter
         return view
-
     }
 
-    private fun initializeNews() {
+    private fun initializeNews(isFav:Boolean) {
         val string = resources.getString(R.string.lorem)
         for (i in 0 until 15) {
-            news.add(0, News("$i. Why is Lorem?", "$i-09-2018", string))
+            var isFavorite = false
+            if(isFav){
+                isFavorite = i%2==0
+            }
+            news.add(0, News("$i. Why is Lorem?", "$i-09-2018", string, isFavorite))
         }
     }
 }

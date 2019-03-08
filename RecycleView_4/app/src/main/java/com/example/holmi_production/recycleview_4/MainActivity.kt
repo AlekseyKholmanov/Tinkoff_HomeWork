@@ -17,17 +17,21 @@ class MainActivity : AppCompatActivity() {
 
         val tabLayout:TabLayout = findViewById(R.id.tab_layout)
         tabLayout.setupWithViewPager(viewPager)
+    }
 
-
-
-
+    private fun createFavoriteFragment():ListFragment{
+        val favoriteFragment = ListFragment()
+        val bundle = Bundle()
+        bundle.putBoolean("isFavorite", true)
+        favoriteFragment.arguments = bundle
+        return favoriteFragment
     }
 
     private fun setupViewPager(viewPager:ViewPager) {
         val adapter = ViewPagerAdapter(supportFragmentManager)
+        val favoriteFragment = createFavoriteFragment()
         adapter.addFragment(ListFragment(), "Последние")
-        adapter.addFragment(ListFragment(), "Избранное")
+        adapter.addFragment(favoriteFragment, "Избранное")
         viewPager.adapter = adapter
-
     }
 }

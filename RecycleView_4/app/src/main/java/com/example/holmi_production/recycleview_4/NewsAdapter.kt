@@ -7,12 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 
-class NewsAdapter(_news: ArrayList<News>): RecyclerView.Adapter<NewsAdapter.NewsHolder>() {
-     private var news = _news
+class NewsAdapter(_news: ArrayList<News>, _isFavorite: Boolean) : RecyclerView.Adapter<NewsAdapter.NewsHolder>() {
+    private var news = _news
+    private var isFavorite = _isFavorite
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val view = inflater.inflate(R.layout.news_item,parent,false)
-        return  NewsHolder(view)
+        val view = inflater.inflate(R.layout.news_item, parent, false)
+        news = if (isFavorite) news.filter { !it.isFavorites } as ArrayList<News> else news
+        return NewsHolder(view)
     }
 
     override fun getItemCount(): Int {
@@ -25,16 +27,16 @@ class NewsAdapter(_news: ArrayList<News>): RecyclerView.Adapter<NewsAdapter.News
     }
 
 
-    class NewsHolder(v:View) : RecyclerView.ViewHolder(v),View.OnClickListener{
+    class NewsHolder(v: View) : RecyclerView.ViewHolder(v), View.OnClickListener {
         private val theme = v.findViewById<TextView>(R.id.Theme)
         private val date = v.findViewById<TextView>(R.id.Date)
-        private val content =  v.findViewById<TextView>(R.id.Content)
+        private val content = v.findViewById<TextView>(R.id.Content)
 
         init {
             v.setOnClickListener(this)
         }
 
-        fun bind(news: News){
+        fun bind(news: News) {
             theme.text = news.theme
             date.text = news.date
             content.text = news.content

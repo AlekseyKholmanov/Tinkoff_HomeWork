@@ -1,5 +1,7 @@
 package com.example.holmi_production.recycleview_4
 
+import android.content.Intent
+import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,6 +12,8 @@ import android.widget.TextView
 class NewsAdapter(_news: ArrayList<News>, _isFavorite: Boolean) : RecyclerView.Adapter<NewsAdapter.NewsHolder>() {
     private var news = _news
     private var isFavorite = _isFavorite
+
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsHolder {
         val inflater = LayoutInflater.from(parent.context)
         val view = inflater.inflate(R.layout.news_item, parent, false)
@@ -43,6 +47,12 @@ class NewsAdapter(_news: ArrayList<News>, _isFavorite: Boolean) : RecyclerView.A
         }
 
         override fun onClick(v: View) {
+            val intent = Intent(v.context, ActivityItem::class.java).apply{
+                putExtra("theme",theme.text)
+                putExtra("content", content.text)
+                putExtra("date",date.text)
+            }
+            startActivity(v.context,intent,null)
             Log.d("RecyclerView", "CLICK!")
         }
     }

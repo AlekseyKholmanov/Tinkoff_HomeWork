@@ -24,19 +24,16 @@ class ListFragment : Fragment() {
         val recyclerView = view.findViewById<RecyclerView>(R.id.listRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(activity)
         val isFav = if(arguments == null) false else arguments!!.getBoolean("isFavorite")
-        initializeNews(isFav)
+        initializeNews()
         val adapter = NewsAdapter(news, isFav)
         recyclerView.adapter = adapter
         return view
     }
 
-    private fun initializeNews(isFav:Boolean) {
+    private fun initializeNews() {
         val string = resources.getString(R.string.lorem)
         for (i in 0 until 15) {
-            var isFavorite = false
-            if(isFav){
-                isFavorite = i%2==0
-            }
+            var isFavorite = i%2==0
             news.add(0, News("$i. Why is Lorem?", "$i-09-2018", string, isFavorite))
         }
     }

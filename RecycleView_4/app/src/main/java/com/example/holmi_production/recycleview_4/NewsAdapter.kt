@@ -35,6 +35,7 @@ class NewsAdapter(_news: ArrayList<News>, _isFavorite: Boolean) : RecyclerView.A
         private val theme = v.findViewById<TextView>(R.id.Theme)
         private val date = v.findViewById<TextView>(R.id.Date)
         private val content = v.findViewById<TextView>(R.id.Content)
+        private var isFavorite:Boolean = false
 
         init {
             v.setOnClickListener(this)
@@ -44,6 +45,7 @@ class NewsAdapter(_news: ArrayList<News>, _isFavorite: Boolean) : RecyclerView.A
             theme.text = news.theme
             date.text = news.date
             content.text = news.content
+            isFavorite = news.isFavorites
         }
 
         override fun onClick(v: View) {
@@ -51,6 +53,7 @@ class NewsAdapter(_news: ArrayList<News>, _isFavorite: Boolean) : RecyclerView.A
                 putExtra("theme",theme.text)
                 putExtra("content", content.text)
                 putExtra("date",date.text)
+                putExtra("isFavorite", isFavorite)
             }
             startActivity(v.context,intent,null)
             Log.d("RecyclerView", "CLICK!")

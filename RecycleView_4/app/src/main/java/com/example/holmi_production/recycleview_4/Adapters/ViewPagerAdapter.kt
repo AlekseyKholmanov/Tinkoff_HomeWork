@@ -1,4 +1,4 @@
-package com.example.holmi_production.recycleview_4
+package com.example.holmi_production.recycleview_4.Adapters
 
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager

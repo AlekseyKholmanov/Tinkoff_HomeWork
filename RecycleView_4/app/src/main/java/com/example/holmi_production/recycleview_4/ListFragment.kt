@@ -1,6 +1,5 @@
 package com.example.holmi_production.recycleview_4
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -8,6 +7,8 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.holmi_production.recycleview_4.Adapters.NewsAdapter
+import com.example.holmi_production.recycleview_4.Model.News
 
 
 class ListFragment : Fragment() {
@@ -34,7 +35,14 @@ class ListFragment : Fragment() {
         val string = resources.getString(R.string.lorem)
         for (i in 0 until 15) {
             var isFavorite = i%2==0
-            news.add(0, News("$i. Why is Lorem?", "$i-09-2018", string, isFavorite))
+            news.add(0,
+                News(
+                    "$i. Why is Lorem?",
+                    "$i-09-2018",
+                    string,
+                    isFavorite
+                )
+            )
         }
     }
 }

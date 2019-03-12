@@ -1,4 +1,4 @@
-package com.example.holmi_production.recycleview_4
+package com.example.holmi_production.recycleview_4.Adapters
 
 import android.content.Intent
 import android.support.v4.content.ContextCompat.startActivity
@@ -8,6 +8,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.example.holmi_production.recycleview_4.ActivityItem
+import com.example.holmi_production.recycleview_4.Model.News
+import com.example.holmi_production.recycleview_4.R
 
 class NewsAdapter(_news: ArrayList<News>, _isFavorite: Boolean) : RecyclerView.Adapter<NewsAdapter.NewsHolder>() {
     private var news = _news

@@ -19,7 +19,7 @@ class NewsAdapter(_news: ArrayList<News>, _isFavorite: Boolean) : RecyclerView.A
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val view = inflater.inflate(R.layout.news_item, parent, false)
+        val view = inflater.inflate(R.layout.view_list_item_news, parent, false)
         news = if (isFavorite) news.filter { it.isFavorites } as ArrayList<News> else news
         return NewsHolder(view)
     }

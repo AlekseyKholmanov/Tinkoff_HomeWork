@@ -25,7 +25,7 @@ class NewsAdapter(val listItem: List<ListItem>) : RecyclerView.Adapter<RecyclerV
 
         private val theme = v.findViewById<TextView>(R.id.Theme)
         private val content = v.findViewById<TextView>(R.id.Content)
-        private var date =""
+        private var date = ""
         private var isFavorite = false
 
         init {
@@ -77,11 +77,14 @@ class NewsAdapter(val listItem: List<ListItem>) : RecyclerView.Adapter<RecyclerV
             ListItem.TYPE_HEADER -> {
                 var headerItem = items[position] as HeaderItem
                 var viewHolder = viewHolder as HeaderViewHolder
-                var dateText = when(headerItem.date){
-                    DateUtils().buildDate(DateUtils().currentDay())->{
+                var dateText = when (headerItem.date) {
+                    DateUtils().buildDate(DateUtils().currentDay()) -> {
                         "Сегодня"
                     }
-                    else ->{
+                    DateUtils().buildDate(DateUtils().currentDay() - 1) -> {
+                        "Вчера"
+                    }
+                    else -> {
                         DateUtils().formatDate(headerItem.date)
                     }
                 }

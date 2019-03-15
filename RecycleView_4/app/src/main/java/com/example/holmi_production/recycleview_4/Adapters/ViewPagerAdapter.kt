@@ -12,9 +12,7 @@ class ViewPagerAdapter(fm: FragmentManager?) : FragmentStatePagerAdapter(fm){
         return mFragmentList.size
     }
 
-    override fun getItem(p0: Int): Fragment {
-        return mFragmentList[p0]
-    }
+    override fun getItem(p0: Int) = mFragmentList[p0]
 
     override fun getPageTitle(position: Int): CharSequence? {
         return mFragmentTitleList[position]

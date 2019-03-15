@@ -9,14 +9,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.example.holmi_production.recycleview_4.ActivityItem
+import com.example.holmi_production.recycleview_4.Interfaces.mClickListener
 import com.example.holmi_production.recycleview_4.Model.News
+import com.example.holmi_production.recycleview_4.NewsItems.HeaderItem
+import com.example.holmi_production.recycleview_4.NewsItems.ListItem
+import com.example.holmi_production.recycleview_4.NewsItems.NewsItem
 import com.example.holmi_production.recycleview_4.R
 import com.example.holmi_production.recycleview_4.utils.DateUtils
 
-class NewsAdapter(var listItem: List<ListItem>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class NewsAdapter(private val listItem: List<ListItem>) : RecyclerView.Adapter<RecyclerView.ViewHolder>(),mClickListener  {
+    override fun mClick(v: View, position: Int) {
+        
+    }
 
-
-    private var items = listItem
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -27,25 +32,27 @@ class NewsAdapter(var listItem: List<ListItem>) : RecyclerView.Adapter<RecyclerV
             }
             ListItem.TYPE_NEWS -> {
                 val itemView = inflater.inflate(R.layout.view_list_item_news, parent, false)
+                itemView.setOnClickListener()
                 NewsViewHolder(itemView)
             }
             else -> throw IllegalStateException("unsupported item type")
         }
     }
 
-    override fun getItemCount(): Int = items.size
+    override fun getItemCount(): Int = listItem.size
 
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
         var viewType = getItemViewType(position)
+        val currentDay = DateUtils().currentDay()
         when (viewType) {
             ListItem.TYPE_HEADER -> {
-                var headerItem = items[position] as HeaderItem
+                var headerItem = listItem[position] as HeaderItem
                 var viewHolder = viewHolder as HeaderViewHolder
                 var dateText = when (headerItem.date) {
-                    DateUtils().buildDate(DateUtils().currentDay()) -> {
+                    DateUtils().buildDate(currentDay) -> {
                         "Сегодня"
                     }
-                    DateUtils().buildDate(DateUtils().currentDay() - 1) -> {
+                    DateUtils().buildDate(currentDay - 1) -> {
                         "Вчера"
                     }
                     else -> {
@@ -55,7 +62,7 @@ class NewsAdapter(var listItem: List<ListItem>) : RecyclerView.Adapter<RecyclerV
                 viewHolder.txt_header.text = dateText
             }
             ListItem.TYPE_NEWS -> {
-                var newsItem = items[position] as NewsItem
+                var newsItem = listItem[position] as NewsItem
                 var viewHolder = viewHolder as NewsViewHolder
                 viewHolder.bind(newsItem.content)
             }
@@ -63,7 +70,7 @@ class NewsAdapter(var listItem: List<ListItem>) : RecyclerView.Adapter<RecyclerV
     }
 
     override fun getItemViewType(position: Int): Int {
-        return items[position].getType()
+        return listItem[position].getType()
     }
 
     private class HeaderViewHolder internal constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {

@@ -18,7 +18,9 @@ import kotlin.collections.ArrayList
 
 class ListFragment : Fragment() {
     private var news: ArrayList<ListItem> = arrayListOf()
-
+    companion object {
+        private const val ARG_IS_FAVORITE = "isFavorite"
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,7 +31,7 @@ class ListFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_list, container, false)
         val recyclerView = view.findViewById<RecyclerView>(R.id.listRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(activity)
-        val isFav = if(arguments == null) false else arguments!!.getBoolean("isFavorite")
+        val isFav = if(arguments == null) false else arguments!!.getBoolean(ARG_IS_FAVORITE)
         val events = toMap(loadNews())
 
         for (date in events.keys) {

@@ -8,6 +8,11 @@ import com.example.holmi_production.recycleview_4.Adapters.ViewPagerAdapter
 
 
 class MainActivity : AppCompatActivity() {
+    companion object {
+        private const val ARG_IS_FAVORITE= "isFavorite"
+    }
+    val lastPageName = resources.getString(R.string.lastPageName)
+    val favPageName = resources.getString(R.string.favoritePageName)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,7 +28,7 @@ class MainActivity : AppCompatActivity() {
     private fun createFavoriteFragment():ListFragment{
         val favoriteFragment = ListFragment()
         val bundle = Bundle()
-        bundle.putBoolean("isFavorite", true)
+        bundle.putBoolean(ARG_IS_FAVORITE, true)
         favoriteFragment.arguments = bundle
         return favoriteFragment
     }
@@ -31,8 +36,8 @@ class MainActivity : AppCompatActivity() {
     private fun setupViewPager(viewPager:ViewPager) {
         val adapter = ViewPagerAdapter(supportFragmentManager)
         val favoriteFragment = createFavoriteFragment()
-        adapter.addFragment(ListFragment(), "Последние")
-        adapter.addFragment(favoriteFragment, "Избранное")
+        adapter.addFragment(ListFragment(), lastPageName)
+        adapter.addFragment(favoriteFragment, favPageName)
         viewPager.adapter = adapter
     }
 }

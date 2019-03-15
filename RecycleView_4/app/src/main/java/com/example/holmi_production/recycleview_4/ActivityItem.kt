@@ -10,7 +10,8 @@ import android.widget.Toast
 
 class ActivityItem : AppCompatActivity() {
     private var isFavorite: Boolean? = null
-
+    val favoriteIcon = R.drawable.favorite_enable
+    val nonFavoriteIcon = R.drawable.favorite_none
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,10 +31,10 @@ class ActivityItem : AppCompatActivity() {
     }
 
 
-    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.activity_item_menu, menu)
-        var drawble = if (isFavorite!!) R.drawable.favorite_enable else R.drawable.favorite_none
-        menu!!.getItem(0).icon = ContextCompat.getDrawable(this, drawble)
+        var drawble = if (isFavorite!!)favoriteIcon  else nonFavoriteIcon
+        menu.getItem(0).icon = ContextCompat.getDrawable(this, drawble)
         return true
     }
 

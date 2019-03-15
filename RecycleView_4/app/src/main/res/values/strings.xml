@@ -10,4 +10,6 @@
     <string name="news_theme">What is Lorem Ipsum?</string>
     <string name="news_date">22.08.2018</string>
     <string name="favorite">Favorite</string>
+    <string name="favoritePageName">Избранное</string>
+    <string name="lastPageName">Последние</string>
 </resources>

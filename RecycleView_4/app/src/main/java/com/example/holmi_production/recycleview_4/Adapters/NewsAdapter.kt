@@ -11,6 +11,7 @@ import android.widget.TextView
 import com.example.holmi_production.recycleview_4.ActivityItem
 import com.example.holmi_production.recycleview_4.Model.News
 import com.example.holmi_production.recycleview_4.R
+import com.example.holmi_production.recycleview_4.utils.DateUtils
 
 class NewsAdapter(val listItem: List<ListItem>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -23,8 +24,8 @@ class NewsAdapter(val listItem: List<ListItem>) : RecyclerView.Adapter<RecyclerV
     private class NewsViewHolder internal constructor(v: View) : RecyclerView.ViewHolder(v), View.OnClickListener {
 
         private val theme = v.findViewById<TextView>(R.id.Theme)
-        private val date = v.findViewById<TextView>(R.id.Date)
         private val content = v.findViewById<TextView>(R.id.Content)
+        private var date =""
         private var isFavorite = false
 
         init {
@@ -33,7 +34,7 @@ class NewsAdapter(val listItem: List<ListItem>) : RecyclerView.Adapter<RecyclerV
 
         fun bind(news: News) {
             theme.text = news.theme
-            date.text = news.date.toString()
+            date = DateUtils().formatDate(news.date)
             content.text = news.content
             isFavorite = news.isFavorites
         }
@@ -43,7 +44,7 @@ class NewsAdapter(val listItem: List<ListItem>) : RecyclerView.Adapter<RecyclerV
             val intent = Intent(v.context, ActivityItem::class.java).apply {
                 putExtra("theme", theme.text)
                 putExtra("content", content.text)
-                putExtra("date", date.text)
+                putExtra("date", date)
                 putExtra("isFavorite", isFavorite)
             }
             startActivity(v.context, intent, null)
@@ -76,7 +77,15 @@ class NewsAdapter(val listItem: List<ListItem>) : RecyclerView.Adapter<RecyclerV
             ListItem.TYPE_HEADER -> {
                 var headerItem = items[position] as HeaderItem
                 var viewHolder = viewHolder as HeaderViewHolder
-                viewHolder.txt_header.text = headerItem.date.toString()
+                var dateText = when(headerItem.date){
+                    DateUtils().buildDate(DateUtils().currentDay())->{
+                        "Сегодня"
+                    }
+                    else ->{
+                        DateUtils().formatDate(headerItem.date)
+                    }
+                }
+                viewHolder.txt_header.text = dateText
             }
             ListItem.TYPE_NEWS -> {
                 var newsItem = items[position] as NewsItem

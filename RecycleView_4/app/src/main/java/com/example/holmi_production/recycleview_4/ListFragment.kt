@@ -49,7 +49,10 @@ class ListFragment : Fragment() {
         val events = ArrayList<News>()
         val content = resources.getString(R.string.lorem)
         for (i in 1..49) {
-            events.add(News("Why is lorem theme $i ?",buildRandomDateInCurrentMonth(),content,false))
+            events.add(News("Why is lorem theme $i ?",
+                buildRandomDateInCurrentMonth(),
+                content,
+                false))
         }
         return events
     }
@@ -65,12 +68,12 @@ class ListFragment : Fragment() {
         for (event in events) {
             var value: MutableList<News>? = map[event.date]
             if (value == null) {
-                value = ArrayList<News>()
+                value = ArrayList()
                 map[event.date] = value
             }
             value.add(event)
         }
-        return map
+        return map.descendingMap()
     }
 
 

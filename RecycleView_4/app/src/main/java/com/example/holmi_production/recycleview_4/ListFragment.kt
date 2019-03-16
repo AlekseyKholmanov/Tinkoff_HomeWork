@@ -1,5 +1,6 @@
 package com.example.holmi_production.recycleview_4
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -10,7 +11,6 @@ import android.view.ViewGroup
 import com.example.holmi_production.recycleview_4.NewsItems.HeaderItem
 import com.example.holmi_production.recycleview_4.NewsItems.ListItem
 import com.example.holmi_production.recycleview_4.Adapters.NewsAdapter
-import com.example.holmi_production.recycleview_4.Interfaces.onNewsClickListener
 import com.example.holmi_production.recycleview_4.NewsItems.NewsItem
 import com.example.holmi_production.recycleview_4.Model.News
 import com.example.holmi_production.recycleview_4.utils.DateUtils
@@ -18,12 +18,26 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class ListFragment : Fragment() {
+    interface Callbacks{
+        fun onItemClicked(v:View)
+    }
+
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        callbacks = requireActivity() as Callbacks
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        callbacks = null
+    }
 
     private var news: ArrayList<ListItem> = arrayListOf()
     companion object {
         private const val ARG_IS_FAVORITE = "isFavorite"
     }
-
+    private var callbacks: Callbacks? = null
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -36,7 +50,7 @@ class ListFragment : Fragment() {
         val events = toMap(loadNews())
 
         setHeader(events)
-        val adapter = NewsAdapter(news)
+        val adapter = NewsAdapter(news, callbacks)
         recyclerView.adapter = adapter
         return view
     }
@@ -82,6 +96,6 @@ class ListFragment : Fragment() {
         }
         return map.descendingMap()
     }
-
-
 }
+
+

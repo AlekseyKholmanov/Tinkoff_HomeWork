@@ -9,11 +9,24 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import android.widget.TextView
-import com.example.holmi_production.recycleview_4.Adapters.NewsAdapter
 import com.example.holmi_production.recycleview_4.Adapters.ViewPagerAdapter
 
 
-class MainActivity : AppCompatActivity(),NewsAdapter.mClickListener {
+class MainActivity : AppCompatActivity(), ListFragment.Callbacks{
+    override fun onItemClicked(v: View) {
+        Log.d("RecyclerView", "CLICK!")
+        val theme = v.findViewById<TextView>(R.id.theme)
+        val content = v.findViewById<TextView>(R.id.content)
+        var date = ""
+        var isFavorite = false
+        val intent = Intent(v.context, ActivityItem::class.java).apply {
+            putExtra("theme", theme.text)
+            putExtra("content", content.text)
+            putExtra("date", date)
+            putExtra("isFavorite", isFavorite)
+        }
+        ContextCompat.startActivity(v.context, intent, null)
+    }
 
     companion object {
         private const val ARG_IS_FAVORITE= "isFavorite"
@@ -48,18 +61,8 @@ class MainActivity : AppCompatActivity(),NewsAdapter.mClickListener {
         adapter.addFragment(favoriteFragment, favPageName)
         viewPager.adapter = adapter
     }
-    override fun mClick(v: View, position: Int) {
-        val theme = v.findViewById<TextView>(R.id.theme)
-        val content = v.findViewById<TextView>(R.id.content)
-        var date = ""
-        var isFavorite = false
-        val intent = Intent(v.context, ActivityItem::class.java).apply {
-            putExtra("theme", theme.text)
-            putExtra("content", content.text)
-            putExtra("date", date)
-            putExtra("isFavorite", isFavorite)
-        }
-        ContextCompat.startActivity(v.context, intent, null)
-        Log.d("RecyclerView", "CLICK!")
-    }
+//    override fun mClick(v: View, position: Int) {
+
+//
+//    }
 }

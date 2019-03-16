@@ -18,8 +18,8 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class ListFragment : Fragment() {
-    interface Callbacks{
-        fun onItemClicked(v:View)
+    interface Callbacks {
+        fun onItemClicked(v: View, news: News)
     }
 
 
@@ -34,9 +34,11 @@ class ListFragment : Fragment() {
     }
 
     private var news: ArrayList<ListItem> = arrayListOf()
+
     companion object {
         private const val ARG_IS_FAVORITE = "isFavorite"
     }
+
     private var callbacks: Callbacks? = null
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,7 +48,7 @@ class ListFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_list, container, false)
         val recyclerView = view.findViewById<RecyclerView>(R.id.listRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(activity)
-        val isFav = if(arguments == null) false else arguments!!.getBoolean(ARG_IS_FAVORITE)
+        val isFav = if (arguments == null) false else arguments!!.getBoolean(ARG_IS_FAVORITE)
         val events = toMap(loadNews())
 
         setHeader(events)
@@ -66,21 +68,25 @@ class ListFragment : Fragment() {
         }
     }
 
-    private fun loadNews():List<News>{
+    private fun loadNews(): List<News> {
         val events = ArrayList<News>()
         val content = resources.getString(R.string.lorem)
         for (i in 1..49) {
-            events.add(News("Why is lorem theme $i ?",
-                buildRandomDateInCurrentMonth(),
-                content,
-                false))
+            events.add(
+                News(
+                    "Why is lorem theme $i ?",
+                    buildRandomDateInCurrentMonth(),
+                    content,
+                    false
+                )
+            )
         }
         return events
     }
 
     private fun buildRandomDateInCurrentMonth(): Date {
         val random = Random()
-        val todayDay= DateUtils().currentDay()
+        val todayDay = DateUtils().currentDay()
         return DateUtils().buildDate(random.nextInt(todayDay) + 1)
     }
 

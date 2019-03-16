@@ -27,7 +27,8 @@ class DateUtils {
             calendar.time = now
             return calendar.get(Calendar.YEAR)
         }
-    fun currentDay():Int{
+
+    fun currentDay(): Int {
         val now = Date(System.currentTimeMillis())
         val calendar = GregorianCalendar()
         calendar.time = now

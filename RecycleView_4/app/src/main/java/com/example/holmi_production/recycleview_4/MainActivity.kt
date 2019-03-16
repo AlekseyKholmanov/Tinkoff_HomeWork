@@ -8,42 +8,28 @@ import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
-import android.widget.TextView
 import com.example.holmi_production.recycleview_4.Adapters.ViewPagerAdapter
+import com.example.holmi_production.recycleview_4.Model.News
 
 
-class MainActivity : AppCompatActivity(), ListFragment.Callbacks{
-    override fun onItemClicked(v: View) {
-        Log.d("RecyclerView", "CLICK!")
-        val theme = v.findViewById<TextView>(R.id.theme)
-        val content = v.findViewById<TextView>(R.id.content)
-        var date = ""
-        var isFavorite = false
-        val intent = Intent(v.context, ActivityItem::class.java).apply {
-            putExtra("theme", theme.text)
-            putExtra("content", content.text)
-            putExtra("date", date)
-            putExtra("isFavorite", isFavorite)
-        }
-        ContextCompat.startActivity(v.context, intent, null)
-    }
+class MainActivity : AppCompatActivity(), ListFragment.Callbacks {
 
     companion object {
-        private const val ARG_IS_FAVORITE= "isFavorite"
+        private const val ARG_IS_FAVORITE = "isFavorite"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val viewPager:ViewPager = findViewById(R.id.pager)
+        val viewPager: ViewPager = findViewById(R.id.pager)
         setupViewPager(viewPager)
 
-        val tabLayout:TabLayout = findViewById(R.id.tab_layout)
+        val tabLayout: TabLayout = findViewById(R.id.tab_layout)
         tabLayout.setupWithViewPager(viewPager)
     }
 
-    private fun createFavoriteFragment():ListFragment{
+    private fun createFavoriteFragment(): ListFragment {
         val favoriteFragment = ListFragment()
         val bundle = Bundle()
         bundle.putBoolean(ARG_IS_FAVORITE, true)
@@ -51,7 +37,7 @@ class MainActivity : AppCompatActivity(), ListFragment.Callbacks{
         return favoriteFragment
     }
 
-    private fun setupViewPager(viewPager:ViewPager) {
+    private fun setupViewPager(viewPager: ViewPager) {
         val adapter = ViewPagerAdapter(supportFragmentManager)
         val favoriteFragment = createFavoriteFragment()
         val lastPageName = resources.getString(R.string.lastPageName)
@@ -61,8 +47,15 @@ class MainActivity : AppCompatActivity(), ListFragment.Callbacks{
         adapter.addFragment(favoriteFragment, favPageName)
         viewPager.adapter = adapter
     }
-//    override fun mClick(v: View, position: Int) {
 
-//
-//    }
+    override fun onItemClicked(v: View, news: News) {
+        Log.d("RecyclerView", "CLICK!")
+        val intent = Intent(v.context, ActivityItem::class.java).apply {
+            putExtra("theme", news.theme)
+            putExtra("content", news.content)
+            putExtra("date", news.date)
+            putExtra("isFavorite", news.isFavorites)
+        }
+        ContextCompat.startActivity(v.context, intent, null)
+    }
 }

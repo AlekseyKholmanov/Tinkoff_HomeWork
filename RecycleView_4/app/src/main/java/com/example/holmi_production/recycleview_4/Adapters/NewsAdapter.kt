@@ -1,14 +1,10 @@
 package com.example.holmi_production.recycleview_4.Adapters
 
-import android.content.Intent
-import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.example.holmi_production.recycleview_4.ActivityItem
 import com.example.holmi_production.recycleview_4.ListFragment.Callbacks
 import com.example.holmi_production.recycleview_4.Model.News
 import com.example.holmi_production.recycleview_4.NewsItems.HeaderItem
@@ -31,9 +27,6 @@ class NewsAdapter(
             }
             ListItem.TYPE_NEWS -> {
                 val itemView = inflater.inflate(R.layout.view_list_item_news, parent, false)
-                itemView.setOnClickListener {
-                    callbacks?.onItemClicked(itemView)
-                }
                 NewsViewHolder(itemView)
             }
             else -> throw IllegalStateException("unsupported item type")
@@ -65,7 +58,8 @@ class NewsAdapter(
             ListItem.TYPE_NEWS -> {
                 var newsItem = listItem[position] as NewsItem
                 var viewHolder = viewHolder as NewsViewHolder
-                viewHolder.bind(newsItem.content)
+
+                viewHolder.bind(newsItem.content, callbacks)
             }
         }
     }
@@ -80,7 +74,7 @@ class NewsAdapter(
 
     }
 
-    private class NewsViewHolder internal constructor(v: View) : RecyclerView.ViewHolder(v) {
+    private class NewsViewHolder internal constructor(var v: View) : RecyclerView.ViewHolder(v) {
 
         private val theme = v.findViewById<TextView>(R.id.theme)
         private val content = v.findViewById<TextView>(R.id.content)
@@ -91,11 +85,17 @@ class NewsAdapter(
 //            v.setOnClickListener(this)
 //        }
 
-        fun bind(news: News) {
+        fun bind(
+            news: News,
+            callbacks: Callbacks?
+        ) {
             theme.text = news.theme
             date = DateUtils().formatDate(news.date)
             content.text = news.content
             isFavorite = news.isFavorites
+            v.setOnClickListener {
+                callbacks?.onItemClicked(v, news)
+            }
 //        }
 //
 //        override fun onClick(v: View) {

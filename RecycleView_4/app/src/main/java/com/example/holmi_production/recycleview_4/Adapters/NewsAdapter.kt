@@ -81,10 +81,6 @@ class NewsAdapter(
         private var date = ""
         private var isFavorite = false
 
-//        init {
-//            v.setOnClickListener(this)
-//        }
-
         fun bind(
             news: News,
             callbacks: Callbacks?
@@ -96,19 +92,6 @@ class NewsAdapter(
             v.setOnClickListener {
                 callbacks?.onItemClicked(v, news)
             }
-//        }
-//
-//        override fun onClick(v: View) {
-//
-//            val intent = Intent(v.context, ActivityItem::class.java).apply {
-//                putExtra("theme", theme.text)
-//                putExtra("content", content.text)
-//                putExtra("date", date)
-//                putExtra("isFavorite", isFavorite)
-//            }
-//            startActivity(v.context, intent, null)
-//            Log.d("RecyclerView", "CLICK!")
-//        }
         }
     }
 }

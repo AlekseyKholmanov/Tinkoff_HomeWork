@@ -20,10 +20,10 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class ListFragment : Fragment() {
+
     interface Callbacks {
         fun onItemClicked(v: View, news: News)
     }
-
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -37,9 +37,6 @@ class ListFragment : Fragment() {
 
     private var news: ArrayList<ListItem> = arrayListOf()
 
-    companion object {
-        private const val ARG_IS_FAVORITE = "isFavorite"
-    }
 
     private var callbacks: Callbacks? = null
     override fun onCreateView(
@@ -50,11 +47,11 @@ class ListFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_list, container, false)
         val recyclerView = view.findViewById<RecyclerView>(R.id.listRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(activity)
-        val isFav = if (arguments == null) false else arguments!!.getBoolean(ARG_IS_FAVORITE)
-        val events = toMap(loadNews())
+        val isFav = if (arguments == null) false else arguments!!.getBoolean(MainActivity.ARG_IS_FAVORITE)
+        val events = toMap(loadNews(isFav))
         setHeader(events)
 
-        recyclerView.addItemDecoration(DividerItemDecoration(context,DividerItemDecoration.VERTICAL))
+        recyclerView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
         val adapter = NewsAdapter(news, callbacks)
         recyclerView.adapter = adapter
         return view
@@ -71,18 +68,21 @@ class ListFragment : Fragment() {
         }
     }
 
-    private fun loadNews(): List<News> {
+    private fun loadNews(isFav: Boolean): List<News> {
         val events = ArrayList<News>()
         val content = resources.getString(R.string.lorem)
-        for (i in 1..49) {
-            events.add(
-                News(
-                    "Why is lorem theme $i ?",
-                    buildRandomDateInCurrentMonth(),
-                    content,
-                    false
-                )
+        for (i in 1..20) {
+            var news = News(
+                "Why is lorem theme $i ?",
+                buildRandomDateInCurrentMonth(),
+                content,
+                i % 2 == 0
             )
+            if (isFav) {
+                if (i % 2 == 0)
+                    events.add(news)
+                continue
+            } else events.add(news)
         }
         return events
     }

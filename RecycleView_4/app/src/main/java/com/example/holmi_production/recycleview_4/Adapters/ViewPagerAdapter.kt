@@ -8,6 +8,7 @@ class ViewPagerAdapter(fm: FragmentManager?) : FragmentStatePagerAdapter(fm) {
 
     private val mFragmentList = ArrayList<Fragment>()
     private val mFragmentTitleList = ArrayList<String>()
+
     override fun getCount(): Int {
         return mFragmentList.size
     }

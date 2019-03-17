@@ -10,12 +10,16 @@ import android.util.Log
 import android.view.View
 import com.example.holmi_production.recycleview_4.Adapters.ViewPagerAdapter
 import com.example.holmi_production.recycleview_4.Model.News
+import com.example.holmi_production.recycleview_4.utils.DateUtils
 
 
 class MainActivity : AppCompatActivity(), ListFragment.Callbacks {
 
     companion object {
-        private const val ARG_IS_FAVORITE = "isFavorite"
+        const val ARG_IS_FAVORITE = "isFavorite"
+        const val ARG_CONTENT = "content"
+        const val ARG_THEME = "theme"
+        const val ARG_DATE = "date"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,10 +55,10 @@ class MainActivity : AppCompatActivity(), ListFragment.Callbacks {
     override fun onItemClicked(v: View, news: News) {
         Log.d("RecyclerView", "CLICK!")
         val intent = Intent(v.context, ActivityItem::class.java).apply {
-            putExtra("theme", news.theme)
-            putExtra("content", news.content)
-            putExtra("date", news.date)
-            putExtra("isFavorite", news.isFavorites)
+            putExtra(ARG_THEME, news.theme)
+            putExtra(ARG_CONTENT, news.content)
+            putExtra(ARG_DATE, DateUtils().formatDate(news.date))
+            putExtra(ARG_IS_FAVORITE, news.isFavorites)
         }
         ContextCompat.startActivity(v.context, intent, null)
     }

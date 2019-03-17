@@ -11,11 +11,11 @@ import java.util.Locale
 
 class DateUtils {
     companion object {
+        var calendar = GregorianCalendar()
+        var now = Date(System.currentTimeMillis())
         val currentMonth: Int
             @IntRange(from = 0, to = 11)
             get() {
-                val now = Date(System.currentTimeMillis())
-                val calendar = GregorianCalendar()
                 calendar.time = now
                 return calendar.get(Calendar.MONTH)
             }
@@ -23,8 +23,7 @@ class DateUtils {
         val currentYear: Int
             @IntRange(from = 0)
             get() {
-                val now = Date(System.currentTimeMillis())
-                val calendar = GregorianCalendar()
+
                 calendar.time = now
                 return calendar.get(Calendar.YEAR)
             }
@@ -32,8 +31,6 @@ class DateUtils {
         val currentDay: Int
             @IntRange(from = 0)
             get() {
-                val now = Date(System.currentTimeMillis())
-                val calendar = GregorianCalendar()
                 calendar.time = now
                 return calendar.get(Calendar.DAY_OF_MONTH)
             }

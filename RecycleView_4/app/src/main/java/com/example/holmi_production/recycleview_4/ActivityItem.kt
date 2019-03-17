@@ -10,18 +10,19 @@ import android.widget.Toast
 
 class ActivityItem : AppCompatActivity() {
 
+
     private var isFavorite: Boolean? = null
-    val favoriteIcon = R.drawable.favorite_enable
-    val nonFavoriteIcon = R.drawable.favorite_none
+    private val favoriteIcon = R.drawable.favorite_enable
+    private val nonFavoriteIcon = R.drawable.favorite_none
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_news_item)
 
-        val themeText = intent.getStringExtra("theme")
-        val contentText = intent.getStringExtra("content")
-        val dateText = intent.getStringExtra("date")
-        isFavorite = intent.getBooleanExtra("isFavorite", false)
+        val themeText = intent.getStringExtra(MainActivity.ARG_THEME)
+        val contentText = intent.getStringExtra(MainActivity.ARG_CONTENT)
+        val dateText = intent.getStringExtra(MainActivity.ARG_DATE)
+        isFavorite = intent.getBooleanExtra(MainActivity.ARG_IS_FAVORITE, false)
 
         val content = findViewById<TextView>(R.id.activity_content)
         val date = findViewById<TextView>(R.id.activity_date)
@@ -34,8 +35,8 @@ class ActivityItem : AppCompatActivity() {
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.activity_item_menu, menu)
-        var drawble = if (isFavorite!!) favoriteIcon else nonFavoriteIcon
-        menu.getItem(0).icon = ContextCompat.getDrawable(this, drawble)
+        var favoriteIcon = if (isFavorite!!) favoriteIcon else nonFavoriteIcon
+        menu.getItem(0).icon = ContextCompat.getDrawable(this, favoriteIcon)
         return true
     }
 

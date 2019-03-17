@@ -37,7 +37,7 @@ class NewsAdapter(
 
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
         var viewType = getItemViewType(position)
-        val currentDay = DateUtils().currentDay()
+        val currentDay = DateUtils.currentDay
         when (viewType) {
             ListItem.TYPE_HEADER -> {
                 var headerItem = listItem[position] as HeaderItem

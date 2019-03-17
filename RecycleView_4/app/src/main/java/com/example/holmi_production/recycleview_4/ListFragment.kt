@@ -89,7 +89,7 @@ class ListFragment : Fragment() {
 
     private fun buildRandomDateInCurrentMonth(): Date {
         val random = Random()
-        val todayDay = DateUtils().currentDay()
+        val todayDay = DateUtils.currentDay
         return DateUtils().buildDate(random.nextInt(todayDay) + 1)
     }
 

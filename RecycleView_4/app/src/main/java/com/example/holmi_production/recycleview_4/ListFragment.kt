@@ -3,8 +3,10 @@ package com.example.holmi_production.recycleview_4
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.RecyclerView.ItemDecoration
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -50,8 +52,9 @@ class ListFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(activity)
         val isFav = if (arguments == null) false else arguments!!.getBoolean(ARG_IS_FAVORITE)
         val events = toMap(loadNews())
-
         setHeader(events)
+
+        recyclerView.addItemDecoration(DividerItemDecoration(context,DividerItemDecoration.VERTICAL))
         val adapter = NewsAdapter(news, callbacks)
         recyclerView.adapter = adapter
         return view

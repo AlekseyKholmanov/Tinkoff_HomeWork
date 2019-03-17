@@ -72,6 +72,7 @@ class ListFragment : Fragment() {
         val events = ArrayList<News>()
         val content = resources.getString(R.string.lorem)
         for (i in 1..20) {
+            ///Хак для новостей на вкладке избранное
             var news = News(
                 "Why is lorem theme $i ?",
                 buildRandomDateInCurrentMonth(),

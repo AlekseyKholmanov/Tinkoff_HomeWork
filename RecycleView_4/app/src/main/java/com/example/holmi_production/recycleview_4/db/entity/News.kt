@@ -8,13 +8,13 @@ import java.util.*
 @Entity
 data class News(
     @PrimaryKey(autoGenerate = true)
-    val id:Int,
+    var id:Int,
     @ColumnInfo
-    val theme: String,
+    var theme: String,
     @ColumnInfo
-    val date: Date,
+    var date: Date,
     @ColumnInfo
-    val content: String,
+    var content: String,
     @ColumnInfo
-    val isFavorites: Boolean
+    var isFavorites: Boolean
 )

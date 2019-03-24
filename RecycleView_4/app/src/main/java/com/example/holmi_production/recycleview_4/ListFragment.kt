@@ -1,5 +1,6 @@
 package com.example.holmi_production.recycleview_4
 
+import android.app.Application
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -13,6 +14,7 @@ import com.example.holmi_production.recycleview_4.NewsItems.HeaderItem
 import com.example.holmi_production.recycleview_4.NewsItems.ListItem
 import com.example.holmi_production.recycleview_4.Adapters.NewsAdapter
 import com.example.holmi_production.recycleview_4.NewsItems.NewsItem
+import com.example.holmi_production.recycleview_4.db.NewsRepository
 import com.example.holmi_production.recycleview_4.db.entity.News
 import java.util.*
 import kotlin.collections.ArrayList
@@ -57,13 +59,17 @@ class ListFragment : Fragment() {
         return view
     }
 
-    private fun getNews(isFav: Boolean): List<News> {
-        var news: List<News>
-        val db = NewsRepository.IN
-        if(isFav)
-           news =
-        else
-           news = NewsRepository(context).getAllFavoriteNews()!!
+    private fun getNews(isFav: Boolean): ArrayList<News>? {
+        var news: ArrayList<News>? = null
+        val app = Application()
+        if(!isFav)
+            news = NewsRepository(app).getAllNews() as ArrayList<News>
+        else{
+            var favNews = NewsRepository(Application()).getAllFavoriteNews()
+            for (i in favNews!!){
+                news?.add(NewsRepository(Application()).getNewsById(i.newsId)!!)
+            }
+        }
         return news
     }
 
@@ -78,15 +84,17 @@ class ListFragment : Fragment() {
         }
     }
 
-    private fun toMap(events: List<News>): Map<Date, List<News>> {
+    private fun toMap(events: ArrayList<News>?): Map<Date, List<News>> {
         val map = TreeMap<Date, MutableList<News>>()
-        for (event in events) {
-            var value: MutableList<News>? = map[event.date]
-            if (value == null) {
-                value = ArrayList()
-                map[event.date] = value
+        if (events != null) {
+            for (event in events) {
+                var value: MutableList<News>? = map[event.date]
+                if (value == null) {
+                    value = ArrayList()
+                    map[event.date] = value
+                }
+                value.add(event)
             }
-            value.add(event)
         }
         return map.descendingMap()
     }

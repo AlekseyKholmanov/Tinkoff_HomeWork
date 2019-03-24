@@ -1,5 +1,6 @@
 package com.example.holmi_production.recycleview_4.db.dao
 
+import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
 import android.arch.persistence.room.OnConflictStrategy.REPLACE
 import android.support.annotation.Nullable
@@ -13,7 +14,7 @@ public interface NewsDao{
     fun getNewsById(idToSelect:Int): News
 
     @Query("SELECT * FROM news")
-    fun  getAll():List<News>
+    fun  getAll():LiveData<List<News>>
 
     @Insert(onConflict = REPLACE)
     fun insert(news: News)
@@ -26,4 +27,7 @@ public interface NewsDao{
 
     @Update
     fun update(news: News)
+
+    @Query("DELETE FROM news")
+    fun deleteAll()
 }

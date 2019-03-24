@@ -1,7 +1,6 @@
 package com.example.holmi_production.recycleview_4.NewsItems
 
-import com.example.holmi_production.recycleview_4.Model.News
-import com.example.holmi_production.recycleview_4.NewsItems.ListItem
+import com.example.holmi_production.recycleview_4.db.entity.News
 
 class NewsItem(val content: News) : ListItem() {
     override fun getType(): Int {

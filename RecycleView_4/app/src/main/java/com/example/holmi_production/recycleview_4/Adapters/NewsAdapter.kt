@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.example.holmi_production.recycleview_4.ListFragment.Callbacks
-import com.example.holmi_production.recycleview_4.Model.News
+import com.example.holmi_production.recycleview_4.db.entity.News
 import com.example.holmi_production.recycleview_4.NewsItems.HeaderItem
 import com.example.holmi_production.recycleview_4.NewsItems.ListItem
 import com.example.holmi_production.recycleview_4.NewsItems.NewsItem

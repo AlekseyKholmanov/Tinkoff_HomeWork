@@ -1,4 +1,4 @@
-package com.example.holmi_production.recycleview_4.Model
+package com.example.holmi_production.recycleview_4.db.entity
 
 import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity

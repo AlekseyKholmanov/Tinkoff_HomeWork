@@ -1,6 +1,7 @@
 package com.example.holmi_production.recycleview_4
 
 import android.app.Application
+import android.arch.lifecycle.ViewModelProvider
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -20,7 +21,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class ListFragment : Fragment() {
-
+    private lateinit var newsViewModel: NewsViewModel
     interface Callbacks {
         fun onItemClicked(v: View, news: News)
     }
@@ -59,18 +60,14 @@ class ListFragment : Fragment() {
         return view
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        newsViewModel = ViewModelProvider.of(this).get(NewsViewModel::class.java)
+    }
+
     private fun getNews(isFav: Boolean): ArrayList<News>? {
         var news: ArrayList<News>? = null
         val app = Application()
-        if(!isFav)
-            news = NewsRepository(app).getAllNews() as ArrayList<News>
-        else{
-            var favNews = NewsRepository(Application()).getAllFavoriteNews()
-            for (i in favNews!!){
-                news?.add(NewsRepository(Application()).getNewsById(i.newsId)!!)
-            }
-        }
-        return news
     }
 
     private fun setHeader(events: Map<Date, List<News>>) {

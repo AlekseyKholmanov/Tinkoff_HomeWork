@@ -5,14 +5,12 @@ import android.arch.persistence.room.Database
 import android.arch.persistence.room.Room
 import android.arch.persistence.room.RoomDatabase
 import android.content.Context
+import android.os.AsyncTask
 import com.example.holmi_production.recycleview_4.db.dao.FavoriteNewsDao
 import com.example.holmi_production.recycleview_4.db.dao.NewsDao
 import com.example.holmi_production.recycleview_4.db.entity.FavoriteNews
 import com.example.holmi_production.recycleview_4.db.entity.News
 import com.example.holmi_production.recycleview_4.utils.DateUtils
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 @Database(entities = [News::class, FavoriteNews::class], version = 1)
 public abstract class NewsDatabase : RoomDatabase() {
@@ -25,7 +23,7 @@ public abstract class NewsDatabase : RoomDatabase() {
         private val DATABASE_NAME = "basic-sample-db"
         var sInstance: NewsDatabase? = null
 
-        fun getInstance(context: Context, scope: CoroutineScope): NewsDatabase? {
+        fun getInstance(context: Context): NewsDatabase? {
             if (sInstance == null) {
                 synchronized(NewsDatabase::class.java) {
                     if (sInstance == null) {
@@ -34,7 +32,7 @@ public abstract class NewsDatabase : RoomDatabase() {
                             NewsDatabase::class.java,
                             DATABASE_NAME
                         )
-                            .addCallback(NewsDatabaseCallback(scope))
+                            .addCallback(NewsDatabaseCallback())
                             .build()
                     }
                 }
@@ -43,14 +41,18 @@ public abstract class NewsDatabase : RoomDatabase() {
         }
     }
 
-    private class NewsDatabaseCallback(private val scope: CoroutineScope) : RoomDatabase.Callback() {
-        override fun onOpen(db: SupportSQLiteDatabase) {
-            super.onOpen(db)
-            sInstance?.let { newsDatabase ->
-                scope.launch(Dispatchers.IO) {
-                    populateDatabase(newsDatabase.newsDao())
-                }
-            }
+    private class NewsDatabaseCallback : RoomDatabase.Callback() {
+        override fun onCreate(db: SupportSQLiteDatabase) {
+            PopulateDbAsynkTask(sInstance).execute()
+        }
+    }
+
+    private class PopulateDbAsynkTask(newsDatabase: NewsDatabase?) : AsyncTask<Void, Void, Void>() {
+        private val newsDao: NewsDao = newsDatabase!!.newsDao()
+
+        override fun doInBackground(vararg params: Void?): Void? {
+            populateDatabase(newsDao)
+            return null
         }
 
         fun populateDatabase(newsDao: NewsDao) {

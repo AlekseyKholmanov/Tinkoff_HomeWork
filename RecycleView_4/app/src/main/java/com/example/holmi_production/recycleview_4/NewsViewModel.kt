@@ -2,36 +2,24 @@ package com.example.holmi_production.recycleview_4
 
 import android.app.Application
 import android.arch.lifecycle.AndroidViewModel
-import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
 import com.example.holmi_production.recycleview_4.db.NewsDatabase
 import com.example.holmi_production.recycleview_4.db.NewsRepository
 import com.example.holmi_production.recycleview_4.db.entity.News
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
-import kotlin.coroutines.CoroutineContext
 
-class NewsViewModel(application: Application) : AndroidViewModel(application) {
-    private val repository: NewsRepository
-    val allNews: LiveData<List<News>>
-    private var parentJob = Job()
-    private val coroutineContext: CoroutineContext
-        get() = parentJob + Dispatchers.Main
-    private val scope = CoroutineScope(coroutineContext)
-
+public class NewsViewModel(application: Application):AndroidViewModel(application){
+    private val repository:NewsRepository
+    private val allNews:MutableLiveData<List<News>>
     init {
-        val newsDao = NewsDatabase.getInstance(application,scope)!!.newsDao()
+        val newsDao = NewsDatabase.getInstance(application)?.newsDao()
         repository = NewsRepository(newsDao)
-        allNews = repository.allNews
+        allNews = repository.getAllNews()
     }
-
-    fun insert(news: News) = scope.launch(Dispatchers.IO) {
+    fun insert(news: News){
         repository.insert(news)
     }
-
-    override fun onCleared() {
-        super.onCleared()
-        parentJob.cancel()
+    fun getAllNews(): MutableLiveData<List<News>> {
+        return allNews
     }
+
 }

@@ -14,7 +14,7 @@ import com.example.holmi_production.recycleview_4.R
 import com.example.holmi_production.recycleview_4.utils.DateUtils
 
 class NewsAdapter(
-    private val listItem: List<ListItem>,
+    private val listItem: List<ListItem>?,
     private var callbacks: Callbacks?
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -33,14 +33,14 @@ class NewsAdapter(
         }
     }
 
-    override fun getItemCount(): Int = listItem.size
+    override fun getItemCount(): Int = listItem!!.size
 
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
         var viewType = getItemViewType(position)
         val currentDay = DateUtils.currentDay
         when (viewType) {
             ListItem.TYPE_HEADER -> {
-                var headerItem = listItem[position] as HeaderItem
+                var headerItem = listItem?.get(position) as HeaderItem
                 val viewHolder1 = viewHolder as HeaderViewHolder
                 var dateText = when (headerItem.date) {
                     DateUtils().buildDate(currentDay) -> {
@@ -56,7 +56,7 @@ class NewsAdapter(
                 viewHolder1.txt_header.text = dateText
             }
             ListItem.TYPE_NEWS -> {
-                var newsItem = listItem[position] as NewsItem
+                var newsItem = listItem?.get(position) as NewsItem
                 val viewHolder1 = viewHolder as NewsViewHolder
 
                 viewHolder1.bind(newsItem.content, callbacks)
@@ -65,7 +65,7 @@ class NewsAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        return listItem[position].getType()
+        return listItem?.get(position)!!.getType()
     }
 
     private class HeaderViewHolder internal constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {

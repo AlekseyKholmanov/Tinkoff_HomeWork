@@ -4,15 +4,18 @@ import android.arch.persistence.db.SupportSQLiteDatabase
 import android.arch.persistence.room.Database
 import android.arch.persistence.room.Room
 import android.arch.persistence.room.RoomDatabase
+import android.arch.persistence.room.TypeConverters
 import android.content.Context
 import android.os.AsyncTask
+import com.example.holmi_production.recycleview_4.Converter.DateConverter
 import com.example.holmi_production.recycleview_4.db.dao.FavoriteNewsDao
 import com.example.holmi_production.recycleview_4.db.dao.NewsDao
 import com.example.holmi_production.recycleview_4.db.entity.FavoriteNews
 import com.example.holmi_production.recycleview_4.db.entity.News
 import com.example.holmi_production.recycleview_4.utils.DateUtils
 
-@Database(entities = [News::class, FavoriteNews::class], version = 1)
+@Database(entities = [News::class, FavoriteNews::class], version = 1,exportSchema = false)
+@TypeConverters(DateConverter::class)
 public abstract class NewsDatabase : RoomDatabase() {
 
     abstract fun newsDao(): NewsDao
@@ -43,14 +46,14 @@ public abstract class NewsDatabase : RoomDatabase() {
 
     private class NewsDatabaseCallback : RoomDatabase.Callback() {
         override fun onCreate(db: SupportSQLiteDatabase) {
-            PopulateDbAsynkTask(sInstance).execute()
+            PopulateDbAsynkTask(sInstance!!).execute()
         }
     }
 
-    private class PopulateDbAsynkTask(newsDatabase: NewsDatabase?) : AsyncTask<Void, Void, Void>() {
-        private val newsDao: NewsDao = newsDatabase!!.newsDao()
+    private class PopulateDbAsynkTask(newsDatabase: NewsDatabase) : AsyncTask<Void, Void, Void>() {
+        private val newsDao: NewsDao = newsDatabase.newsDao()
 
-        override fun doInBackground(vararg params: Void?): Void? {
+        override fun doInBackground(vararg params: Void): Void? {
             populateDatabase(newsDao)
             return null
         }

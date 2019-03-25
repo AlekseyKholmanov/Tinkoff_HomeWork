@@ -1,5 +1,8 @@
 package com.example.holmi_production.recycleview_4
 
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProvider
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.TabLayout
@@ -8,6 +11,7 @@ import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import com.example.holmi_production.recycleview_4.Adapters.ViewPagerAdapter
 import com.example.holmi_production.recycleview_4.db.entity.News
 import com.example.holmi_production.recycleview_4.utils.DateUtils
@@ -22,15 +26,16 @@ class MainActivity : AppCompatActivity(), ListFragment.Callbacks {
         const val ARG_DATE = "date"
     }
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         val viewPager: ViewPager = findViewById(R.id.pager)
         setupViewPager(viewPager)
-
         val tabLayout: TabLayout = findViewById(R.id.tab_layout)
         tabLayout.setupWithViewPager(viewPager)
+
     }
 
     private fun createFavoriteFragment(): ListFragment {

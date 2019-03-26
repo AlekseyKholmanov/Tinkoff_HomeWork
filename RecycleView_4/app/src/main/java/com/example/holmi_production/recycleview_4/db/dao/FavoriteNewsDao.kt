@@ -1,5 +1,6 @@
 package com.example.holmi_production.recycleview_4.db.dao
 
+import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Query
 import android.arch.persistence.room.*
@@ -11,11 +12,11 @@ public interface FavoriteNewsDao{
 
     @Nullable
     @Query("select * from favoritenews")
-    fun getAllId():List<FavoriteNews>
+    fun getAll():LiveData<List<FavoriteNews>>
 
     @Insert
     fun insert(favoriteNews: FavoriteNews)
 
-    @Delete()
-    fun deleteId(favoriteNews: FavoriteNews)
+    @Delete
+    fun delete(favoriteNews: FavoriteNews)
 }

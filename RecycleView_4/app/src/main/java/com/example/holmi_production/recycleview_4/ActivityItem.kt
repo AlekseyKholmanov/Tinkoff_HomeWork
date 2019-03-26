@@ -7,6 +7,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
 import android.widget.Toast
+import com.example.holmi_production.recycleview_4.db.NewsRepository
+import com.example.holmi_production.recycleview_4.utils.DateUtils
 
 class ActivityItem : AppCompatActivity() {
 
@@ -19,17 +21,16 @@ class ActivityItem : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_news_item)
 
-        val themeText = intent.getStringExtra(MainActivity.ARG_THEME)
-        val contentText = intent.getStringExtra(MainActivity.ARG_CONTENT)
-        val dateText = intent.getStringExtra(MainActivity.ARG_DATE)
+        val id = intent.getIntExtra(MainActivity.ARG_ID,0)
         isFavorite = intent.getBooleanExtra(MainActivity.ARG_IS_FAVORITE, false)
+        val news = NewsRepository(application).getNewsById(id)
 
         val content = findViewById<TextView>(R.id.activity_content)
         val date = findViewById<TextView>(R.id.activity_date)
 
-        title = themeText
-        content.text = contentText
-        date.text = dateText
+        title = news.theme
+        content.text = news.content
+        date.text = DateUtils().formatDate(news.date)
     }
 
 

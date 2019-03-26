@@ -8,6 +8,7 @@ import android.arch.persistence.room.TypeConverters
 import android.content.Context
 import android.os.AsyncTask
 import com.example.holmi_production.recycleview_4.Converter.DateConverter
+import com.example.holmi_production.recycleview_4.R
 import com.example.holmi_production.recycleview_4.db.dao.FavoriteNewsDao
 import com.example.holmi_production.recycleview_4.db.dao.NewsDao
 import com.example.holmi_production.recycleview_4.db.entity.FavoriteNews
@@ -20,6 +21,7 @@ public abstract class NewsDatabase : RoomDatabase() {
 
     abstract fun newsDao(): NewsDao
     abstract fun favoriteNewsDao(): FavoriteNewsDao
+
 
     companion object {
 
@@ -45,7 +47,7 @@ public abstract class NewsDatabase : RoomDatabase() {
     }
 
     private class NewsDatabaseCallback : RoomDatabase.Callback() {
-        override fun onCreate(db: SupportSQLiteDatabase) {
+        override fun onOpen(db: SupportSQLiteDatabase) {
             PopulateDbAsynkTask(sInstance!!).execute()
         }
     }
@@ -59,13 +61,16 @@ public abstract class NewsDatabase : RoomDatabase() {
         }
 
         fun populateDatabase(newsDao: NewsDao) {
-            newsDao.deleteAll()
+                       newsDao.deleteAll()
             for (i in 0..25) {
                 var news = News(
                     i,
                     "Theme $i",
                     DateUtils().buildDate(i),
-                    "text $i",
+                    "Also note that the whole language dependency can be taken care of by the android framework. " +
+                            "Simply create different folders for each language. If english is your default language, " +
+                            "just put the english strings into res/values/strings.xml. Then create a new folder values-ru and put the russian strings " +
+                            "with identical names into res/values-ru/strings.xml. From this point on android  $i",
                     false
                 )
                 newsDao.insert(news)

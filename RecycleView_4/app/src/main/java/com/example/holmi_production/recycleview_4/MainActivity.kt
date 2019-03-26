@@ -1,8 +1,5 @@
 package com.example.holmi_production.recycleview_4
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.TabLayout
@@ -11,19 +8,15 @@ import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import com.example.holmi_production.recycleview_4.Adapters.ViewPagerAdapter
 import com.example.holmi_production.recycleview_4.db.entity.News
-import com.example.holmi_production.recycleview_4.utils.DateUtils
 
 
 class MainActivity : AppCompatActivity(), ListFragment.Callbacks {
 
     companion object {
         const val ARG_IS_FAVORITE = "isFavorite"
-        const val ARG_CONTENT = "content"
-        const val ARG_THEME = "theme"
-        const val ARG_DATE = "date"
+        const val ARG_ID = "id"
     }
 
 
@@ -60,10 +53,7 @@ class MainActivity : AppCompatActivity(), ListFragment.Callbacks {
     override fun onItemClicked(v: View, news: News) {
         Log.d("RecyclerView", "CLICK!")
         val intent = Intent(v.context, ActivityItem::class.java).apply {
-            putExtra(ARG_THEME, news.theme)
-            putExtra(ARG_CONTENT, news.content)
-            putExtra(ARG_DATE, DateUtils().formatDate(news.date))
-            putExtra(ARG_IS_FAVORITE, news.isFavorites)
+            putExtra(ARG_ID, news.id)
         }
         ContextCompat.startActivity(v.context, intent, null)
     }

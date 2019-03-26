@@ -10,7 +10,7 @@ import java.util.*
 @Entity
 data class News(
     @PrimaryKey(autoGenerate = true)
-    var id:Int,
+    var id:Int?,
 
     var theme: String,
 

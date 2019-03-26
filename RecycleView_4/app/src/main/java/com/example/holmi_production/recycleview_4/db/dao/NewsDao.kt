@@ -14,7 +14,7 @@ public interface NewsDao{
     fun getNewsById(idToSelect: Int): News
 
     @Query("SELECT * FROM news")
-    fun  getAll():LiveData<List<News>>
+    fun  getAll():List<News>
 
     @Insert(onConflict = REPLACE)
     fun insert(news: News)

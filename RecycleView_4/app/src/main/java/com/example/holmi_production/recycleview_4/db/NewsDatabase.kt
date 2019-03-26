@@ -15,7 +15,7 @@ import com.example.holmi_production.recycleview_4.db.entity.FavoriteNews
 import com.example.holmi_production.recycleview_4.db.entity.News
 import com.example.holmi_production.recycleview_4.utils.DateUtils
 
-@Database(entities = [News::class, FavoriteNews::class], version = 1,exportSchema = false)
+@Database(entities = [News::class, FavoriteNews::class], version = 2,exportSchema = false)
 @TypeConverters(DateConverter::class)
 public abstract class NewsDatabase : RoomDatabase() {
 
@@ -37,6 +37,8 @@ public abstract class NewsDatabase : RoomDatabase() {
                             NewsDatabase::class.java,
                             DATABASE_NAME
                         )
+                            .fallbackToDestructiveMigration()
+                            .allowMainThreadQueries()
                             .addCallback(NewsDatabaseCallback())
                             .build()
                     }

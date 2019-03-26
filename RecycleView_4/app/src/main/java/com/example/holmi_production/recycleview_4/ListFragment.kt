@@ -1,7 +1,6 @@
 package com.example.holmi_production.recycleview_4
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
+import android.app.Application
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -16,14 +15,13 @@ import com.example.holmi_production.recycleview_4.NewsItems.HeaderItem
 import com.example.holmi_production.recycleview_4.NewsItems.ListItem
 import com.example.holmi_production.recycleview_4.Adapters.NewsAdapter
 import com.example.holmi_production.recycleview_4.NewsItems.NewsItem
-import com.example.holmi_production.recycleview_4.db.entity.FavoriteNews
+import com.example.holmi_production.recycleview_4.db.NewsRepository
 import com.example.holmi_production.recycleview_4.db.entity.News
 import kotlinx.android.synthetic.main.fragment_list.*
 import java.util.*
 import kotlin.collections.ArrayList
 
 class ListFragment : Fragment() {
-    private lateinit var newsViewModel: NewsViewModel
 
     interface Callbacks {
         fun onItemClicked(v: View, news: News)
@@ -52,40 +50,41 @@ class ListFragment : Fragment() {
         return view
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val context = activity
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         val isFav = if (arguments == null) false else arguments!!.getBoolean(MainActivity.ARG_IS_FAVORITE)
         super.onActivityCreated(savedInstanceState)
         var items: ArrayList<News>? = null
-        newsViewModel = ViewModelProviders.of(this).get(NewsViewModel::class.java)
+        var newsRepository = NewsRepository(activity!!.applicationContext)
         if (!isFav) {
-            newsViewModel.getAllNews().observe(this, Observer<List<News>> { news ->
-                news.let {
-                    val events = toMap(news)
-                    listRecyclerView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+            val news = newsRepository.getAllNews()
+            val events = toMap(news)
+            listRecyclerView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+            var list = setHeader(events)
+            val adapter = NewsAdapter(list, callbacks)
+            listRecyclerView.adapter = adapter
+
+        } else {
+            val fNews = newsRepository.getAllFavoriteNews()
+            if (fNews != null)
+                for (i in fNews) {
+                    var item = newsRepository.getNewsById(i.id!!)
+                    items?.add(item)
+                    val events = toMap(items)
+                    listRecyclerView.addItemDecoration(
+                        DividerItemDecoration(
+                            context,
+                            DividerItemDecoration.VERTICAL
+                        )
+                    )
                     var list = setHeader(events)
                     val adapter = NewsAdapter(list, callbacks)
                     listRecyclerView.adapter = adapter
                 }
-            })
-        } else {
-            newsViewModel.getAllFavoriteNews().observe(this, Observer<List<FavoriteNews>> { fNews ->
-                if (fNews != null) {
-                    for (i in fNews) {
-                        var item = newsViewModel.getNewsById(i.id) as News
-                        items?.add(item)
-                        val events = toMap(items)
-                        listRecyclerView.addItemDecoration(
-                            DividerItemDecoration(
-                                context,
-                                DividerItemDecoration.VERTICAL
-                            )
-                        )
-                        var list = setHeader(events)
-                        val adapter = NewsAdapter(list, callbacks)
-                        listRecyclerView.adapter = adapter
-                    }
-                }
-            })
         }
         Log.d("tag", "text")
     }

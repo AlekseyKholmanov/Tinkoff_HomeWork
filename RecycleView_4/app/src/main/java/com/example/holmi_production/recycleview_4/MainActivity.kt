@@ -9,7 +9,9 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import com.example.holmi_production.recycleview_4.Adapters.ViewPagerAdapter
+import com.example.holmi_production.recycleview_4.db.NewsRepository
 import com.example.holmi_production.recycleview_4.db.entity.News
+import java.security.AccessController.getContext
 
 
 class MainActivity : AppCompatActivity(), ListFragment.Callbacks {

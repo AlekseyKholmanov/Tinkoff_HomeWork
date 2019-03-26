@@ -12,7 +12,7 @@ public interface FavoriteNewsDao{
 
     @Nullable
     @Query("select * from favoritenews")
-    fun getAll():LiveData<List<FavoriteNews>>
+    fun getAll():List<FavoriteNews>
 
     @Insert
     fun insert(favoriteNews: FavoriteNews)

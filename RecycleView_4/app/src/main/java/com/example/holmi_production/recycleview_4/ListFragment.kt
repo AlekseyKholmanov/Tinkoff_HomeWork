@@ -1,19 +1,17 @@
 package com.example.holmi_production.recycleview_4
 
-import android.app.Application
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.holmi_production.recycleview_4.Adapters.NewsAdapter
 import com.example.holmi_production.recycleview_4.NewsItems.HeaderItem
 import com.example.holmi_production.recycleview_4.NewsItems.ListItem
-import com.example.holmi_production.recycleview_4.Adapters.NewsAdapter
 import com.example.holmi_production.recycleview_4.NewsItems.NewsItem
 import com.example.holmi_production.recycleview_4.db.NewsRepository
 import com.example.holmi_production.recycleview_4.db.entity.News
@@ -21,11 +19,27 @@ import kotlinx.android.synthetic.main.fragment_list.*
 import java.util.*
 import kotlin.collections.ArrayList
 
-class ListFragment : Fragment() {
+class ListFragment : Fragment(),NewsRepository.onUpdate {
+    override fun onUpdate() {
+        update()
+    }
 
     interface Callbacks {
         fun onItemClicked(v: View, news: News)
     }
+    companion object {
+        private const val ARG_NAME = "isFavorite"
+        @JvmStatic
+        fun newInstance(isFavorite: Boolean) : ListFragment {
+            val args = Bundle()
+            args.putBoolean(ARG_NAME, isFavorite)
+            val fragment = ListFragment()
+            fragment.arguments = args
+            return fragment
+        }
+    }
+    lateinit var mAdapter: NewsAdapter
+
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -37,7 +51,10 @@ class ListFragment : Fragment() {
         callbacks = null
     }
 
+    private lateinit var newsRepository: NewsRepository
     private var callbacks: Callbacks? = null
+
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -46,47 +63,40 @@ class ListFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_list, container, false)
         val recyclerView = view.findViewById<RecyclerView>(R.id.listRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(activity)
-
         return view
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val context = activity
-    }
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
-        val isFav = if (arguments == null) false else arguments!!.getBoolean(MainActivity.ARG_IS_FAVORITE)
         super.onActivityCreated(savedInstanceState)
-        var items: ArrayList<News>? = null
-        var newsRepository = NewsRepository(activity!!.applicationContext)
-        if (!isFav) {
-            val news = newsRepository.getAllNews()
-            val events = toMap(news)
+
+        var items = arrayListOf<News>()
+        newsRepository = NewsRepository(activity!!.applicationContext)
+        val isFav = arguments?.getBoolean(ARG_NAME)
+        if (!isFav!!) {
+            var news = newsRepository.getAllNews()
+            var events = toMap(news)
             listRecyclerView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-            var list = setHeader(events)
-            val adapter = NewsAdapter(list, callbacks)
-            listRecyclerView.adapter = adapter
+            val items = setHeader(events)
+            mAdapter = NewsAdapter(items, callbacks)
+
+            listRecyclerView.adapter = mAdapter
 
         } else {
             val fNews = newsRepository.getAllFavoriteNews()
-            if (fNews != null)
-                for (i in fNews) {
-                    var item = newsRepository.getNewsById(i.id!!)
-                    items?.add(item)
-                    val events = toMap(items)
-                    listRecyclerView.addItemDecoration(
-                        DividerItemDecoration(
-                            context,
-                            DividerItemDecoration.VERTICAL
-                        )
-                    )
-                    var list = setHeader(events)
-                    val adapter = NewsAdapter(list, callbacks)
-                    listRecyclerView.adapter = adapter
-                }
+            for (i in fNews) {
+                val item = newsRepository.getNewsById(i.newsId)
+                items?.add(item)
+            }
+            val events = toMap(items)
+            listRecyclerView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+            val list = setHeader(events)
+            mAdapter = NewsAdapter(list, callbacks)
+            listRecyclerView.adapter = mAdapter
         }
-        Log.d("tag", "text")
+    }
+
+    fun update(){
+        mAdapter.update()
     }
 
 

@@ -2,16 +2,14 @@ package com.example.holmi_production.recycleview_4.Adapters
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import com.example.holmi_production.recycleview_4.ListFragment.Callbacks
-import com.example.holmi_production.recycleview_4.db.entity.News
 import com.example.holmi_production.recycleview_4.NewsItems.HeaderItem
 import com.example.holmi_production.recycleview_4.NewsItems.ListItem
 import com.example.holmi_production.recycleview_4.NewsItems.NewsItem
 import com.example.holmi_production.recycleview_4.R
 import com.example.holmi_production.recycleview_4.utils.DateUtils
+
 
 class NewsAdapter(
     private val listItem: List<ListItem>?,
@@ -33,6 +31,9 @@ class NewsAdapter(
         }
     }
 
+    fun update() {
+        this.notifyDataSetChanged()
+    }
     override fun getItemCount(): Int = listItem!!.size
 
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
@@ -66,33 +67,6 @@ class NewsAdapter(
 
     override fun getItemViewType(position: Int): Int {
         return listItem?.get(position)!!.getType()
-    }
-
-    private class HeaderViewHolder internal constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-        internal var txt_header: TextView = itemView.findViewById(R.id.txt_header)
-
-    }
-
-    private class NewsViewHolder internal constructor(var v: View) : RecyclerView.ViewHolder(v) {
-
-        private val theme = v.findViewById<TextView>(R.id.theme)
-        private val content = v.findViewById<TextView>(R.id.content)
-        private var date = ""
-        private var isFavorite = false
-
-        fun bind(
-            news: News,
-            callbacks: Callbacks?
-        ) {
-            theme.text = news.theme
-            date = DateUtils().formatDate(news.date)
-            content.text = news.content
-            isFavorite = news.isFavorites
-            v.setOnClickListener {
-                callbacks?.onItemClicked(v, news)
-            }
-        }
     }
 }
 

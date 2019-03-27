@@ -16,7 +16,5 @@ data class News(
 
     var date: Date,
 
-    var content: String,
-
-    var isFavorites: Boolean
+    var content: String
 )

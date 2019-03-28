@@ -69,7 +69,7 @@ class ListFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        var list: ArrayList<ListItem>
+        val list: ArrayList<ListItem>
         newsRepository = NewsRepository(activity!!.applicationContext)
         val isFav = arguments?.getBoolean(ARG_NAME)
         list = arrayList(isFav)
@@ -91,7 +91,7 @@ class ListFragment : Fragment() {
             var items = arrayListOf<News>()
             for (i in fNews) {
                 val item = newsRepository.getNewsById(i.newsId)
-                items?.add(item)
+                items.add(item)
             }
             newsItems = DateUtils().reformateItem(items)
 
@@ -101,13 +101,14 @@ class ListFragment : Fragment() {
 
 
     override fun onResume() {
-        val isFav = arguments?.getBoolean(ARG_NAME)
-        var list = arrayList(isFav)
-        var adapter = NewsAdapter(list,callbacks)
-        adapter.notifyDataSetChanged()
-        listRecyclerView.adapter = adapter
-
         super.onResume()
+        val isFav = arguments?.getBoolean(ARG_NAME)
+        if(!isFav!!){
+            return
+        }
+        val list = arrayList(isFav)
+        val adapter = NewsAdapter(list,callbacks)
+        listRecyclerView.adapter = adapter
     }
 }
 

@@ -31,9 +31,6 @@ class NewsAdapter(
         }
     }
 
-    fun update() {
-        this.notifyDataSetChanged()
-    }
     override fun getItemCount(): Int = listItem!!.size
 
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {

@@ -1,9 +1,8 @@
 package com.example.holmi_production.recycleview_4.db
 
-import android.app.Application
 import android.content.Context
 import android.os.AsyncTask
-import com.example.holmi_production.recycleview_4.ListFragment
+import android.support.v7.widget.RecyclerView
 import com.example.holmi_production.recycleview_4.db.dao.FavoriteNewsDao
 import com.example.holmi_production.recycleview_4.db.dao.NewsDao
 import com.example.holmi_production.recycleview_4.db.entity.FavoriteNews
@@ -16,14 +15,17 @@ public class NewsRepository(context: Context) {
     private val db: NewsDatabase = NewsDatabase.getInstance(context)!!
     private val newsDao: NewsDao
     private val favoriteNewsDao: FavoriteNewsDao
-    private val allNews: List<News>
-    private val allFavoriteNews: List<FavoriteNews>
+    interface Callback{
+        fun onUpdateData(list:List<FavoriteNews>)
+    }
+    private var callback:Callback?  = null
 
+    fun setOnCallbackListener(callback: Callback){
+        this.callback = callback
+    }
     init {
         newsDao = db.newsDao()
         favoriteNewsDao = db.favoriteNewsDao()
-        allNews = newsDao.getAll()
-        allFavoriteNews = favoriteNewsDao.getAll()
     }
 
     fun insert(news: News) {
@@ -34,7 +36,7 @@ public class NewsRepository(context: Context) {
         InsertFavoriteNewsAsyncTask(favoriteNewsDao).execute(news)
     }
 
-    fun deleteFavotiteNews(newsId:Int) {
+    fun deleteFavotiteNews(newsId: Int) {
         DeleteFavoriteNewsAsynkTask(favoriteNewsDao).execute(newsId)
     }
 
@@ -43,14 +45,14 @@ public class NewsRepository(context: Context) {
     }
 
     fun getAllNews(): List<News> {
-        return allNews
+        return GetAllNewsAsyncTask(newsDao).execute().get()
     }
 
     fun getAllFavoriteNews(): List<FavoriteNews> {
-        return allFavoriteNews
+        return GetAllFavoriteNewsAsyncTask(favoriteNewsDao).execute().get()
     }
 
-    fun getFavoriteNewsById(newsId:Int):FavoriteNews?{
+    fun getFavoriteNewsById(newsId: Int): FavoriteNews? {
         return GetFavoriteNewsByIdAsyncTaks(favoriteNewsDao).execute(newsId).get()
     }
 
@@ -74,7 +76,8 @@ public class NewsRepository(context: Context) {
         }
     }
 
-    private class GetFavoriteNewsByIdAsyncTaks(val favoriteNewsDao: FavoriteNewsDao) : AsyncTask<Int, Void, FavoriteNews>() {
+    private class GetFavoriteNewsByIdAsyncTaks(val favoriteNewsDao: FavoriteNewsDao) :
+        AsyncTask<Int, Void, FavoriteNews>() {
         override fun doInBackground(vararg params: Int?): FavoriteNews? {
             return favoriteNewsDao.getNewsById(params[0]!!)
         }
@@ -99,6 +102,18 @@ public class NewsRepository(context: Context) {
         override fun doInBackground(vararg params: FavoriteNews?): Void? {
             favoriteNewsDao.insert(params[0]!!)
             return null
+        }
+    }
+    private class GetAllNewsAsyncTask(val newsDao: NewsDao) :
+        AsyncTask<Void, Void, List<News>>() {
+        override fun doInBackground(vararg params: Void?): List<News> {
+            return newsDao.getAll()
+        }
+    }
+    private class GetAllFavoriteNewsAsyncTask(val favoriteNewsDao: FavoriteNewsDao) :
+        AsyncTask<Void, Void, List<FavoriteNews>>() {
+        override fun doInBackground(vararg params: Void?): List<FavoriteNews> {
+            return favoriteNewsDao.getAll()
         }
     }
 }

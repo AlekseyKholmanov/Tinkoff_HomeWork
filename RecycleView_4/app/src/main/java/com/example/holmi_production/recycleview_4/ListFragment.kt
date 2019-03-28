@@ -18,12 +18,12 @@ import com.example.holmi_production.recycleview_4.db.entity.News
 import kotlinx.android.synthetic.main.fragment_list.*
 import java.util.*
 import kotlin.collections.ArrayList
+import android.widget.Toast
+import com.example.holmi_production.recycleview_4.utils.DateUtils
+import java.util.stream.Collectors.toMap
 
-class ListFragment : Fragment(),NewsRepository.onUpdate {
-    override fun onUpdate() {
-        update()
-    }
 
+class ListFragment : Fragment() {
     interface Callbacks {
         fun onItemClicked(v: View, news: News)
     }
@@ -69,63 +69,45 @@ class ListFragment : Fragment(),NewsRepository.onUpdate {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        var items = arrayListOf<News>()
+        var list: ArrayList<ListItem>
         newsRepository = NewsRepository(activity!!.applicationContext)
         val isFav = arguments?.getBoolean(ARG_NAME)
+        list = arrayList(isFav)
+        listRecyclerView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+        mAdapter = NewsAdapter(list, callbacks)
+        listRecyclerView.adapter = mAdapter
+    }
+
+    private fun arrayList(
+        isFav: Boolean?
+    ): ArrayList<ListItem> {
+        var newsItems: ArrayList<ListItem>
         if (!isFav!!) {
             var news = newsRepository.getAllNews()
-            var events = toMap(news)
-            listRecyclerView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-            val items = setHeader(events)
-            mAdapter = NewsAdapter(items, callbacks)
-
-            listRecyclerView.adapter = mAdapter
+            newsItems = DateUtils().reformateItem(news)
 
         } else {
             val fNews = newsRepository.getAllFavoriteNews()
+            var items = arrayListOf<News>()
             for (i in fNews) {
                 val item = newsRepository.getNewsById(i.newsId)
                 items?.add(item)
             }
-            val events = toMap(items)
-            listRecyclerView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-            val list = setHeader(events)
-            mAdapter = NewsAdapter(list, callbacks)
-            listRecyclerView.adapter = mAdapter
-        }
-    }
+            newsItems = DateUtils().reformateItem(items)
 
-    fun update(){
-        mAdapter.update()
+        }
+        return newsItems
     }
 
 
-    private fun setHeader(events: Map<Date, List<News>>): ArrayList<ListItem> {
-        var news: ArrayList<ListItem> = arrayListOf()
-        for (date in events.keys) {
-            val header = HeaderItem(date)
-            news.add(header)
-            for (event in events.getValue(date)) {
-                val item = NewsItem(event)
-                news.add(item)
-            }
-        }
-        return news
-    }
+    override fun onResume() {
+        val isFav = arguments?.getBoolean(ARG_NAME)
+        var list = arrayList(isFav)
+        var adapter = NewsAdapter(list,callbacks)
+        adapter.notifyDataSetChanged()
+        listRecyclerView.adapter = adapter
 
-    private fun toMap(events: List<News>?): Map<Date, List<News>> {
-        val map = TreeMap<Date, MutableList<News>>()
-        if (events != null) {
-            for (event in events) {
-                var value: MutableList<News>? = map[event.date]
-                if (value == null) {
-                    value = ArrayList()
-                    map[event.date] = value
-                }
-                value.add(event)
-            }
-        }
-        return map.descendingMap()
+        super.onResume()
     }
 }
 

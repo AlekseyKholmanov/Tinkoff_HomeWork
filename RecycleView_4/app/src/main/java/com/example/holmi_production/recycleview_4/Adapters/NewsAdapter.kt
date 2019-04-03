@@ -39,7 +39,7 @@ class NewsAdapter(
         when (viewType) {
             ListItem.TYPE_HEADER -> {
                 var headerItem = listItem?.get(position) as HeaderItem
-                val viewHolder1 = viewHolder as HeaderViewHolder
+                val viewHolder = viewHolder as HeaderViewHolder
                 var dateText = when (headerItem.date) {
                     DateUtils().buildDate(currentDay) -> {
                         "Сегодня"
@@ -51,7 +51,7 @@ class NewsAdapter(
                         DateUtils().formatDate(headerItem.date)
                     }
                 }
-                viewHolder1.txt_header.text = dateText
+                viewHolder.txt_header.text = dateText
             }
             ListItem.TYPE_NEWS -> {
                 var newsItem = listItem?.get(position) as NewsItem

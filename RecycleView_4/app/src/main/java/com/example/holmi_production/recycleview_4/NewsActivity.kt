@@ -51,7 +51,7 @@ class NewsActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         var favNews = FavoriteNews(null, news.id!!)
-        var a = newsRepository.getAllFavoriteNews().count()
+
 
         if (isFavorite) {
             item!!.icon = ContextCompat.getDrawable(this, R.drawable.favorite_none)

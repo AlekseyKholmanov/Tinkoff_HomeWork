@@ -6,13 +6,14 @@ import android.arch.persistence.room.*
 import android.arch.persistence.room.OnConflictStrategy.REPLACE
 import android.support.annotation.Nullable
 import com.example.holmi_production.recycleview_4.db.entity.FavoriteNews
+import io.reactivex.Single
 
 @Dao
 public interface FavoriteNewsDao{
 
     @Nullable
-    @Query("select * from favoritenews")
-    fun getAll():List<FavoriteNews>
+    @Query("select newsId from favoritenews")
+    fun getAllFavoriteIds(): Single<Array<Int>>
 
     @Nullable
     @Query("select * from favoritenews where newsId=:newsId")

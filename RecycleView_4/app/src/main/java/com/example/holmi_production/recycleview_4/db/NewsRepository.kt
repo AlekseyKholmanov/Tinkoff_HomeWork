@@ -7,6 +7,13 @@ import com.example.holmi_production.recycleview_4.db.dao.FavoriteNewsDao
 import com.example.holmi_production.recycleview_4.db.dao.NewsDao
 import com.example.holmi_production.recycleview_4.db.entity.FavoriteNews
 import com.example.holmi_production.recycleview_4.db.entity.News
+import io.reactivex.Observable
+import io.reactivex.ObservableOnSubscribe
+import io.reactivex.Scheduler
+import io.reactivex.Single
+import io.reactivex.functions.Consumer
+import io.reactivex.schedulers.Schedulers
+import java.util.*
 
 
 public class NewsRepository(context: Context) {
@@ -44,12 +51,16 @@ public class NewsRepository(context: Context) {
         DeleteAllNewsAsyncTask(newsDao).execute()
     }
 
-    fun getAllNews(): List<News> {
-        return GetAllNewsAsyncTask(newsDao).execute().get()
+    fun getAllNews(): Single<List<News>> {
+        return newsDao.getAll()
     }
 
-    fun getAllFavoriteNews(): List<FavoriteNews> {
-        return GetAllFavoriteNewsAsyncTask(favoriteNewsDao).execute().get()
+    fun getAllFavoriteNews(ids:Array<Int>):Single<List<News>>{
+        return newsDao.getNewsByIds(ids)
+    }
+
+    fun getAllFavoriteIds(): Single<Array<Int>> {
+        return favoriteNewsDao.getAllFavoriteIds()
     }
 
     fun getFavoriteNewsById(newsId: Int): FavoriteNews? {
@@ -102,18 +113,6 @@ public class NewsRepository(context: Context) {
         override fun doInBackground(vararg params: FavoriteNews?): Void? {
             favoriteNewsDao.insert(params[0]!!)
             return null
-        }
-    }
-    private class GetAllNewsAsyncTask(val newsDao: NewsDao) :
-        AsyncTask<Void, Void, List<News>>() {
-        override fun doInBackground(vararg params: Void?): List<News> {
-            return newsDao.getAll()
-        }
-    }
-    private class GetAllFavoriteNewsAsyncTask(val favoriteNewsDao: FavoriteNewsDao) :
-        AsyncTask<Void, Void, List<FavoriteNews>>() {
-        override fun doInBackground(vararg params: Void?): List<FavoriteNews> {
-            return favoriteNewsDao.getAll()
         }
     }
 }

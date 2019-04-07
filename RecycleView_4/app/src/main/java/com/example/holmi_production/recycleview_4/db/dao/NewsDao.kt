@@ -5,6 +5,8 @@ import android.arch.persistence.room.*
 import android.arch.persistence.room.OnConflictStrategy.REPLACE
 import android.support.annotation.Nullable
 import com.example.holmi_production.recycleview_4.db.entity.News
+import io.reactivex.Completable
+import io.reactivex.Single
 
 
 @Dao
@@ -13,8 +15,11 @@ public interface NewsDao{
     @Query("SELECT * FROM news WHERE id=:idToSelect")
     fun getNewsById(idToSelect: Int): News
 
+    @Query("Select * from news where id in (:newsIds)")
+    fun getNewsByIds(newsIds:Array<Int>):Single<List<News>>
+
     @Query("SELECT * FROM news")
-    fun  getAll():List<News>
+    fun  getAll():Single<List<News>>
 
     @Insert(onConflict = REPLACE)
     fun insert(news: News)

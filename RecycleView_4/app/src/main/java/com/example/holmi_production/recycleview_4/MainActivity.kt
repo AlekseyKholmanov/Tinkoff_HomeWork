@@ -14,7 +14,7 @@ import com.example.holmi_production.recycleview_4.db.entity.News
 
 
 
-class MainActivity : AppCompatActivity(), ListFragment.Callbacks {
+class MainActivity : AppCompatActivity(), ListFragment.ClickOnNewsCallback {
 
     companion object {
         const val ARG_ID = "id"

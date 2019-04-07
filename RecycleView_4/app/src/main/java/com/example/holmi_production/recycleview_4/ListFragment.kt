@@ -15,14 +15,18 @@ import com.example.holmi_production.recycleview_4.NewsItems.ListItem
 import com.example.holmi_production.recycleview_4.db.NewsRepository
 import com.example.holmi_production.recycleview_4.db.entity.News
 import com.example.holmi_production.recycleview_4.utils.DateUtils
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_list.*
 
 
-class ListFragment : Fragment() {
-    interface Callbacks {
+class ListFragment : Fragment(), NewsRepository.UpdateFavorite {
+    override fun onUpdateData() {
+        Log.d("TAG1","dataUpdate")
+    }
+
+    interface ClickOnNewsCallback {
         fun onItemClicked(v: View, news: News)
     }
 
@@ -38,22 +42,21 @@ class ListFragment : Fragment() {
         }
     }
 
-    lateinit var mAdapter: NewsAdapter
-
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        callbacks = requireActivity() as Callbacks
+        clickOnNewsCallback = requireActivity() as ClickOnNewsCallback
     }
 
     override fun onDetach() {
         super.onDetach()
-        callbacks = null
+        clickOnNewsCallback = null
     }
 
     private lateinit var newsRepository: NewsRepository
-    private var callbacks: Callbacks? = null
-    private lateinit var observable: Disposable
-    private lateinit var fObservable: Disposable
+    private var clickOnNewsCallback: ClickOnNewsCallback? = null
+    private lateinit var observable: Single<ArrayList<ListItem>>
+    private lateinit var fObservable: Single<ArrayList<ListItem>>
+    lateinit var mAdapter: NewsAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -68,59 +71,63 @@ class ListFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-        val list: ArrayList<ListItem>
         newsRepository = NewsRepository(activity!!.applicationContext)
+        newsRepository.setOnCallbackListener(this)
         val isFav = arguments?.getBoolean(ARG_NAME)
         listRecyclerView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-        if (!isFav!!)
+
+        if (!isFav!!) {
             loadNews()
-        else
+            observable.subscribe { it ->
+                mAdapter = NewsAdapter(it, clickOnNewsCallback)
+                listRecyclerView.adapter = mAdapter
+            }
+        } else {
             loadFavoriteNews()
-
-
-//        mAdapter = NewsAdapter(list,callbacks)
-
+            fObservable.subscribe { it ->
+                mAdapter = NewsAdapter(it, clickOnNewsCallback)
+                listRecyclerView.adapter = mAdapter
+            }
+        }
     }
 
     fun loadNews() {
         observable = newsRepository.getAllNews()
-            .map { DateUtils().reformateItem(it) }
+            .map {
+                DateUtils().reformateItem(it)
+            }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { it ->
-                setAdapter(it)
-                Log.d("TAG1", "news" + it.size.toString())
-            }
     }
 
+
     fun setAdapter(news: List<ListItem>) {
-        mAdapter = NewsAdapter(news, callbacks)
+        mAdapter = NewsAdapter(news, clickOnNewsCallback)
         listRecyclerView.adapter = mAdapter
     }
 
     fun loadFavoriteNews() {
         fObservable = newsRepository.getAllFavoriteIds()
             .flatMap { it ->
-                newsRepository.getAllFavoriteNews(it)}
+                newsRepository.getAllFavoriteNews(it)
+            }
             .map { DateUtils().reformateItem(it) }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { it ->
-                setAdapter(it)
-                Log.d("TAG1", "fav" + it.size.toString())
-            }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        observable.dispose()
-        fObservable.dispose()
     }
 
-    override fun onResume() {
-        super.onResume()
-    }
+//    override fun onResume() {
+//        super.onResume()
+//        val isFav = arguments?.getBoolean(ARG_NAME)
+//        if (!isFav!!)
+//            loadNews()
+//        else
+//            loadFavoriteNews()
+//    }
 }
 
 

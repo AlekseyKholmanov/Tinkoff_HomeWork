@@ -16,13 +16,13 @@ class NewsViewHolder internal constructor(var v: View) : RecyclerView.ViewHolder
 
     fun bind(
         news: News,
-        callbacks: ListFragment.Callbacks?
+        clickOnNewsCallback: ListFragment.ClickOnNewsCallback?
     ) {
         theme.text = news.theme
         date = DateUtils().formatDate(news.date)
         content.text = news.content
         v.setOnClickListener {
-            callbacks?.onItemClicked(v, news)
+            clickOnNewsCallback?.onItemClicked(v, news)
         }
     }
 }

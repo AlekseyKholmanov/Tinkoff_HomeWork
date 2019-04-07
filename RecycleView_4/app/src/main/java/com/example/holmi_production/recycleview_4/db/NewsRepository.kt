@@ -2,18 +2,11 @@ package com.example.holmi_production.recycleview_4.db
 
 import android.content.Context
 import android.os.AsyncTask
-import android.support.v7.widget.RecyclerView
 import com.example.holmi_production.recycleview_4.db.dao.FavoriteNewsDao
 import com.example.holmi_production.recycleview_4.db.dao.NewsDao
 import com.example.holmi_production.recycleview_4.db.entity.FavoriteNews
 import com.example.holmi_production.recycleview_4.db.entity.News
-import io.reactivex.Observable
-import io.reactivex.ObservableOnSubscribe
-import io.reactivex.Scheduler
 import io.reactivex.Single
-import io.reactivex.functions.Consumer
-import io.reactivex.schedulers.Schedulers
-import java.util.*
 
 
 public class NewsRepository(context: Context) {
@@ -22,12 +15,12 @@ public class NewsRepository(context: Context) {
     private val db: NewsDatabase = NewsDatabase.getInstance(context)!!
     private val newsDao: NewsDao
     private val favoriteNewsDao: FavoriteNewsDao
-    interface Callback{
-        fun onUpdateData(list:List<FavoriteNews>)
+    interface UpdateFavorite{
+        fun onUpdateData()
     }
-    private var callback:Callback?  = null
+    private var callback:UpdateFavorite?  = null
 
-    fun setOnCallbackListener(callback: Callback){
+    fun setOnCallbackListener(callback: UpdateFavorite){
         this.callback = callback
     }
     init {
@@ -41,10 +34,12 @@ public class NewsRepository(context: Context) {
 
     fun insertFavoriteNews(news: FavoriteNews) {
         InsertFavoriteNewsAsyncTask(favoriteNewsDao).execute(news)
+        callback!!.onUpdateData()
     }
 
     fun deleteFavotiteNews(newsId: Int) {
         DeleteFavoriteNewsAsynkTask(favoriteNewsDao).execute(newsId)
+        callback!!.onUpdateData()
     }
 
     fun deleteAll() {

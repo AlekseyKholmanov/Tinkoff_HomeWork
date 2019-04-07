@@ -43,7 +43,6 @@ class NewsActivity : AppCompatActivity() {
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.activity_item_menu, menu)
-
         var favoriteIcon = if (isFavorite!!) favoriteIcon else nonFavoriteIcon
         menu.getItem(0).icon = ContextCompat.getDrawable(this, favoriteIcon)
         return true
@@ -51,8 +50,6 @@ class NewsActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         var favNews = FavoriteNews(null, news.id!!)
-
-
         if (isFavorite) {
             item!!.icon = ContextCompat.getDrawable(this, R.drawable.favorite_none)
             newsRepository.deleteFavotiteNews(news.id!!)

@@ -6,6 +6,7 @@ import android.arch.persistence.room.*
 import android.arch.persistence.room.OnConflictStrategy.REPLACE
 import android.support.annotation.Nullable
 import com.example.holmi_production.recycleview_4.db.entity.FavoriteNews
+import io.reactivex.Completable
 import io.reactivex.Single
 
 @Dao
@@ -22,7 +23,7 @@ public interface FavoriteNewsDao{
     @Insert(onConflict = REPLACE)
     fun insert(favoriteNews: FavoriteNews)
 
-    @Query("Delete From favoritenews WHERE newsId=:newsId")
+    @Query("Delete from favoritenews where newsId=:newsId ")
     fun delete(newsId: Int)
 
     @Query("DELETE FROM favoritenews")

@@ -19,7 +19,6 @@ import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.fragment_list.*
 import java.util.ArrayList
 
@@ -34,8 +33,6 @@ class ListFragment : Fragment(), NewsRepository.UpdateFavorite {
     }
 
     companion object {
-        var subject: PublishSubject<Void> = PublishSubject.create()
-
         private const val ARG_NAME = "isFavorite"
         @JvmStatic
         fun newInstance(isFavorite: Boolean): ListFragment {
@@ -85,7 +82,7 @@ class ListFragment : Fragment(), NewsRepository.UpdateFavorite {
         listRecyclerView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
     }
 
-    private fun getNews() {
+    private fun setNewsToAdapter() {
         observable = loadNews()
             .subscribe { it ->
                 mAdapter = NewsAdapter(it, clickOnNewsCallback)
@@ -93,7 +90,7 @@ class ListFragment : Fragment(), NewsRepository.UpdateFavorite {
             }
     }
 
-    private fun getFavoriteNews() {
+    private fun setFavoriteNewsToAdapter() {
         fObservable = loadFavoriteNews().subscribe { it ->
             mAdapter = NewsAdapter(it, clickOnNewsCallback)
             listRecyclerView.adapter = mAdapter
@@ -119,25 +116,24 @@ class ListFragment : Fragment(), NewsRepository.UpdateFavorite {
             .observeOn(AndroidSchedulers.mainThread())
     }
 
-    private fun setNewsTOFragment() {
+    private fun setNewsToFragment() {
         val isFav = arguments?.getBoolean(ARG_NAME)
         if (!isFav!!) {
-            getNews()
+            setNewsToAdapter()
         } else {
-            getFavoriteNews()
+            setFavoriteNewsToAdapter()
         }
     }
 
     override fun onResume() {
         super.onResume()
         //обновление и сэт данных во фрагменты
-        RxBus.publish(setNewsTOFragment())
+        RxBus.publish(setNewsToFragment())
         Log.d("TAG1", "resume")
     }
 
     override fun onDestroy() {
         super.onDestroy()
-
         Log.d("TAG1", "destroy")
     }
 }

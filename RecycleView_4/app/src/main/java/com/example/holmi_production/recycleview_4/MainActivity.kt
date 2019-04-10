@@ -40,6 +40,7 @@ class MainActivity : AppCompatActivity(), ListFragment.ClickOnNewsCallback {
         adapter.addFragment(ListFragment(), lastPageName)
         adapter.addFragment(ListFragment(), favPageName)
         viewPager.adapter = adapter
+
     }
 
     override fun onItemClicked(v: View, news: News) {

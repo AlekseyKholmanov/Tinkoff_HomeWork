@@ -16,7 +16,7 @@ import com.example.holmi_production.recycleview_4.utils.DateUtils
 
 @Database(entities = [News::class, FavoriteNews::class], version = 3, exportSchema = false)
 @TypeConverters(DateConverter::class)
-public abstract class NewsDatabase : RoomDatabase() {
+abstract class NewsDatabase : RoomDatabase() {
 
     abstract fun newsDao(): NewsDao
     abstract fun favoriteNewsDao(): FavoriteNewsDao

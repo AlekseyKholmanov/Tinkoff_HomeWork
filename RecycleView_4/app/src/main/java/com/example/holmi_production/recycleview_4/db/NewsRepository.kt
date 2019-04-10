@@ -1,7 +1,6 @@
 package com.example.holmi_production.recycleview_4.db
 
 import android.content.Context
-import android.os.AsyncTask
 import com.example.holmi_production.recycleview_4.db.dao.FavoriteNewsDao
 import com.example.holmi_production.recycleview_4.db.dao.NewsDao
 import com.example.holmi_production.recycleview_4.db.entity.FavoriteNews
@@ -9,11 +8,10 @@ import com.example.holmi_production.recycleview_4.db.entity.News
 import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Single
-import io.reactivex.functions.Action
 import io.reactivex.schedulers.Schedulers
 
 
-public class NewsRepository(context: Context) {
+class NewsRepository(context: Context) {
 
 
     private val db: NewsDatabase = NewsDatabase.getInstance(context)!!

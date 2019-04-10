@@ -6,20 +6,13 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Adapter
 import android.widget.TextView
 import android.widget.Toast
-import com.example.holmi_production.recycleview_4.Adapters.NewsAdapter
 import com.example.holmi_production.recycleview_4.db.NewsRepository
 import com.example.holmi_production.recycleview_4.db.entity.FavoriteNews
-import com.example.holmi_production.recycleview_4.db.entity.News
 import com.example.holmi_production.recycleview_4.utils.DateUtils
-import io.reactivex.Completable
-import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import io.reactivex.functions.Consumer
-import io.reactivex.schedulers.Schedulers
 
 class NewsActivity : AppCompatActivity() {
 
@@ -96,6 +89,7 @@ class NewsActivity : AppCompatActivity() {
             isFavorite = true
             Toast.makeText(this, "добавлено", Toast.LENGTH_SHORT).show()
         }
+        RxBus.listen(NewsActivity::class.java).subscribe()
         return true
     }
 }

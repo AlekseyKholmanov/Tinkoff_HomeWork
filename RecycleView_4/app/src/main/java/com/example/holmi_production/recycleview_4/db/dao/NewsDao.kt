@@ -13,7 +13,7 @@ import io.reactivex.Single
 public interface NewsDao{
     @Nullable
     @Query("SELECT * FROM news WHERE id=:idToSelect")
-    fun getNewsById(idToSelect: Int): News
+    fun getNewsById(idToSelect: Int): Single<News>
 
     @Query("Select * from news where id in (:newsIds)")
     fun getNewsByIds(newsIds:Array<Int>):Single<List<News>>

@@ -7,6 +7,7 @@ import android.arch.persistence.room.OnConflictStrategy.REPLACE
 import android.support.annotation.Nullable
 import com.example.holmi_production.recycleview_4.db.entity.FavoriteNews
 import io.reactivex.Completable
+import io.reactivex.Maybe
 import io.reactivex.Single
 
 @Dao
@@ -18,7 +19,7 @@ public interface FavoriteNewsDao{
 
     @Nullable
     @Query("select * from favoritenews where newsId=:newsId")
-    fun getNewsById(newsId: Int):FavoriteNews?
+    fun getNewsById(newsId: Int):Maybe<FavoriteNews>
 
     @Insert(onConflict = REPLACE)
     fun insert(favoriteNews: FavoriteNews)

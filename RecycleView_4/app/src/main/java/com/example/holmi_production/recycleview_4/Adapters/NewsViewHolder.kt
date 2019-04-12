@@ -1,5 +1,6 @@
 package com.example.holmi_production.recycleview_4.Adapters
 
+import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.TextView
@@ -24,6 +25,7 @@ class NewsViewHolder internal constructor(var v: View) : RecyclerView.ViewHolder
         v.setOnClickListener {
             clickOnNewsCallback?.onItemClicked(v, news)
         }
+
     }
 }
  class HeaderViewHolder internal constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {

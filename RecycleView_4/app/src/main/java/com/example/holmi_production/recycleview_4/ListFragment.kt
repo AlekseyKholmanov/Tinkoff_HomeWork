@@ -102,7 +102,6 @@ class ListFragment : Fragment(), NewsRepository.UpdateFavorite {
             .map {
                 DateUtils().reformateItem(it)
             }
-            .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }
 
@@ -112,7 +111,6 @@ class ListFragment : Fragment(), NewsRepository.UpdateFavorite {
                 newsRepository.getAllFavoriteNews(it)
             }
             .map { DateUtils().reformateItem(it) }
-            .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }
 

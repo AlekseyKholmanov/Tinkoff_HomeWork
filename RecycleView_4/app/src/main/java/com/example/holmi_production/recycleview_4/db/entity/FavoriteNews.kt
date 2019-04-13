@@ -9,5 +9,5 @@ data class FavoriteNews(
     @PrimaryKey(autoGenerate = true)
     var id: Int?,
     @ColumnInfo
-    var newsId:Int
+    var newsId: Int
 )

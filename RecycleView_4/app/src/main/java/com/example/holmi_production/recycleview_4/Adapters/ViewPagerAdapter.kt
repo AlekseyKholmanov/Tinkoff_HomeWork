@@ -15,7 +15,7 @@ class ViewPagerAdapter(fm: FragmentManager?) : FragmentStatePagerAdapter(fm) {
     }
 
     override fun getItem(position: Int): ListFragment {
-        return ListFragment.newInstance(position!=0)
+        return ListFragment.newInstance(position != 0)
     }
 
     override fun getPageTitle(position: Int): CharSequence? {

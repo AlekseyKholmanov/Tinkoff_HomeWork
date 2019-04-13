@@ -3,7 +3,7 @@ package com.example.holmi_production.recycleview_4.Converter
 import android.arch.persistence.room.TypeConverter
 import java.util.*
 
-class DateConverter{
+class DateConverter {
 
     @TypeConverter
     fun fromTimestamp(value: Long?): Date? {

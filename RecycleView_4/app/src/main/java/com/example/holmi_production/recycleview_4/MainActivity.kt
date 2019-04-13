@@ -12,8 +12,6 @@ import com.example.holmi_production.recycleview_4.Adapters.ViewPagerAdapter
 import com.example.holmi_production.recycleview_4.db.entity.News
 
 
-
-
 class MainActivity : AppCompatActivity(), ListFragment.ClickOnNewsCallback {
 
     companion object {

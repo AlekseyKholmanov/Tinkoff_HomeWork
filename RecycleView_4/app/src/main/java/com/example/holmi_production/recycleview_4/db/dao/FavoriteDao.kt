@@ -6,9 +6,9 @@ import com.example.holmi_production.recycleview_4.db.entity.News
 import io.reactivex.Single
 
 @Dao
-interface FavoriteDao{
+interface FavoriteDao {
 
     @Query("Select news.id, news.theme, news.date, news.content FROM news, favoriteNews WHERE news.id== favoriteNews.newsId")
-    fun getFavorite():Single<List<News>>
+    fun getFavorite(): Single<List<News>>
 
 }

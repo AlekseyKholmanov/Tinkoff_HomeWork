@@ -21,7 +21,7 @@ abstract class NewsDatabase : RoomDatabase() {
 
     abstract fun newsDao(): NewsDao
     abstract fun favoriteNewsDao(): FavoriteNewsDao
-    abstract fun favorite():FavoriteDao
+    abstract fun favorite(): FavoriteDao
 
 
     companion object {
@@ -82,8 +82,8 @@ abstract class NewsDatabase : RoomDatabase() {
                 )
                 newsDao.insert(news)
             }
-            favoriteNewsDao.insert(FavoriteNews(null,24))
-            favoriteNewsDao.insert(FavoriteNews(null,20))
+            favoriteNewsDao.insert(FavoriteNews(null, 24))
+            favoriteNewsDao.insert(FavoriteNews(null, 20))
             favoriteNewsDao.insert(FavoriteNews(null, 8))
         }
     }

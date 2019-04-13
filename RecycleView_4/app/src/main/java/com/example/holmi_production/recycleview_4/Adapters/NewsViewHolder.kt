@@ -28,7 +28,8 @@ class NewsViewHolder internal constructor(var v: View) : RecyclerView.ViewHolder
 
     }
 }
- class HeaderViewHolder internal constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+class HeaderViewHolder internal constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     internal var txt_header: TextView = itemView.findViewById(R.id.txt_header)
 

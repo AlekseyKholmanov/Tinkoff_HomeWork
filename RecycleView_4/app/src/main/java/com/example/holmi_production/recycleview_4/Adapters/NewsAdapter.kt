@@ -12,8 +12,8 @@ import com.example.holmi_production.recycleview_4.utils.DateUtils
 
 
 class NewsAdapter(
-    private val listItem: List<ListItem>?,
-    private var clickOnNewsCallback: ClickOnNewsCallback?
+    private var listItem: List<ListItem> = listOf(),
+    private var clickOnNewsCallback: ClickOnNewsCallback? = null
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -31,16 +31,21 @@ class NewsAdapter(
         }
     }
 
-    override fun getItemCount(): Int = listItem!!.size
+    fun setNews(news: List<ListItem>) {
+        this.listItem = news
+        notifyDataSetChanged()
+    }
+
+    override fun getItemCount(): Int = listItem.size
 
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
-        var viewType = getItemViewType(position)
+        val viewType = getItemViewType(position)
         val currentDay = DateUtils.currentDay
         when (viewType) {
             ListItem.TYPE_HEADER -> {
                 var headerItem = listItem?.get(position) as HeaderItem
                 val viewHolder = viewHolder as HeaderViewHolder
-                var dateText = when (headerItem.date) {
+                val dateText = when (headerItem.date) {
                     DateUtils().buildDate(currentDay) -> {
                         "Сегодня"
                     }

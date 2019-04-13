@@ -1,6 +1,7 @@
 package com.example.holmi_production.recycleview_4.db
 
 import android.content.Context
+import com.example.holmi_production.recycleview_4.db.dao.FavoriteDao
 import com.example.holmi_production.recycleview_4.db.dao.FavoriteNewsDao
 import com.example.holmi_production.recycleview_4.db.dao.NewsDao
 import com.example.holmi_production.recycleview_4.db.entity.FavoriteNews
@@ -17,6 +18,7 @@ class NewsRepository(context: Context) {
     private val db: NewsDatabase = NewsDatabase.getInstance(context)!!
     private val newsDao: NewsDao
     private val favoriteNewsDao: FavoriteNewsDao
+    private val fNews: FavoriteDao
 
     interface UpdateFavorite {
         fun onUpdateData()
@@ -31,16 +33,18 @@ class NewsRepository(context: Context) {
     init {
         newsDao = db.newsDao()
         favoriteNewsDao = db.favoriteNewsDao()
+        fNews = db.favorite()
+
     }
 
-    fun insertFavoriteNews(news: FavoriteNews):Completable {
-        return Completable.fromCallable { favoriteNewsDao.insert(news)}
+    fun insertFavoriteNews(news: FavoriteNews): Completable {
+        return Completable.fromCallable { favoriteNewsDao.insert(news) }
             .subscribeOn(Schedulers.io())
     }
 
-    fun deleteFavotiteNews(newsId: Int):Completable {
-       return Completable.fromCallable { favoriteNewsDao.delete(newsId) }
-           .subscribeOn(Schedulers.io())
+    fun deleteFavotiteNews(newsId: Int): Completable {
+        return Completable.fromCallable { favoriteNewsDao.delete(newsId) }
+            .subscribeOn(Schedulers.io())
         //callback!!.onUpdateData()
     }
 
@@ -49,8 +53,8 @@ class NewsRepository(context: Context) {
             .subscribeOn(Schedulers.io())
     }
 
-    fun getAllFavoriteNews(ids: Array<Int>): Single<List<News>> {
-        return newsDao.getNewsByIds(ids)
+    fun getAllFavoriteNews(): Single<List<News>> {
+        return fNews.getFavorite()
             .subscribeOn(Schedulers.io())
     }
 

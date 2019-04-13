@@ -8,6 +8,7 @@ import android.arch.persistence.room.TypeConverters
 import android.content.Context
 import android.os.AsyncTask
 import com.example.holmi_production.recycleview_4.Converter.DateConverter
+import com.example.holmi_production.recycleview_4.db.dao.FavoriteDao
 import com.example.holmi_production.recycleview_4.db.dao.FavoriteNewsDao
 import com.example.holmi_production.recycleview_4.db.dao.NewsDao
 import com.example.holmi_production.recycleview_4.db.entity.FavoriteNews
@@ -20,6 +21,7 @@ abstract class NewsDatabase : RoomDatabase() {
 
     abstract fun newsDao(): NewsDao
     abstract fun favoriteNewsDao(): FavoriteNewsDao
+    abstract fun favorite():FavoriteDao
 
 
     companion object {

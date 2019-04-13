@@ -18,7 +18,6 @@ import com.example.holmi_production.recycleview_4.utils.DateUtils
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_list.*
 import java.util.ArrayList
 
@@ -46,7 +45,6 @@ class ListFragment : Fragment(), NewsRepository.UpdateFavorite {
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-
         Log.d("TAG1", "attach")
         clickOnNewsCallback = requireActivity() as ClickOnNewsCallback
     }
@@ -60,7 +58,6 @@ class ListFragment : Fragment(), NewsRepository.UpdateFavorite {
     private lateinit var newsRepository: NewsRepository
     private var clickOnNewsCallback: ClickOnNewsCallback? = null
     private lateinit var observable: Disposable
-    private lateinit var fObservable: Disposable
     lateinit var mAdapter: NewsAdapter
 
     override fun onCreateView(
@@ -78,55 +75,33 @@ class ListFragment : Fragment(), NewsRepository.UpdateFavorite {
         super.onActivityCreated(savedInstanceState)
         newsRepository = NewsRepository(activity!!.applicationContext)
         newsRepository.setOnCallbackListener(this)
-
+        mAdapter = NewsAdapter(clickOnNewsCallback = clickOnNewsCallback)
+        setNewsToAdapter()
+        listRecyclerView.adapter = mAdapter
         listRecyclerView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
     }
 
     private fun setNewsToAdapter() {
         observable = loadNews()
             .subscribe { it ->
-                mAdapter = NewsAdapter(it, clickOnNewsCallback)
-                listRecyclerView.adapter = mAdapter
+                mAdapter.setNews(it)
             }
     }
 
-    private fun setFavoriteNewsToAdapter() {
-        fObservable = loadFavoriteNews().subscribe { it ->
-            mAdapter = NewsAdapter(it, clickOnNewsCallback)
-            listRecyclerView.adapter = mAdapter
+    private fun loadNews(): Single<ArrayList<ListItem>> {
+        val action: Single<List<News>> = if (fragmentManager!!.fragments[0] == this)
+            newsRepository.getAllNews()
+        else {
+            newsRepository.getAllFavoriteNews()
         }
-    }
-
-    private fun loadNews(): Single<java.util.ArrayList<ListItem>> {
-        return newsRepository.getAllNews()
-            .map {
-                DateUtils().reformateItem(it)
-            }
+        return action.map { DateUtils().reformateItem(it) }
             .observeOn(AndroidSchedulers.mainThread())
-    }
-
-    private fun loadFavoriteNews(): Single<ArrayList<ListItem>> {
-        return newsRepository.getAllFavoriteIds()
-            .flatMap { it ->
-                newsRepository.getAllFavoriteNews(it)
-            }
-            .map { DateUtils().reformateItem(it) }
-            .observeOn(AndroidSchedulers.mainThread())
-    }
-
-    private fun setNewsToFragment() {
-        val isFav = arguments?.getBoolean(ARG_NAME)
-        if (!isFav!!) {
-            setNewsToAdapter()
-        } else {
-            setFavoriteNewsToAdapter()
-        }
     }
 
     override fun onResume() {
         super.onResume()
         //обновление и сэт данных во фрагменты
-        RxBus.publish(setNewsToFragment())
+        setNewsToAdapter()
         Log.d("TAG1", "resume")
     }
 

@@ -11,7 +11,7 @@ import io.reactivex.Maybe
 import io.reactivex.Single
 
 @Dao
-public interface FavoriteNewsDao{
+interface FavoriteNewsDao{
 
     @Nullable
     @Query("select newsId from favoritenews")

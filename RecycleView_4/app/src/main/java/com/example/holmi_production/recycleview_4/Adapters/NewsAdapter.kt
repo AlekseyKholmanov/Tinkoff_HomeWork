@@ -43,8 +43,8 @@ class NewsAdapter(
         val currentDay = DateUtils.currentDay
         when (viewType) {
             ListItem.TYPE_HEADER -> {
-                var headerItem = listItem?.get(position) as HeaderItem
-                val viewHolder = viewHolder as HeaderViewHolder
+                val headerItem = listItem[position] as HeaderItem
+                val holder = viewHolder as HeaderViewHolder
                 val dateText = when (headerItem.date) {
                     DateUtils().buildDate(currentDay) -> {
                         "Сегодня"
@@ -56,10 +56,10 @@ class NewsAdapter(
                         DateUtils().formatDate(headerItem.date)
                     }
                 }
-                viewHolder.txt_header.text = dateText
+                holder.txt_header.text = dateText
             }
             ListItem.TYPE_NEWS -> {
-                var newsItem = listItem?.get(position) as NewsItem
+                val newsItem = listItem[position] as NewsItem
                 val viewHolder1 = viewHolder as NewsViewHolder
 
                 viewHolder1.bind(newsItem.content, clickOnNewsCallback)
@@ -68,7 +68,7 @@ class NewsAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        return listItem?.get(position)!!.getType()
+        return listItem[position].getType()
     }
 }
 

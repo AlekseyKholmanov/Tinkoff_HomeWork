@@ -18,7 +18,7 @@ interface FavoriteNewsDao{
     fun getAllFavoriteIds(): Single<Array<Int>>
 
     @Nullable
-    @Query("select * from favoritenews where newsId=:newsId")
+    @Query("select * from favoritenews where newsId Like :newsId")
     fun getNewsById(newsId: Int):Maybe<FavoriteNews>
 
     @Insert(onConflict = REPLACE)

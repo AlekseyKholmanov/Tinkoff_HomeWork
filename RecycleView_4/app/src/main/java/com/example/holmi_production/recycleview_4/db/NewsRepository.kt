@@ -7,6 +7,7 @@ import com.example.holmi_production.recycleview_4.db.dao.NewsDao
 import com.example.holmi_production.recycleview_4.db.entity.FavoriteNews
 import com.example.holmi_production.recycleview_4.db.entity.News
 import io.reactivex.Completable
+import io.reactivex.Flowable
 import io.reactivex.Maybe
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
@@ -19,16 +20,6 @@ class NewsRepository(context: Context) {
     private val newsDao: NewsDao
     private val favoriteNewsDao: FavoriteNewsDao
     private val fNews: FavoriteDao
-
-    interface UpdateFavorite {
-        fun onUpdateData()
-    }
-
-    private var callback: UpdateFavorite? = null
-
-    fun setOnCallbackListener(callback: UpdateFavorite) {
-        this.callback = callback
-    }
 
     init {
         newsDao = db.newsDao()
@@ -45,21 +36,15 @@ class NewsRepository(context: Context) {
     fun deleteFavotiteNews(newsId: Int): Completable {
         return Completable.fromCallable { favoriteNewsDao.delete(newsId) }
             .subscribeOn(Schedulers.io())
-        //callback!!.onUpdateData()
     }
 
-    fun getAllNews(): Single<List<News>> {
+    fun getAllNews(): Flowable<List<News>> {
         return newsDao.getAll()
             .subscribeOn(Schedulers.io())
     }
 
-    fun getAllFavoriteNews(): Single<List<News>> {
+    fun getAllFavoriteNews(): Flowable<List<News>> {
         return fNews.getFavorite()
-            .subscribeOn(Schedulers.io())
-    }
-
-    fun getAllFavoriteIds(): Single<Array<Int>> {
-        return favoriteNewsDao.getAllFavoriteIds()
             .subscribeOn(Schedulers.io())
     }
 

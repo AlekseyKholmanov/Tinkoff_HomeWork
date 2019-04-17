@@ -6,26 +6,23 @@ import android.support.v4.app.FragmentStatePagerAdapter
 import com.example.holmi_production.recycleview_4.ListFragment
 
 class ViewPagerAdapter(fm: FragmentManager?) : FragmentStatePagerAdapter(fm) {
+    override fun getItem(position: Int): Fragment {
+        return ListFragment.newInstance(position != 0)
+    }
 
-    private val mFragmentList = ArrayList<Fragment>()
     private val mFragmentTitleList = ArrayList<String>()
 
     override fun getCount(): Int {
-        return mFragmentList.size
+        return mFragmentTitleList.size
     }
 
-    override fun getItem(position: Int): ListFragment {
-        return ListFragment.newInstance(position != 0)
-    }
 
     override fun getPageTitle(position: Int): CharSequence? {
         return mFragmentTitleList[position]
     }
 
-    fun addFragment(fragment: Fragment, title: String) {
-
-        mFragmentList.add(fragment)
+    fun addPageTitle(title: String) {
         mFragmentTitleList.add(title)
-
     }
+
 }

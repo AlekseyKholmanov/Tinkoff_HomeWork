@@ -62,7 +62,7 @@ class DateUtils {
     }
 
      fun setHeader(events: Map<Date, List<News>>): ArrayList<ListItem> {
-        var news: ArrayList<ListItem> = arrayListOf()
+        val news: ArrayList<ListItem> = arrayListOf()
         for (date in events.keys) {
             val header = HeaderItem(date)
             news.add(header)

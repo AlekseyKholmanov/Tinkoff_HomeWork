@@ -15,33 +15,33 @@ import com.example.holmi_production.recycleview_4.NewsItems.ListItem
 import com.example.holmi_production.recycleview_4.db.NewsRepository
 import com.example.holmi_production.recycleview_4.db.entity.News
 import com.example.holmi_production.recycleview_4.utils.DateUtils
+import io.reactivex.Flowable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
+import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_list.*
 import java.util.ArrayList
 
 
-class ListFragment : Fragment(), NewsRepository.UpdateFavorite {
-    override fun onUpdateData() {
-        Log.d("TAG1", "dataUpdate")
-    }
+class ListFragment : Fragment() {
+
 
     interface ClickOnNewsCallback {
         fun onItemClicked(v: View, news: News)
     }
 
     companion object {
-        private const val ARG_NAME = "isFavorite"
+        private const val ARG_FAVORITE = "isFavorite"
         @JvmStatic
         fun newInstance(isFavorite: Boolean): ListFragment {
             val args = Bundle()
-            args.putBoolean(ARG_NAME, isFavorite)
+            args.putBoolean(ARG_FAVORITE, isFavorite)
             val fragment = ListFragment()
             fragment.arguments = args
             return fragment
         }
     }
+
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -52,13 +52,15 @@ class ListFragment : Fragment(), NewsRepository.UpdateFavorite {
     override fun onDetach() {
         Log.d("TAG1", "detach")
         super.onDetach()
+        compositeDisposable.dispose()
         clickOnNewsCallback = null
     }
 
     private lateinit var newsRepository: NewsRepository
     private var clickOnNewsCallback: ClickOnNewsCallback? = null
-    private lateinit var observable: Disposable
-    lateinit var mAdapter: NewsAdapter
+    private lateinit var mAdapter: NewsAdapter
+    private val compositeDisposable = CompositeDisposable()
+    private var isFavorite:Boolean? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -71,43 +73,38 @@ class ListFragment : Fragment(), NewsRepository.UpdateFavorite {
         return view
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onActivityCreated(bundle: Bundle?) {
         newsRepository = NewsRepository(activity!!.applicationContext)
-        newsRepository.setOnCallbackListener(this)
         mAdapter = NewsAdapter(clickOnNewsCallback = clickOnNewsCallback)
+
         setNewsToAdapter()
         listRecyclerView.adapter = mAdapter
         listRecyclerView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+        super.onActivityCreated(bundle)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        isFavorite= arguments?.getBoolean(ARG_FAVORITE)
+        super.onCreate(savedInstanceState)
     }
 
     private fun setNewsToAdapter() {
-        observable = loadNews()
+        compositeDisposable.add(loadNews()
             .subscribe { it ->
                 mAdapter.setNews(it)
+                mAdapter.notifyDataSetChanged()
             }
+        )
     }
 
-    private fun loadNews(): Single<ArrayList<ListItem>> {
-        val action: Single<List<News>> = if (fragmentManager!!.fragments[0] == this)
+    private fun loadNews(): Flowable<ArrayList<ListItem>> {
+        val action: Flowable<List<News>> = if (!isFavorite!!)
             newsRepository.getAllNews()
         else {
             newsRepository.getAllFavoriteNews()
         }
         return action.map { DateUtils().reformateItem(it) }
             .observeOn(AndroidSchedulers.mainThread())
-    }
-
-    override fun onResume() {
-        super.onResume()
-        //обновление и сэт данных во фрагменты
-        setNewsToAdapter()
-        Log.d("TAG1", "resume")
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d("TAG1", "destroy")
     }
 }
 

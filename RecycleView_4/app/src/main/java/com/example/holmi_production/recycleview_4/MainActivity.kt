@@ -35,8 +35,8 @@ class MainActivity : AppCompatActivity(), ListFragment.ClickOnNewsCallback {
         val lastPageName = resources.getString(R.string.lastPageName)
         val favPageName = resources.getString(R.string.favoritePageName)
 
-        adapter.addFragment(ListFragment(), lastPageName)
-        adapter.addFragment(ListFragment(), favPageName)
+        adapter.addPageTitle(lastPageName)
+        adapter.addPageTitle(favPageName)
         viewPager.adapter = adapter
 
     }
@@ -46,7 +46,6 @@ class MainActivity : AppCompatActivity(), ListFragment.ClickOnNewsCallback {
         val intent = Intent(v.context, NewsActivity::class.java).apply {
             putExtra(ARG_ID, news.id)
         }
-
         ContextCompat.startActivity(v.context, intent, null)
     }
 

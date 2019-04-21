@@ -1,14 +1,15 @@
 package com.example.holmi_production.recycleview_4.db.Network
 
 import com.example.holmi_production.recycleview_4.db.entity.News
+import io.reactivex.Single
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface NewsApi{
+interface ApiService{
     @GET("news")
-    fun getNews():Call<List<News>>
+    fun getNews():Single<List<News>>
 
     @GET("news_content?")
-    fun getNewsById(@Query("id") newsId:Int):Call<News>
+    fun getNewsById(@Query("id") newsId:Int):Single<News>
 }

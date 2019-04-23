@@ -35,19 +35,19 @@ class NewsActivity : AppCompatActivity() {
         newsRepository = NewsRepository(applicationContext)
         val content = findViewById<TextView>(R.id.activity_content)
         val date = findViewById<TextView>(R.id.activity_date)
-        compositeDisposable.add(newsRepository.getNewsById(newsId!!)
+        compositeDisposable.add(newsRepository.getNewsFromNetworkById(newsId!!)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { it ->
-                title = it.theme
-                content.text = it.content
-                date.text = DateUtils().formatDate(it.date.timeInMilliseconds)
+                title = it.newsItem.newsHeader.theme
+                content.text = it.newsItem.content
+                date.text = DateUtils().formatDate(it.newsItem.newsHeader.date.timeInMilliseconds)
             })
-        compositeDisposable.add(
-            newsRepository.getFavoriteNewsById(newsId!!)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { it ->
-                    isFavorite = it != null
-                })
+//        compositeDisposable.add(
+//            newsRepository.getFavoriteNewsById(newsId!!)
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe { it ->
+//                    isFavorite = it != null
+//                })
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {

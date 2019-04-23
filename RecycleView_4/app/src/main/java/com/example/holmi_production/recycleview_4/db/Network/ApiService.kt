@@ -10,5 +10,5 @@ interface ApiService{
     fun getNews():Single<NewsObject>
 
     @GET("news_content?")
-    fun getNewsById(@Query("id") newsId:Int):Single<News>
+    fun getNewsById(@Query("id") newsId:Int):Single<SingleNews>
 }

@@ -1,6 +1,7 @@
 package com.example.holmi_production.recycleview_4
 
 import android.content.Context
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.DividerItemDecoration
@@ -61,7 +62,7 @@ class ListFragment : Fragment() {
     private var clickOnNewsCallback: ClickOnNewsCallback? = null
     private lateinit var mAdapter: NewsAdapter
     private val compositeDisposable = CompositeDisposable()
-    private var isFavorite:Boolean? = null
+    private var isFavorite: Boolean? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -77,21 +78,27 @@ class ListFragment : Fragment() {
     override fun onActivityCreated(bundle: Bundle?) {
         newsRepository = NewsRepository(activity!!.applicationContext)
         mAdapter = NewsAdapter(clickOnNewsCallback = clickOnNewsCallback)
-
-        setNewsToAdapter()
+        if (!isNetworkConnection()) {
+            Log.d("qwerty1", "internetama")
+        } else {
+            setNewsToAdapter()
+        }
         listRecyclerView.adapter = mAdapter
         listRecyclerView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
         super.onActivityCreated(bundle)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        isFavorite= arguments?.getBoolean(ARG_FAVORITE)
+        isFavorite = arguments?.getBoolean(ARG_FAVORITE)
         super.onCreate(savedInstanceState)
     }
 
     private fun setNewsToAdapter() {
         compositeDisposable.add(loadNewsFromNetwork()
-            .map { t-> DateUtils().reformateItem(t.news)}
+            .map { t ->
+                Log.d("qwerty1", t.news.size.toString())
+                DateUtils().reformateItem(t.news)
+            }
             .subscribe { it ->
                 mAdapter.setNews(it)
                 mAdapter.notifyDataSetChanged()
@@ -99,7 +106,13 @@ class ListFragment : Fragment() {
         )
     }
 
-    private fun loadNewsFromNetwork():Single<NewsObject>{
+    private fun isNetworkConnection(): Boolean {
+        val cm = context!!.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val netInfo = cm.activeNetworkInfo
+        return netInfo != null && netInfo.isConnected
+    }
+
+    private fun loadNewsFromNetwork(): Single<NewsObject> {
         return newsRepository.getNewsFromNetwork()
             .observeOn(AndroidSchedulers.mainThread())
     }

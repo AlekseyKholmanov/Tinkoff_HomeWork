@@ -20,7 +20,7 @@ class NewsViewHolder internal constructor(var v: View) : RecyclerView.ViewHolder
         clickOnNewsCallback: ListFragment.ClickOnNewsCallback?
     ) {
         theme.text = news.theme
-        date = DateUtils().formatDate(news.date)
+        date = DateUtils().formatDate(news.date.timeInMilliseconds)
         content.text = news.content
         v.setOnClickListener {
             clickOnNewsCallback?.onItemClicked(v, news)

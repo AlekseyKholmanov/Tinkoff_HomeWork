@@ -1,9 +1,13 @@
 package com.example.holmi_production.recycleview_4
 
+import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.Network
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.content.ContextCompat
+import android.support.v4.net.ConnectivityManagerCompat
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
@@ -30,6 +34,8 @@ class MainActivity : AppCompatActivity(), ListFragment.ClickOnNewsCallback {
 
     }
 
+
+
     private fun setupViewPager(viewPager: ViewPager) {
         val adapter = ViewPagerAdapter(supportFragmentManager)
         val lastPageName = resources.getString(R.string.lastPageName)
@@ -44,7 +50,7 @@ class MainActivity : AppCompatActivity(), ListFragment.ClickOnNewsCallback {
     override fun onItemClicked(v: View, news: News) {
         Log.d("RecyclerView", "CLICK!")
         val intent = Intent(v.context, NewsActivity::class.java).apply {
-            putExtra(ARG_ID, news.id)
+            putExtra(ARG_ID, news.newsId)
         }
         ContextCompat.startActivity(v.context, intent, null)
     }

@@ -4,6 +4,7 @@ import android.content.Context
 import com.example.holmi_production.recycleview_4.db.Network.ApiClient
 import com.example.holmi_production.recycleview_4.db.Network.ApiService
 import com.example.holmi_production.recycleview_4.db.Network.NewsObject
+import com.example.holmi_production.recycleview_4.db.Network.SingleNews
 import com.example.holmi_production.recycleview_4.db.dao.FavoriteDao
 import com.example.holmi_production.recycleview_4.db.dao.FavoriteNewsDao
 import com.example.holmi_production.recycleview_4.db.dao.NewsDao
@@ -14,7 +15,6 @@ import io.reactivex.Flowable
 import io.reactivex.Maybe
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
-import retrofit2.Retrofit
 
 
 class NewsRepository(context: Context) {
@@ -34,6 +34,11 @@ class NewsRepository(context: Context) {
     }
     fun getNewsFromNetwork():Single<NewsObject>{
         return apiClient.getNews()
+            .subscribeOn(Schedulers.io())
+    }
+
+    fun getNewsFromNetworkById(id:Int):Single<SingleNews>{
+        return apiClient.getNewsById(id)
             .subscribeOn(Schedulers.io())
     }
     fun insertFavoriteNews(news: FavoriteNews): Completable {

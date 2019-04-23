@@ -5,10 +5,9 @@ import com.google.gson.annotations.SerializedName
 
 @Entity
 data class News(
-    @Transient
-    var traid: Int,
 
     @SerializedName("id")
+    @PrimaryKey(autoGenerate = false)
     var newsId: Int,
 
     @SerializedName("text")

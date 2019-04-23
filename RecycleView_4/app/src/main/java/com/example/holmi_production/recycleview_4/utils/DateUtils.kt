@@ -57,11 +57,11 @@ class DateUtils {
         return calendar.time
     }
 
-    fun formatDate(date: Date): String {
-        return DateFormat.getDateInstance(SimpleDateFormat.LONG, Locale("ru")).format(date)
+    fun formatDate(timeinMilis: Long): String {
+        return DateFormat.getDateInstance(SimpleDateFormat.LONG,Locale("ru")).format(Date(timeinMilis))
     }
 
-     fun setHeader(events: Map<Date, List<News>>): ArrayList<ListItem> {
+     fun setHeader(events: Map<Long, List<News>>): ArrayList<ListItem> {
         val news: ArrayList<ListItem> = arrayListOf()
         for (date in events.keys) {
             val header = HeaderItem(date)
@@ -74,14 +74,14 @@ class DateUtils {
         return news
     }
 
-     fun toMap(events: List<News>?): Map<Date, List<News>> {
-        val map = TreeMap<Date, MutableList<News>>()
+     fun toMap(events: List<News>?): Map<Long, List<News>> {
+        val map = TreeMap<Long, MutableList<News>>()
         if (events != null) {
             for (event in events) {
-                var value: MutableList<News>? = map[event.date]
+                var value: MutableList<News>? = map[event.date.timeInMilliseconds]
                 if (value == null) {
                     value = ArrayList()
-                    map[event.date] = value
+                    map[event.date.timeInMilliseconds] = value
                 }
                 value.add(event)
             }

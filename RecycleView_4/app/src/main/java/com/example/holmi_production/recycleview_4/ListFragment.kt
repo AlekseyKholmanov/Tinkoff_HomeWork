@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.holmi_production.recycleview_4.Adapters.NewsAdapter
 import com.example.holmi_production.recycleview_4.NewsItems.ListItem
+import com.example.holmi_production.recycleview_4.db.Network.NewsObject
 import com.example.holmi_production.recycleview_4.db.NewsRepository
 import com.example.holmi_production.recycleview_4.db.entity.News
 import com.example.holmi_production.recycleview_4.utils.DateUtils
@@ -89,12 +90,18 @@ class ListFragment : Fragment() {
     }
 
     private fun setNewsToAdapter() {
-        compositeDisposable.add(loadNews()
+        compositeDisposable.add(loadNewsFromNetwork()
+            .map { t-> DateUtils().reformateItem(t.news)}
             .subscribe { it ->
                 mAdapter.setNews(it)
                 mAdapter.notifyDataSetChanged()
             }
         )
+    }
+
+    private fun loadNewsFromNetwork():Single<NewsObject>{
+        return newsRepository.getNewsFromNetwork()
+            .observeOn(AndroidSchedulers.mainThread())
     }
 
     private fun loadNews(): Flowable<ArrayList<ListItem>> {

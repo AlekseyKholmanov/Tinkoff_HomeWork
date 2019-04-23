@@ -40,7 +40,7 @@ class NewsActivity : AppCompatActivity() {
             .subscribe { it ->
                 title = it.theme
                 content.text = it.content
-                date.text = DateUtils().formatDate(it.date)
+                date.text = DateUtils().formatDate(it.date.timeInMilliseconds)
             })
         compositeDisposable.add(
             newsRepository.getFavoriteNewsById(newsId!!)
@@ -64,12 +64,6 @@ class NewsActivity : AppCompatActivity() {
             item!!.icon = ContextCompat.getDrawable(this, R.drawable.favorite_none)
             compositeDisposable.add( newsRepository.deleteFavotiteNews(newsId!!)
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnComplete {
-                    Log.d("TAG1", "delete succes")
-                }
-                .doOnError {
-                    Log.d("TAG1", "delete error")
-                }
                 .subscribe())
             isFavorite = false
             Toast.makeText(this, "убрано", Toast.LENGTH_SHORT).show()
@@ -77,17 +71,10 @@ class NewsActivity : AppCompatActivity() {
             item!!.icon = ContextCompat.getDrawable(this, R.drawable.favorite_enable)
             compositeDisposable.add(newsRepository.insertFavoriteNews(favNews)
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnComplete {
-                    Log.d("TAG1", "insert succes")
-                }
-                .doOnError {
-                    Log.d("TAG1", "delete error")
-                }
                 .subscribe())
             isFavorite = true
             Toast.makeText(this, "добавлено", Toast.LENGTH_SHORT).show()
         }
-        RxBus.listen(NewsActivity::class.java).subscribe()
         return true
     }
 

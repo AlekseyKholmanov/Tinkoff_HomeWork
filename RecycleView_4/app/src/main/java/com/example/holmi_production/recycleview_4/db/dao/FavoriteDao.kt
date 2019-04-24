@@ -9,7 +9,7 @@ import io.reactivex.Single
 @Dao
 interface FavoriteDao {
 
-    @Query("Select * FROM news, favoriteNews WHERE news.newsId == favoriteNews.newsId")
+    @Query("Select news.newsId, news.theme,news.timeInMilliseconds,news.content FROM news, favoriteNews WHERE news.newsId == favoriteNews.newsId")
     fun getFavorite(): Flowable<List<News>>
 
 }

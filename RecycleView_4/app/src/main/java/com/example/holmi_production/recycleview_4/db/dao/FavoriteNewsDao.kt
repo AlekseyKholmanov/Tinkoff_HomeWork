@@ -7,6 +7,7 @@ import android.arch.persistence.room.OnConflictStrategy.REPLACE
 import android.support.annotation.Nullable
 import com.example.holmi_production.recycleview_4.db.entity.FavoriteNews
 import io.reactivex.Completable
+import io.reactivex.Flowable
 import io.reactivex.Maybe
 import io.reactivex.Single
 
@@ -15,7 +16,7 @@ interface FavoriteNewsDao{
 
     @Nullable
     @Query("select newsId from favoritenews")
-    fun getAllFavoriteIds(): Single<Array<Int>>
+    fun getAllFavoriteIds(): Flowable<List<Int>>
 
     @Nullable
     @Query("select * from favoritenews where newsId Like :newsId")

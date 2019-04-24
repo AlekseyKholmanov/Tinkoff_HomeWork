@@ -21,6 +21,7 @@ import io.reactivex.Flowable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.functions.Consumer
 import kotlinx.android.synthetic.main.fragment_list.*
 import java.util.ArrayList
 
@@ -110,7 +111,8 @@ class ListFragment : Fragment() {
                 .map { t ->
                     DateUtils().reformateItem(t)
                 }
-                .subscribe { it->
+                .subscribe { it ->
+                    Log.d("Qwerty", "size ${it.size}")
                     mAdapter.setNews(it)
                 }
             )

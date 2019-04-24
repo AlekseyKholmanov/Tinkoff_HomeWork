@@ -17,7 +17,7 @@ public interface NewsDao{
     fun getNewsById(idToSelect: Int): Single<News>
 
     @Query("Select * from news where newsId in (:newsIds)")
-    fun getNewsByIds(newsIds:Array<Int>):Single<List<News>>
+    fun getNewsByIds(newsIds:List<Int>):Flowable<List<News>>
 
     @Query("SELECT * FROM news")
     fun  getAll():Flowable<List<News>>
@@ -25,7 +25,7 @@ public interface NewsDao{
     @Insert(onConflict = REPLACE)
     fun insert(news: News)
 
-    @Insert
+    @Insert(onConflict = REPLACE)
     fun insertListNews(news:List<News>)
 
     @Delete

@@ -38,6 +38,7 @@ class NewsRepository(context: Context) {
             .subscribeOn(Schedulers.io())
             .doAfterSuccess { t ->
                 insertListNews(t.news)
+                    .subscribe()
             }
     }
 
@@ -71,14 +72,18 @@ class NewsRepository(context: Context) {
             .subscribeOn(Schedulers.io())
     }
 
+    fun getFavoriteIds(): Flowable<List<Int>> {
+        return favoriteNewsDao.getAllFavoriteIds()
+            .subscribeOn(Schedulers.io())
+    }
 
     fun getFavoriteNewsById(newsId: Int): Maybe<FavoriteNews> {
         return favoriteNewsDao.getNewsById(newsId)
             .subscribeOn(Schedulers.io())
     }
 
-    fun getNewsById(id: Int): Single<News> {
-        return newsDao.getNewsById(id)
+    fun getNewsById(ids: List<Int>): Flowable<List<News>> {
+        return newsDao.getNewsByIds(ids)
             .subscribeOn(Schedulers.io())
     }
 

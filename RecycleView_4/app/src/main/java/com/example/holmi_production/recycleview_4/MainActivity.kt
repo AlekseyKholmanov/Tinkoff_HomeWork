@@ -22,7 +22,6 @@ class MainActivity : AppCompatActivity(), ListFragment.ClickOnNewsCallback {
         const val ARG_ID = "id"
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -31,10 +30,7 @@ class MainActivity : AppCompatActivity(), ListFragment.ClickOnNewsCallback {
         setupViewPager(viewPager)
         val tabLayout: TabLayout = findViewById(R.id.tab_layout)
         tabLayout.setupWithViewPager(viewPager)
-
     }
-
-
 
     private fun setupViewPager(viewPager: ViewPager) {
         val adapter = ViewPagerAdapter(supportFragmentManager)
@@ -44,7 +40,6 @@ class MainActivity : AppCompatActivity(), ListFragment.ClickOnNewsCallback {
         adapter.addPageTitle(lastPageName)
         adapter.addPageTitle(favPageName)
         viewPager.adapter = adapter
-
     }
 
     override fun onItemClicked(v: View, news: News) {

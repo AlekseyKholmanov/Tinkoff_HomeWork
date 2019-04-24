@@ -32,17 +32,27 @@ class NewsRepository(context: Context) {
         fNews = db.favorite()
         apiClient = ApiClient().getClient().create(ApiService::class.java)
     }
-    fun getNewsFromNetwork():Single<NewsObject>{
+
+    fun getNewsFromNetwork(): Single<NewsObject> {
         return apiClient.getNews()
             .subscribeOn(Schedulers.io())
+            .doAfterSuccess { t ->
+                insertListNews(t.news)
+            }
     }
 
-    fun getNewsFromNetworkById(id:Int):Single<SingleNews>{
+    fun getNewsFromNetworkById(id: Int): Single<SingleNews> {
         return apiClient.getNewsById(id)
             .subscribeOn(Schedulers.io())
     }
+
     fun insertFavoriteNews(news: FavoriteNews): Completable {
         return Completable.fromCallable { favoriteNewsDao.insert(news) }
+            .subscribeOn(Schedulers.io())
+    }
+
+    fun insertListNews(news: List<News>): Completable {
+        return Completable.fromCallable { newsDao.insertListNews(news) }
             .subscribeOn(Schedulers.io())
     }
 
@@ -60,6 +70,7 @@ class NewsRepository(context: Context) {
         return fNews.getFavorite()
             .subscribeOn(Schedulers.io())
     }
+
 
     fun getFavoriteNewsById(newsId: Int): Maybe<FavoriteNews> {
         return favoriteNewsDao.getNewsById(newsId)

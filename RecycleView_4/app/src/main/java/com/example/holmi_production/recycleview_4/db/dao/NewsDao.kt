@@ -26,7 +26,7 @@ public interface NewsDao{
     fun insert(news: News)
 
     @Insert
-    fun insertData(news:List<News>)
+    fun insertListNews(news:List<News>)
 
     @Delete
     fun delete(news: News)

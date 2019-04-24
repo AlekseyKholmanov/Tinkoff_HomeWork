@@ -94,16 +94,27 @@ class ListFragment : Fragment() {
     }
 
     private fun setNewsToAdapter() {
-        compositeDisposable.add(loadNewsFromNetwork()
-            .map { t ->
-                Log.d("qwerty1", t.news.size.toString())
-                DateUtils().reformateItem(t.news)
-            }
-            .subscribe { it ->
-                mAdapter.setNews(it)
-                mAdapter.notifyDataSetChanged()
-            }
-        )
+        if (!isFavorite!!)
+            compositeDisposable.add(loadNewsFromNetwork()
+                .observeOn(AndroidSchedulers.mainThread())
+                .map { t ->
+                    DateUtils().reformateItem(t.news)
+                }
+                .subscribe { it ->
+                    mAdapter.setNews(it)
+                }
+            )
+        else {
+            compositeDisposable.add(newsRepository.getAllFavoriteNews()
+                .observeOn(AndroidSchedulers.mainThread())
+                .map { t ->
+                    DateUtils().reformateItem(t)
+                }
+                .subscribe { it->
+                    mAdapter.setNews(it)
+                }
+            )
+        }
     }
 
     private fun isNetworkConnection(): Boolean {

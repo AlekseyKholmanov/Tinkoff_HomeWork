@@ -42,12 +42,12 @@ class NewsActivity : AppCompatActivity() {
                 content.text = it.newsItem.content
                 date.text = DateUtils().formatDate(it.newsItem.newsHeader.date.timeInMilliseconds)
             })
-//        compositeDisposable.add(
-//            newsRepository.getFavoriteNewsById(newsId!!)
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe { it ->
-//                    isFavorite = it != null
-//                })
+        compositeDisposable.add(
+            newsRepository.getFavoriteNewsById(newsId!!)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { it ->
+                    isFavorite = it != null
+                })
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
@@ -62,16 +62,22 @@ class NewsActivity : AppCompatActivity() {
 
         if (isFavorite) {
             item!!.icon = ContextCompat.getDrawable(this, R.drawable.favorite_none)
-            compositeDisposable.add( newsRepository.deleteFavotiteNews(newsId!!)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe())
+            compositeDisposable.add(
+                newsRepository.deleteFavotiteNews(newsId!!)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnError { Log.d("qwerty1", "error $it") }
+                    .subscribe()
+            )
             isFavorite = false
             Toast.makeText(this, "убрано", Toast.LENGTH_SHORT).show()
         } else {
             item!!.icon = ContextCompat.getDrawable(this, R.drawable.favorite_enable)
-            compositeDisposable.add(newsRepository.insertFavoriteNews(favNews)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe())
+            compositeDisposable.add(
+                newsRepository.insertFavoriteNews(favNews)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnError { Log.d("qwerty1", "error $it") }
+                    .subscribe()
+            )
             isFavorite = true
             Toast.makeText(this, "добавлено", Toast.LENGTH_SHORT).show()
         }

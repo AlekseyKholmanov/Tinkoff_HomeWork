@@ -1,9 +1,10 @@
 package com.example.holmi_production.recycleview_4
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
+import android.support.v4.text.HtmlCompat
 import android.support.v7.app.AppCompatActivity
+import android.text.Html
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -14,7 +15,6 @@ import com.example.holmi_production.recycleview_4.db.entity.FavoriteNews
 import com.example.holmi_production.recycleview_4.utils.DateUtils
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 
 class NewsActivity : AppCompatActivity() {
 
@@ -39,7 +39,7 @@ class NewsActivity : AppCompatActivity() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { it ->
                 title = it.newsItem.newsHeader.theme
-                content.text = it.newsItem.content
+                content.text = HtmlCompat.fromHtml(it.newsItem.content,Html.FROM_HTML_MODE_LEGACY)
                 date.text = DateUtils().formatDate(it.newsItem.newsHeader.date.timeInMilliseconds)
             })
         compositeDisposable.add(

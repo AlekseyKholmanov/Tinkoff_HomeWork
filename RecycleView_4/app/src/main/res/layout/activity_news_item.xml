@@ -15,6 +15,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/activity_content"
                 android:ellipsize="end"
+                android:autoLink="web"
                 android:text="@string/lorem"
                 android:paddingStart="5dp"/>
 

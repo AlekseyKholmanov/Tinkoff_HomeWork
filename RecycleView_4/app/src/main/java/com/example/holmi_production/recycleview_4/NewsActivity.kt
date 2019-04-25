@@ -5,6 +5,7 @@ import android.support.v4.content.ContextCompat
 import android.support.v4.text.HtmlCompat
 import android.support.v7.app.AppCompatActivity
 import android.text.Html
+import android.text.method.LinkMovementMethod
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -39,7 +40,7 @@ class NewsActivity : AppCompatActivity() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { it ->
                 title = it.newsItem.newsHeader.theme
-                content.text = HtmlCompat.fromHtml(it.newsItem.content,Html.FROM_HTML_MODE_LEGACY)
+                content.text = HtmlCompat.fromHtml(it.newsItem.content, Html.FROM_HTML_MODE_COMPACT)
                 date.text = DateUtils().formatDate(it.newsItem.newsHeader.date.timeInMilliseconds)
             })
         compositeDisposable.add(
@@ -69,7 +70,7 @@ class NewsActivity : AppCompatActivity() {
                     .subscribe()
             )
             isFavorite = false
-            Toast.makeText(this, "убрано", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "убрано $newsId", Toast.LENGTH_SHORT).show()
         } else {
             item!!.icon = ContextCompat.getDrawable(this, R.drawable.favorite_enable)
             compositeDisposable.add(
@@ -79,7 +80,7 @@ class NewsActivity : AppCompatActivity() {
                     .subscribe()
             )
             isFavorite = true
-            Toast.makeText(this, "добавлено", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "добавлено $newsId", Toast.LENGTH_SHORT).show()
         }
         return true
     }

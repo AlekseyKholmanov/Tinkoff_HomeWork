@@ -25,7 +25,7 @@ class NewsActivity : AppCompatActivity() {
     private lateinit var newsRepository: NewsRepository
     private val favoriteIcon = R.drawable.favorite_enable
     private val nonFavoriteIcon = R.drawable.favorite_none
-    val compositeDisposable = CompositeDisposable()
+    private val compositeDisposable = CompositeDisposable()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

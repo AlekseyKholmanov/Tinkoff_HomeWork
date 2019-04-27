@@ -3,7 +3,9 @@ package com.example.holmi_production.recycleview_4
 import android.content.Context
 import android.net.ConnectivityManager
 import android.os.Bundle
+import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -45,7 +47,6 @@ class ListFragment : Fragment() {
         }
     }
 
-
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         Log.d("TAG1", "attach")
@@ -77,16 +78,12 @@ class ListFragment : Fragment() {
     }
 
     override fun onActivityCreated(bundle: Bundle?) {
+        super.onActivityCreated(bundle)
         newsRepository = NewsRepository(activity!!.applicationContext)
         mAdapter = NewsAdapter(clickOnNewsCallback = clickOnNewsCallback)
-        if (!isNetworkConnection()) {
-            Log.d("qwerty1", "internetama")
-        } else {
-            setNewsToAdapter()
-        }
+        setNewsToAdapter()
         listRecyclerView.adapter = mAdapter
         listRecyclerView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-        super.onActivityCreated(bundle)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -119,11 +116,6 @@ class ListFragment : Fragment() {
         }
     }
 
-    private fun isNetworkConnection(): Boolean {
-        val cm = context!!.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val netInfo = cm.activeNetworkInfo
-        return netInfo != null && netInfo.isConnected
-    }
 
     private fun loadNewsFromNetwork(): Single<NewsObject> {
         return newsRepository.getNewsFromNetwork()

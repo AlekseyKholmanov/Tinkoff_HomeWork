@@ -1,6 +1,5 @@
 package com.example.holmi_production.recycleview_4.Adapters
 
-import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.TextView

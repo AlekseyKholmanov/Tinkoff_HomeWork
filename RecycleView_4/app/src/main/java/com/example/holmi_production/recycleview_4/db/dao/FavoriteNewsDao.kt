@@ -15,19 +15,19 @@ import io.reactivex.Single
 interface FavoriteNewsDao{
 
     @Nullable
-    @Query("select newsId from favoritenews")
+    @Query("select newsId from FavoriteNews")
     fun getAllFavoriteIds(): Flowable<List<Int>>
 
     @Nullable
-    @Query("select * from favoritenews where newsId Like :newsId")
+    @Query("select * from FavoriteNews where newsId Like :newsId")
     fun getNewsById(newsId: Int):Maybe<FavoriteNews>
 
     @Insert(onConflict = REPLACE)
     fun insert(favoriteNews: FavoriteNews)
 
-    @Query("Delete from favoritenews where newsId=:newsId ")
+    @Query("Delete from FavoriteNews where newsId=:newsId ")
     fun delete(newsId: Int)
 
-    @Query("DELETE FROM favoritenews")
+    @Query("DELETE FROM FavoriteNews")
     fun deleteAll()
 }

@@ -1,4 +1,4 @@
-package com.example.holmi_production.recycleview_4
+package com.example.holmi_production.recycleview_4.ui
 
 import android.content.Context
 import android.content.Intent
@@ -13,10 +13,10 @@ import android.view.View
 import android.view.ViewGroup
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
-import com.example.holmi_production.recycleview_4.Adapters.NewsAdapter
 import com.example.holmi_production.recycleview_4.MvpView.NewsListView
 import com.example.holmi_production.recycleview_4.NewsItems.ListItem
 import com.example.holmi_production.recycleview_4.Presenter.NewsListPresenterImpl
+import com.example.holmi_production.recycleview_4.R
 import com.example.holmi_production.recycleview_4.db.Network.NewsObject
 import com.example.holmi_production.recycleview_4.db.NewsRepository
 import com.example.holmi_production.recycleview_4.db.entity.News
@@ -31,7 +31,7 @@ import java.util.*
 
 class ListFragment : MvpAppCompatFragment(), ClickOnNewsCallback, NewsListView {
     override fun onItemClicked(newsId: Int) {
-        Log.d("qwerty1","clicked")
+        Log.d("qwerty1", "clicked")
         newsListPresenter.openSingleNews(newsId)
     }
 
@@ -101,7 +101,8 @@ class ListFragment : MvpAppCompatFragment(), ClickOnNewsCallback, NewsListView {
     override fun onActivityCreated(bundle: Bundle?) {
         super.onActivityCreated(bundle)
         newsRepository = NewsRepository(activity!!.applicationContext)
-        mAdapter = NewsAdapter(clickOnNewsCallback = this as ClickOnNewsCallback)
+        mAdapter =
+            NewsAdapter(clickOnNewsCallback = this as ClickOnNewsCallback)
         setNewsToAdapter()
         listRecyclerView.adapter = mAdapter
         listRecyclerView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
@@ -153,6 +154,7 @@ class ListFragment : MvpAppCompatFragment(), ClickOnNewsCallback, NewsListView {
             .observeOn(AndroidSchedulers.mainThread())
     }
 }
+
 interface ClickOnNewsCallback {
     fun onItemClicked(newsId: Int)
 }

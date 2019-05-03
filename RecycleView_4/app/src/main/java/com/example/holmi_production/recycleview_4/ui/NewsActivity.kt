@@ -1,16 +1,16 @@
-package com.example.holmi_production.recycleview_4
+package com.example.holmi_production.recycleview_4.ui
 
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v4.text.HtmlCompat
 import android.support.v7.app.AppCompatActivity
 import android.text.Html
-import android.text.method.LinkMovementMethod
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
 import android.widget.Toast
+import com.example.holmi_production.recycleview_4.R
 import com.example.holmi_production.recycleview_4.db.NewsRepository
 import com.example.holmi_production.recycleview_4.db.entity.FavoriteNews
 import com.example.holmi_production.recycleview_4.utils.DateUtils
@@ -62,7 +62,10 @@ class NewsActivity : AppCompatActivity() {
         val favNews = FavoriteNews(null, newsId!!)
 
         if (isFavorite) {
-            item!!.icon = ContextCompat.getDrawable(this, R.drawable.favorite_none)
+            item!!.icon = ContextCompat.getDrawable(
+                this,
+                R.drawable.favorite_none
+            )
             compositeDisposable.add(
                 newsRepository.deleteFavotiteNews(newsId!!)
                     .observeOn(AndroidSchedulers.mainThread())
@@ -72,7 +75,10 @@ class NewsActivity : AppCompatActivity() {
             isFavorite = false
             Toast.makeText(this, "убрано $newsId", Toast.LENGTH_SHORT).show()
         } else {
-            item!!.icon = ContextCompat.getDrawable(this, R.drawable.favorite_enable)
+            item!!.icon = ContextCompat.getDrawable(
+                this,
+                R.drawable.favorite_enable
+            )
             compositeDisposable.add(
                 newsRepository.insertFavoriteNews(favNews)
                     .observeOn(AndroidSchedulers.mainThread())

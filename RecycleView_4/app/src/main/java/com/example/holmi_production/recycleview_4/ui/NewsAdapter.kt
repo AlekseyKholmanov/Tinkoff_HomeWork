@@ -1,13 +1,15 @@
-package com.example.holmi_production.recycleview_4.Adapters
+package com.example.holmi_production.recycleview_4.ui
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import com.example.holmi_production.recycleview_4.ClickOnNewsCallback
+import android.widget.TextView
 import com.example.holmi_production.recycleview_4.NewsItems.HeaderItem
 import com.example.holmi_production.recycleview_4.NewsItems.ListItem
 import com.example.holmi_production.recycleview_4.NewsItems.NewsItem
 import com.example.holmi_production.recycleview_4.R
+import com.example.holmi_production.recycleview_4.db.entity.News
 import com.example.holmi_production.recycleview_4.utils.DateUtils
 
 
@@ -30,6 +32,7 @@ class NewsAdapter(
             else -> throw IllegalStateException("unsupported item type")
         }
     }
+
     fun setNews(news: List<ListItem>) {
         this.listItem = news
         notifyDataSetChanged()
@@ -61,7 +64,7 @@ class NewsAdapter(
             ListItem.TYPE_NEWS -> {
                 val newsItem = listItem[position] as NewsItem
                 val viewHolder1 = viewHolder as NewsViewHolder
-                viewHolder1.bind(newsItem.content,clickOnNewsCallback)
+                viewHolder1.bind(newsItem.content, clickOnNewsCallback)
 
             }
         }
@@ -69,6 +72,31 @@ class NewsAdapter(
 
     override fun getItemViewType(position: Int): Int {
         return listItem[position].getType()
+    }
+
+    class NewsViewHolder internal constructor(var v: View) : RecyclerView.ViewHolder(v) {
+
+        private val theme = v.findViewById<TextView>(R.id.theme)
+        private val content = v.findViewById<TextView>(R.id.content)
+        private var date = ""
+
+        fun bind(
+            news: News,
+            clickOnNewsCallback: ClickOnNewsCallback
+        ) {
+            theme.text = news.theme
+            date = DateUtils().formatDate(news.date.timeInMilliseconds)
+            content.text = news.content
+            v.setOnClickListener {
+                clickOnNewsCallback.onItemClicked(news.newsId)
+            }
+        }
+    }
+
+    class HeaderViewHolder internal constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+        internal var txt_header: TextView = itemView.findViewById(R.id.txt_header)
+
     }
 }
 

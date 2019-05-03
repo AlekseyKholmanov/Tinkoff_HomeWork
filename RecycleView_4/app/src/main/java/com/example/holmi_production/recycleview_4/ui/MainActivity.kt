@@ -1,4 +1,4 @@
-package com.example.holmi_production.recycleview_4
+package com.example.holmi_production.recycleview_4.ui
 
 import android.content.Context
 import android.net.ConnectivityManager
@@ -7,7 +7,7 @@ import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
-import com.example.holmi_production.recycleview_4.Adapters.ViewPagerAdapter
+import com.example.holmi_production.recycleview_4.R
 
 
 class MainActivity : AppCompatActivity() {

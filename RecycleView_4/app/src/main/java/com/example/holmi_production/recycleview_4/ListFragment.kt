@@ -1,11 +1,9 @@
 package com.example.holmi_production.recycleview_4
 
 import android.content.Context
-import android.net.ConnectivityManager
+import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
-import android.support.v4.app.Fragment
-import android.support.v7.app.AlertDialog
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -13,8 +11,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.arellomobile.mvp.MvpAppCompatFragment
+import com.arellomobile.mvp.presenter.InjectPresenter
 import com.example.holmi_production.recycleview_4.Adapters.NewsAdapter
+import com.example.holmi_production.recycleview_4.MvpView.NewsListView
 import com.example.holmi_production.recycleview_4.NewsItems.ListItem
+import com.example.holmi_production.recycleview_4.Presenter.NewsListPresenterImpl
 import com.example.holmi_production.recycleview_4.db.Network.NewsObject
 import com.example.holmi_production.recycleview_4.db.NewsRepository
 import com.example.holmi_production.recycleview_4.db.entity.News
@@ -23,17 +25,38 @@ import io.reactivex.Flowable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.functions.Consumer
 import kotlinx.android.synthetic.main.fragment_list.*
-import java.util.ArrayList
+import java.util.*
 
 
-class ListFragment : Fragment() {
-
-
-    interface ClickOnNewsCallback {
-        fun onItemClicked(v: View, news: News)
+class ListFragment : MvpAppCompatFragment(), ClickOnNewsCallback, NewsListView {
+    override fun onItemClicked(newsId: Int) {
+        Log.d("qwerty1","clicked")
+        newsListPresenter.openSingleNews(newsId)
     }
+
+    override fun showNetworkAlertDialog() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun showNews(news: List<News>) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun showSingleNews(newsId: Int) {
+        Log.d("RecyclerView", "CLICK!")
+        val intent = Intent(context, NewsActivity::class.java).apply {
+            putExtra(MainActivity.ARG_ID, newsId)
+        }
+        ContextCompat.startActivity(context!!, intent, null)
+    }
+
+    override fun updateListNews() {
+        mAdapter.notifyDataSetChanged()
+    }
+
+    @InjectPresenter
+    lateinit var newsListPresenter: NewsListPresenterImpl
 
     companion object {
         private const val ARG_FAVORITE = "isFavorite"
@@ -50,18 +73,16 @@ class ListFragment : Fragment() {
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         Log.d("TAG1", "attach")
-        clickOnNewsCallback = requireActivity() as ClickOnNewsCallback
+
     }
 
     override fun onDetach() {
         Log.d("TAG1", "detach")
         super.onDetach()
         compositeDisposable.dispose()
-        clickOnNewsCallback = null
     }
 
     private lateinit var newsRepository: NewsRepository
-    private var clickOnNewsCallback: ClickOnNewsCallback? = null
     private lateinit var mAdapter: NewsAdapter
     private val compositeDisposable = CompositeDisposable()
     private var isFavorite: Boolean? = null
@@ -80,7 +101,7 @@ class ListFragment : Fragment() {
     override fun onActivityCreated(bundle: Bundle?) {
         super.onActivityCreated(bundle)
         newsRepository = NewsRepository(activity!!.applicationContext)
-        mAdapter = NewsAdapter(clickOnNewsCallback = clickOnNewsCallback)
+        mAdapter = NewsAdapter(clickOnNewsCallback = this as ClickOnNewsCallback)
         setNewsToAdapter()
         listRecyclerView.adapter = mAdapter
         listRecyclerView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
@@ -132,5 +153,10 @@ class ListFragment : Fragment() {
             .observeOn(AndroidSchedulers.mainThread())
     }
 }
+interface ClickOnNewsCallback {
+    fun onItemClicked(newsId: Int)
+}
+
+
 
 

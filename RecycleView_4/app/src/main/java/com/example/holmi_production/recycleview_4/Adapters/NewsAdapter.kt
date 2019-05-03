@@ -3,7 +3,7 @@ package com.example.holmi_production.recycleview_4.Adapters
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.example.holmi_production.recycleview_4.ListFragment.ClickOnNewsCallback
+import com.example.holmi_production.recycleview_4.ClickOnNewsCallback
 import com.example.holmi_production.recycleview_4.NewsItems.HeaderItem
 import com.example.holmi_production.recycleview_4.NewsItems.ListItem
 import com.example.holmi_production.recycleview_4.NewsItems.NewsItem
@@ -13,7 +13,7 @@ import com.example.holmi_production.recycleview_4.utils.DateUtils
 
 class NewsAdapter(
     private var listItem: List<ListItem> = listOf(),
-    private var clickOnNewsCallback: ClickOnNewsCallback? = null
+    private var clickOnNewsCallback: ClickOnNewsCallback
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -30,7 +30,6 @@ class NewsAdapter(
             else -> throw IllegalStateException("unsupported item type")
         }
     }
-
     fun setNews(news: List<ListItem>) {
         this.listItem = news
         notifyDataSetChanged()
@@ -62,8 +61,8 @@ class NewsAdapter(
             ListItem.TYPE_NEWS -> {
                 val newsItem = listItem[position] as NewsItem
                 val viewHolder1 = viewHolder as NewsViewHolder
+                viewHolder1.bind(newsItem.content,clickOnNewsCallback)
 
-                viewHolder1.bind(newsItem.content, clickOnNewsCallback)
             }
         }
     }

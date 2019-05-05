@@ -1,4 +1,4 @@
-package com.example.holmi_production.recycleview_4.db.Network
+package com.example.holmi_production.recycleview_4.Model
 
 import com.example.holmi_production.recycleview_4.db.entity.News
 import com.google.gson.annotations.SerializedName

@@ -1,13 +1,9 @@
 package com.example.holmi_production.recycleview_4.db
 
-import android.content.Context
-import com.example.holmi_production.recycleview_4.db.Network.ApiClient
-import com.example.holmi_production.recycleview_4.db.Network.ApiService
-import com.example.holmi_production.recycleview_4.db.Network.NewsObject
-import com.example.holmi_production.recycleview_4.db.Network.SingleNews
-import com.example.holmi_production.recycleview_4.db.dao.FavoriteDao
-import com.example.holmi_production.recycleview_4.db.dao.FavoriteNewsDao
-import com.example.holmi_production.recycleview_4.db.dao.NewsDao
+
+import com.example.holmi_production.recycleview_4.Model.NewsObject
+import com.example.holmi_production.recycleview_4.Model.RemoteDataSource
+import com.example.holmi_production.recycleview_4.Model.SingleNews
 import com.example.holmi_production.recycleview_4.db.entity.FavoriteNews
 import com.example.holmi_production.recycleview_4.db.entity.News
 import io.reactivex.Completable
@@ -15,26 +11,22 @@ import io.reactivex.Flowable
 import io.reactivex.Maybe
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
+import javax.inject.Singleton
 
 
-class NewsRepository(context: Context) {
+@Singleton
+class NewsRepository @Inject constructor(
+    private val newsDatabase: NewsDatabase,
+    private val remoteDataSource:RemoteDataSource
+) {
+    private val newsDao=newsDatabase.newsDao()
+    private val favoriteNewsDao = newsDatabase.favoriteNewsDao()
+    private val favorite = newsDatabase.favorite()
 
-
-    private val db: NewsDatabase = NewsDatabase.getInstance(context)!!
-    private val newsDao: NewsDao
-    private val favoriteNewsDao: FavoriteNewsDao
-    private val fNews: FavoriteDao
-    private val apiClient: ApiService
-
-    init {
-        newsDao = db.newsDao()
-        favoriteNewsDao = db.favoriteNewsDao()
-        fNews = db.favorite()
-        apiClient = ApiClient().getClient().create(ApiService::class.java)
-    }
 
     fun getNewsFromNetwork(): Single<NewsObject> {
-        return apiClient.getNews()
+        return remoteDataSource.getNews()
             .subscribeOn(Schedulers.io())
             .doAfterSuccess { t ->
                 insertListNews(t.news)
@@ -43,7 +35,7 @@ class NewsRepository(context: Context) {
     }
 
     fun getNewsFromNetworkById(id: Int): Single<SingleNews> {
-        return apiClient.getNewsById(id)
+        return remoteDataSource.getNewsById(id)
             .subscribeOn(Schedulers.io())
     }
 
@@ -68,7 +60,7 @@ class NewsRepository(context: Context) {
     }
 
     fun getAllFavoriteNews(): Flowable<List<News>> {
-        return fNews.getFavorite()
+        return favorite.getFavorite()
             .subscribeOn(Schedulers.io())
     }
 

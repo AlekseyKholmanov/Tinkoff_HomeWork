@@ -17,9 +17,10 @@ import com.example.holmi_production.recycleview_4.MvpView.NewsListView
 import com.example.holmi_production.recycleview_4.NewsItems.ListItem
 import com.example.holmi_production.recycleview_4.Presenter.NewsListPresenterImpl
 import com.example.holmi_production.recycleview_4.R
-import com.example.holmi_production.recycleview_4.db.Network.NewsObject
+import com.example.holmi_production.recycleview_4.Model.NewsObject
 import com.example.holmi_production.recycleview_4.db.NewsRepository
 import com.example.holmi_production.recycleview_4.db.entity.News
+import com.example.holmi_production.recycleview_4.di.App
 import com.example.holmi_production.recycleview_4.utils.DateUtils
 import io.reactivex.Flowable
 import io.reactivex.Single
@@ -27,6 +28,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_list.*
 import java.util.*
+import javax.inject.Inject
 
 
 class ListFragment : MvpAppCompatFragment(), ClickOnNewsCallback, NewsListView {
@@ -82,10 +84,12 @@ class ListFragment : MvpAppCompatFragment(), ClickOnNewsCallback, NewsListView {
         compositeDisposable.dispose()
     }
 
-    private lateinit var newsRepository: NewsRepository
     private lateinit var mAdapter: NewsAdapter
     private val compositeDisposable = CompositeDisposable()
     private var isFavorite: Boolean? = null
+
+    @Inject
+    lateinit var newsRepository:NewsRepository
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -100,7 +104,6 @@ class ListFragment : MvpAppCompatFragment(), ClickOnNewsCallback, NewsListView {
 
     override fun onActivityCreated(bundle: Bundle?) {
         super.onActivityCreated(bundle)
-        newsRepository = NewsRepository(activity!!.applicationContext)
         mAdapter =
             NewsAdapter(clickOnNewsCallback = this as ClickOnNewsCallback)
         setNewsToAdapter()
@@ -111,6 +114,7 @@ class ListFragment : MvpAppCompatFragment(), ClickOnNewsCallback, NewsListView {
     override fun onCreate(savedInstanceState: Bundle?) {
         isFavorite = arguments?.getBoolean(ARG_FAVORITE)
         super.onCreate(savedInstanceState)
+        App.mRepositoryComponent.inject(this)
     }
 
     private fun setNewsToAdapter() {

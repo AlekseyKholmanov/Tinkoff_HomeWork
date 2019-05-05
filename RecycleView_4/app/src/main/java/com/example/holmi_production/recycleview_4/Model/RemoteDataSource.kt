@@ -1,11 +1,10 @@
-package com.example.holmi_production.recycleview_4.db.Network
+package com.example.holmi_production.recycleview_4.Model
 
-import com.example.holmi_production.recycleview_4.db.entity.News
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface ApiService{
+interface RemoteDataSource{
     @GET("news")
     fun getNews():Single<NewsObject>
 

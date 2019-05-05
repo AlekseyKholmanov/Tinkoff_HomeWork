@@ -33,7 +33,7 @@ class NewsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_news_item)
 
         newsId = intent.getIntExtra(MainActivity.ARG_ID, 0)
-        newsRepository = NewsRepository(applicationContext)
+        //newsRepository = NewsRepository(applicationContext)
         val content = findViewById<TextView>(R.id.activity_content)
         val date = findViewById<TextView>(R.id.activity_date)
         compositeDisposable.add(newsRepository.getNewsFromNetworkById(newsId!!)

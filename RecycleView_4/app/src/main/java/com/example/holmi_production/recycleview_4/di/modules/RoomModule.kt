@@ -9,12 +9,13 @@ import javax.inject.Singleton
 
 @Module
 class RoomModule(context: Context) {
+    val mContext = context
     private val DATABASE_NAME = "basic-sample-db"
     @Provides
     @Singleton
-    fun provideRoomDataSource(context: Context): NewsDatabase {
+    fun provideRoomDataSource(): NewsDatabase {
         return Room.databaseBuilder(
-            context,
+            mContext,
             NewsDatabase::class.java,
             DATABASE_NAME
         ).build()

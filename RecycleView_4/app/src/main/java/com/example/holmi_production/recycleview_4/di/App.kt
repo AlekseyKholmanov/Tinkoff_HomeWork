@@ -8,8 +8,7 @@ class App : Application() {
 
     companion object {
         lateinit var mRepositoryComponent: RepositoryComponent
-        lateinit var mRoomComponent: RoomComponent
-        lateinit var mNetComponent: NetComponent
+        lateinit var mAppComponent: AppComponent
     }
 
     private val BASE_URL = "https://api.tinkoff.ru/v1/"
@@ -20,16 +19,13 @@ class App : Application() {
     }
 
     private fun setup() {
-        mRoomComponent = DaggerRoomComponent.builder()
+        mAppComponent = DaggerAppComponent.builder()
             .roomModule(RoomModule(this))
-            .build()
-        mNetComponent = DaggerNetComponent.builder()
             .netModule(NetModule(BASE_URL, this))
             .build()
 
         mRepositoryComponent = DaggerRepositoryComponent.builder()
-            .netComponent(mNetComponent)
-            .roomComponent(mRoomComponent)
+            .appComponent(mAppComponent)
             .repositoryModule(RepositoryModule())
             .build()
     }

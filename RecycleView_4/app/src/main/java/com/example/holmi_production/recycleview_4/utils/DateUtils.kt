@@ -10,32 +10,31 @@ import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
-class DateUtils {
-    companion object {
-        var calendar = GregorianCalendar()
-        var now = Date(System.currentTimeMillis())
-        val currentMonth: Int
-            @IntRange(from = 0, to = 11)
-            get() {
-                calendar.time = now
-                return calendar.get(Calendar.MONTH)
-            }
 
-        val currentYear: Int
-            @IntRange(from = 0)
-            get() {
+object DateUtils {
+    var calendar = GregorianCalendar()
+    var now = Date(System.currentTimeMillis())
+    val currentMonth: Int
+        @IntRange(from = 0, to = 11)
+        get() {
+            calendar.time = now
+            return calendar.get(Calendar.MONTH)
+        }
 
-                calendar.time = now
-                return calendar.get(Calendar.YEAR)
-            }
+    val currentYear: Int
+        @IntRange(from = 0)
+        get() {
 
-        val currentDay: Int
-            @IntRange(from = 0)
-            get() {
-                calendar.time = now
-                return calendar.get(Calendar.DAY_OF_MONTH)
-            }
-    }
+            calendar.time = now
+            return calendar.get(Calendar.YEAR)
+        }
+
+    val currentDay: Int
+        @IntRange(from = 0)
+        get() {
+            calendar.time = now
+            return calendar.get(Calendar.DAY_OF_MONTH)
+        }
 
     fun buildDate(@IntRange(from = 1, to = 31) dayOfMonth: Int): Date {
         return buildDate(dayOfMonth, currentMonth)
@@ -58,10 +57,10 @@ class DateUtils {
     }
 
     fun formatDate(timeinMilis: Long): String {
-        return DateFormat.getDateInstance(SimpleDateFormat.LONG,Locale("ru")).format(Date(timeinMilis))
+        return DateFormat.getDateInstance(SimpleDateFormat.LONG, Locale("ru")).format(Date(timeinMilis))
     }
 
-     fun setHeader(events: Map<Long, List<News>>): ArrayList<ListItem> {
+    fun setHeader(events: Map<Long, List<News>>): ArrayList<ListItem> {
         val news: ArrayList<ListItem> = arrayListOf()
         for (date in events.keys) {
             val header = HeaderItem(date)
@@ -74,7 +73,7 @@ class DateUtils {
         return news
     }
 
-     fun toMap(events: List<News>?): Map<Long, List<News>> {
+    fun toMap(events: List<News>?): Map<Long, List<News>> {
         val map = TreeMap<Long, MutableList<News>>()
         if (events != null) {
             for (event in events) {
@@ -88,6 +87,7 @@ class DateUtils {
         }
         return map.descendingMap()
     }
+
     fun reformateItem(items: List<News>?): ArrayList<ListItem> {
         return setHeader(toMap(items))
     }

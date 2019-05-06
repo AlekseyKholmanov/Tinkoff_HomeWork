@@ -96,20 +96,20 @@ class ListFragment : MvpAppCompatFragment(), ClickOnNewsCallback, NewsListView {
         if (!isFavorite!!)
             compositeDisposable.add(loadNewsFromNetwork()
                 .observeOn(AndroidSchedulers.mainThread())
-                .map { t ->
-                    DateUtils().reformateItem(t.news)
+                .map { newsObject->
+                    DateUtils.reformateItem(newsObject.news)
                 }
-                .subscribe { it ->
-                    mAdapter.setNews(it)
+                .subscribe { listItem ->
+                    mAdapter.setNews(listItem)
                 }
             )
         else {
             compositeDisposable.add(newsRepository.getAllFavoriteNews()
                 .observeOn(AndroidSchedulers.mainThread())
                 .map { t ->
-                    DateUtils().reformateItem(t)
+                    DateUtils.reformateItem(t)
                 }
-                .subscribe { it ->
+                .subscribe {
                     Log.d("Qwerty", "size ${it.size}")
                     mAdapter.setNews(it)
                 }
@@ -128,7 +128,7 @@ class ListFragment : MvpAppCompatFragment(), ClickOnNewsCallback, NewsListView {
         else {
             newsRepository.getAllFavoriteNews()
         }
-        return action.map { DateUtils().reformateItem(it) }
+        return action.map { DateUtils.reformateItem(it) }
             .observeOn(AndroidSchedulers.mainThread())
     }
 

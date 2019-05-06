@@ -7,7 +7,7 @@ import com.example.holmi_production.recycleview_4.di.modules.*
 class App : Application() {
 
     companion object {
-        lateinit var mRepositoryComponent: RepositoryComponent
+        lateinit var mPresenterComponent: PresenterComponent
         lateinit var mAppComponent: AppComponent
     }
 
@@ -24,9 +24,9 @@ class App : Application() {
             .netModule(NetModule(BASE_URL, this))
             .build()
 
-        mRepositoryComponent = DaggerRepositoryComponent.builder()
+        mPresenterComponent = DaggerPresenterComponent.builder()
             .appComponent(mAppComponent)
-            .repositoryModule(RepositoryModule())
+            .presenterModule(PresenterModule())
             .build()
     }
 

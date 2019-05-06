@@ -1,6 +1,5 @@
 package com.example.holmi_production.recycleview_4.ui
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
@@ -12,22 +11,14 @@ import android.view.View
 import android.view.ViewGroup
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
-import com.example.holmi_production.recycleview_4.mvp.view.NewsListView
+import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.example.holmi_production.recycleview_4.NewsItems.ListItem
-import com.example.holmi_production.recycleview_4.mvp.Presenter.NewsListPresenterImpl
 import com.example.holmi_production.recycleview_4.R
-import com.example.holmi_production.recycleview_4.source.network.NewsObject
-import com.example.holmi_production.recycleview_4.mvp.model.NewsRepository
-import com.example.holmi_production.recycleview_4.source.db.entity.News
 import com.example.holmi_production.recycleview_4.di.App
-import com.example.holmi_production.recycleview_4.utils.DateUtils
-import io.reactivex.Flowable
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
+import com.example.holmi_production.recycleview_4.mvp.Presenter.NewsListPresenter
+import com.example.holmi_production.recycleview_4.mvp.view.NewsListView
 import kotlinx.android.synthetic.main.fragment_list.*
 import java.util.*
-import javax.inject.Inject
 
 
 class ListFragment : MvpAppCompatFragment(), ClickOnNewsCallback,
@@ -45,14 +36,10 @@ class ListFragment : MvpAppCompatFragment(), ClickOnNewsCallback,
         }
     }
 
-    @Inject
-    lateinit var newsRepository: NewsRepository
-
     @InjectPresenter
-    lateinit var newsListPresenter: NewsListPresenterImpl
+    lateinit var newsListPresenter: NewsListPresenter
 
     private lateinit var mAdapter: NewsAdapter
-    private val compositeDisposable = CompositeDisposable()
     private var isFavorite: Boolean? = null
 
     override fun onCreateView(
@@ -68,8 +55,7 @@ class ListFragment : MvpAppCompatFragment(), ClickOnNewsCallback,
 
     override fun onActivityCreated(bundle: Bundle?) {
         super.onActivityCreated(bundle)
-        mAdapter =
-            NewsAdapter(clickOnNewsCallback = this as ClickOnNewsCallback)
+        mAdapter = NewsAdapter(clickOnNewsCallback = this as ClickOnNewsCallback)
         setNewsToAdapter()
         listRecyclerView.adapter = mAdapter
         listRecyclerView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
@@ -78,55 +64,11 @@ class ListFragment : MvpAppCompatFragment(), ClickOnNewsCallback,
     override fun onCreate(savedInstanceState: Bundle?) {
         isFavorite = arguments?.getBoolean(ARG_FAVORITE)
         super.onCreate(savedInstanceState)
-        App.mRepositoryComponent.inject(this)
-    }
-
-    override fun onAttach(context: Context?) {
-        super.onAttach(context)
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        compositeDisposable.dispose()
+        returnPresenter()
     }
 
     private fun setNewsToAdapter() {
-        if (!isFavorite!!)
-            compositeDisposable.add(loadNewsFromNetwork()
-                .observeOn(AndroidSchedulers.mainThread())
-                .map { newsObject->
-                    DateUtils.reformateItem(newsObject.news)
-                }
-                .subscribe { listItem ->
-                    mAdapter.setNews(listItem)
-                }
-            )
-        else {
-            compositeDisposable.add(newsRepository.getAllFavoriteNews()
-                .observeOn(AndroidSchedulers.mainThread())
-                .map { t ->
-                    DateUtils.reformateItem(t)
-                }
-                .subscribe {
-                    mAdapter.setNews(it)
-                }
-            )
-        }
-    }
-
-    private fun loadNewsFromNetwork(): Single<NewsObject> {
-        return newsRepository.getNewsFromNetwork()
-            .observeOn(AndroidSchedulers.mainThread())
-    }
-
-    private fun loadNews(): Flowable<ArrayList<ListItem>> {
-        val action: Flowable<List<News>> = if (!isFavorite!!)
-            newsRepository.getAllNews()
-        else {
-            newsRepository.getAllFavoriteNews()
-        }
-        return action.map { DateUtils.reformateItem(it) }
-            .observeOn(AndroidSchedulers.mainThread())
+        newsListPresenter.getNews(isFavorite!!)
     }
 
     override fun onItemClicked(newsId: Int) {
@@ -137,8 +79,8 @@ class ListFragment : MvpAppCompatFragment(), ClickOnNewsCallback,
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun showNews(news: List<News>) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun showNews(news: ArrayList<ListItem>) {
+        mAdapter.setNews(news)
     }
 
     override fun showSingleNews(newsId: Int) {
@@ -150,6 +92,11 @@ class ListFragment : MvpAppCompatFragment(), ClickOnNewsCallback,
 
     override fun updateListNews() {
         mAdapter.notifyDataSetChanged()
+    }
+
+    @ProvidePresenter
+    fun returnPresenter(): NewsListPresenter {
+        return App.mPresenterComponent.presenter()
     }
 }
 

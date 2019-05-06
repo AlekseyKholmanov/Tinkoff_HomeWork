@@ -55,6 +55,7 @@ class NetModule(baseUrl:String, application: Application){
     }
 
     @Provides
+    @Singleton
     fun provideRemoteDataSource(retrofit:Retrofit): RemoteDataSource {
         return retrofit.create(RemoteDataSource::class.java)
     }

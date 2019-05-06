@@ -33,31 +33,6 @@ import javax.inject.Inject
 
 class ListFragment : MvpAppCompatFragment(), ClickOnNewsCallback, NewsListView {
 
-    override fun onItemClicked(newsId: Int) {
-        Log.d("qwerty1", "clicked")
-        newsListPresenter.openSingleNews(newsId)
-    }
-
-    override fun showNetworkAlertDialog() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun showNews(news: List<News>) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun showSingleNews(newsId: Int) {
-        Log.d("RecyclerView", "CLICK!")
-        val intent = Intent(context, NewsActivity::class.java).apply {
-            putExtra(MainActivity.ARG_ID, newsId)
-        }
-        ContextCompat.startActivity(context!!, intent, null)
-    }
-
-    override fun updateListNews() {
-        mAdapter.notifyDataSetChanged()
-    }
-
     companion object {
         private const val ARG_FAVORITE = "isFavorite"
         @JvmStatic
@@ -71,7 +46,7 @@ class ListFragment : MvpAppCompatFragment(), ClickOnNewsCallback, NewsListView {
     }
 
     @Inject
-    lateinit var newsRepository:NewsRepository
+    lateinit var newsRepository: NewsRepository
 
     @InjectPresenter
     lateinit var newsListPresenter: NewsListPresenterImpl
@@ -142,7 +117,6 @@ class ListFragment : MvpAppCompatFragment(), ClickOnNewsCallback, NewsListView {
         }
     }
 
-
     private fun loadNewsFromNetwork(): Single<NewsObject> {
         return newsRepository.getNewsFromNetwork()
             .observeOn(AndroidSchedulers.mainThread())
@@ -156,6 +130,31 @@ class ListFragment : MvpAppCompatFragment(), ClickOnNewsCallback, NewsListView {
         }
         return action.map { DateUtils().reformateItem(it) }
             .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    override fun onItemClicked(newsId: Int) {
+        Log.d("qwerty1", "clicked")
+        newsListPresenter.openSingleNews(newsId)
+    }
+
+    override fun showNetworkAlertDialog() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun showNews(news: List<News>) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun showSingleNews(newsId: Int) {
+        Log.d("RecyclerView", "CLICK!")
+        val intent = Intent(context, NewsActivity::class.java).apply {
+            putExtra(MainActivity.ARG_ID, newsId)
+        }
+        ContextCompat.startActivity(context!!, intent, null)
+    }
+
+    override fun updateListNews() {
+        mAdapter.notifyDataSetChanged()
     }
 }
 

@@ -4,7 +4,6 @@ import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Query
 import com.example.holmi_production.recycleview_4.db.entity.News
 import io.reactivex.Flowable
-import io.reactivex.Single
 
 @Dao
 interface FavoriteDao {

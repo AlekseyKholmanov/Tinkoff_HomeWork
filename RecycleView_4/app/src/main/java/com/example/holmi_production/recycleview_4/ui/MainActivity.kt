@@ -8,8 +8,6 @@ import android.support.v4.view.ViewPager
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import com.example.holmi_production.recycleview_4.R
-import com.example.holmi_production.recycleview_4.db.NewsRepository
-import javax.inject.Inject
 
 
 class MainActivity : AppCompatActivity() {

@@ -9,6 +9,8 @@ import android.net.NetworkCapabilities
 import android.net.NetworkCapabilities.TRANSPORT_WIFI
 
 class NetworkChangeReceiver : BroadcastReceiver() {
+
+    //TODO фича, которая будет следить за появлением подключения к сети
     override fun onReceive(context: Context?, intent: Intent?) {
         val cm = context!!.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     }

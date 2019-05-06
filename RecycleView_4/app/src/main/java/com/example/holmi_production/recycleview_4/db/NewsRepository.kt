@@ -27,7 +27,6 @@ class NewsRepository @Inject constructor(
 
     fun getNewsFromNetwork(): Single<NewsObject> {
         return remoteDataSource.getNews()
-            .subscribeOn(Schedulers.io())
             .doAfterSuccess { t ->
                 insertListNews(t.news)
                     .subscribe()
@@ -41,34 +40,25 @@ class NewsRepository @Inject constructor(
 
     fun insertFavoriteNews(news: FavoriteNews): Completable {
         return Completable.fromCallable { favoriteNewsDao.insert(news) }
-            .subscribeOn(Schedulers.io())
     }
 
     fun insertListNews(news: List<News>): Completable {
         return Completable.fromCallable { newsDao.insertListNews(news) }
-            .subscribeOn(Schedulers.io())
     }
 
     fun deleteFavotiteNews(newsId: Int): Completable {
         return Completable.fromCallable { favoriteNewsDao.delete(newsId) }
-            .subscribeOn(Schedulers.io())
     }
 
     fun getAllNews(): Flowable<List<News>> {
         return newsDao.getAll()
-            .subscribeOn(Schedulers.io())
     }
 
     fun getAllFavoriteNews(): Flowable<List<News>> {
         return favorite.getFavorite()
-            .subscribeOn(Schedulers.io())
     }
-
 
     fun getFavoriteNewsById(newsId: Int): Maybe<FavoriteNews> {
         return favoriteNewsDao.getNewsById(newsId)
-            .subscribeOn(Schedulers.io())
     }
-
-
 }

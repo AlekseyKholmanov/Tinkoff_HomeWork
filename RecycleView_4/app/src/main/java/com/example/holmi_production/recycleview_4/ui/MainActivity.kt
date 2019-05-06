@@ -17,13 +17,10 @@ class MainActivity : AppCompatActivity() {
     companion object {
         const val ARG_ID = "id"
     }
-
-
-
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         val viewPager: ViewPager = findViewById(R.id.pager)
         setupViewPager(viewPager)
         val tabLayout: TabLayout = findViewById(R.id.tab_layout)

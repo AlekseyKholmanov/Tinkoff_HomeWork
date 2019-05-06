@@ -32,6 +32,7 @@ import javax.inject.Inject
 
 
 class ListFragment : MvpAppCompatFragment(), ClickOnNewsCallback, NewsListView {
+
     override fun onItemClicked(newsId: Int) {
         Log.d("qwerty1", "clicked")
         newsListPresenter.openSingleNews(newsId)
@@ -57,9 +58,6 @@ class ListFragment : MvpAppCompatFragment(), ClickOnNewsCallback, NewsListView {
         mAdapter.notifyDataSetChanged()
     }
 
-    @InjectPresenter
-    lateinit var newsListPresenter: NewsListPresenterImpl
-
     companion object {
         private const val ARG_FAVORITE = "isFavorite"
         @JvmStatic
@@ -72,24 +70,15 @@ class ListFragment : MvpAppCompatFragment(), ClickOnNewsCallback, NewsListView {
         }
     }
 
-    override fun onAttach(context: Context?) {
-        super.onAttach(context)
-        Log.d("TAG1", "attach")
+    @Inject
+    lateinit var newsRepository:NewsRepository
 
-    }
-
-    override fun onDetach() {
-        Log.d("TAG1", "detach")
-        super.onDetach()
-        compositeDisposable.dispose()
-    }
+    @InjectPresenter
+    lateinit var newsListPresenter: NewsListPresenterImpl
 
     private lateinit var mAdapter: NewsAdapter
     private val compositeDisposable = CompositeDisposable()
     private var isFavorite: Boolean? = null
-
-    @Inject
-    lateinit var newsRepository:NewsRepository
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -115,6 +104,17 @@ class ListFragment : MvpAppCompatFragment(), ClickOnNewsCallback, NewsListView {
         isFavorite = arguments?.getBoolean(ARG_FAVORITE)
         super.onCreate(savedInstanceState)
         App.mRepositoryComponent.inject(this)
+    }
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        Log.d("TAG1", "attach")
+    }
+
+    override fun onDetach() {
+        Log.d("TAG1", "detach")
+        super.onDetach()
+        compositeDisposable.dispose()
     }
 
     private fun setNewsToAdapter() {

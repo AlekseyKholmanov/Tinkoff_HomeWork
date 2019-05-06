@@ -30,8 +30,4 @@ class App : Application() {
             .build()
     }
 
-    fun getRepositoryComponent():RepositoryComponent{
-        return mRepositoryComponent
-    }
-
 }

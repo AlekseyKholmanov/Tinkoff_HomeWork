@@ -1,8 +1,8 @@
-package com.example.holmi_production.recycleview_4.db.dao
+package com.example.holmi_production.recycleview_4.source.db.dao
 
 import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Query
-import com.example.holmi_production.recycleview_4.db.entity.News
+import com.example.holmi_production.recycleview_4.source.db.entity.News
 import io.reactivex.Flowable
 
 @Dao

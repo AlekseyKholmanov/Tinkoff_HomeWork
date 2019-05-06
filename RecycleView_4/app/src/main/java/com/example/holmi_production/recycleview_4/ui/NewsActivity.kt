@@ -5,14 +5,13 @@ import android.support.v4.content.ContextCompat
 import android.support.v4.text.HtmlCompat
 import android.support.v7.app.AppCompatActivity
 import android.text.Html
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
 import android.widget.Toast
 import com.example.holmi_production.recycleview_4.R
-import com.example.holmi_production.recycleview_4.db.NewsRepository
-import com.example.holmi_production.recycleview_4.db.entity.FavoriteNews
+import com.example.holmi_production.recycleview_4.mvp.model.NewsRepository
+import com.example.holmi_production.recycleview_4.source.db.entity.FavoriteNews
 import com.example.holmi_production.recycleview_4.utils.DateUtils
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -41,7 +40,7 @@ class NewsActivity : AppCompatActivity() {
             .subscribe { it ->
                 title = it.newsItem.newsHeader.theme
                 content.text = HtmlCompat.fromHtml(it.newsItem.content, Html.FROM_HTML_MODE_COMPACT)
-                date.text = DateUtils().formatDate(it.newsItem.newsHeader.date.timeInMilliseconds)
+                date.text = DateUtils.formatDate(it.newsItem.newsHeader.date.timeInMilliseconds)
             })
         compositeDisposable.add(
             newsRepository.getFavoriteNewsById(newsId!!)
@@ -69,7 +68,6 @@ class NewsActivity : AppCompatActivity() {
             compositeDisposable.add(
                 newsRepository.deleteFavotiteNews(newsId!!)
                     .observeOn(AndroidSchedulers.mainThread())
-                    .doOnError { Log.d("qwerty1", "error $it") }
                     .subscribe()
             )
             isFavorite = false
@@ -82,7 +80,6 @@ class NewsActivity : AppCompatActivity() {
             compositeDisposable.add(
                 newsRepository.insertFavoriteNews(favNews)
                     .observeOn(AndroidSchedulers.mainThread())
-                    .doOnError { Log.d("qwerty1", "error $it") }
                     .subscribe()
             )
             isFavorite = true

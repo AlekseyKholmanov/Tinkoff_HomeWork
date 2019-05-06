@@ -1,9 +1,9 @@
-package com.example.holmi_production.recycleview_4.db.dao
+package com.example.holmi_production.recycleview_4.source.db.dao
 
 import android.arch.persistence.room.*
 import android.arch.persistence.room.OnConflictStrategy.REPLACE
 import android.support.annotation.Nullable
-import com.example.holmi_production.recycleview_4.db.entity.News
+import com.example.holmi_production.recycleview_4.source.db.entity.News
 import io.reactivex.Flowable
 import io.reactivex.Single
 

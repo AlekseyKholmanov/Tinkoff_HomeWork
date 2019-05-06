@@ -1,4 +1,4 @@
-package com.example.holmi_production.recycleview_4.db.entity
+package com.example.holmi_production.recycleview_4.source.db.entity
 
 import android.arch.persistence.room.*
 import com.google.gson.annotations.SerializedName

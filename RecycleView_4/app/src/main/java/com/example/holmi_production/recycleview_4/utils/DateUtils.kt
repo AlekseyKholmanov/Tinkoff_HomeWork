@@ -4,7 +4,7 @@ import android.support.annotation.IntRange
 import com.example.holmi_production.recycleview_4.NewsItems.HeaderItem
 import com.example.holmi_production.recycleview_4.NewsItems.ListItem
 import com.example.holmi_production.recycleview_4.NewsItems.NewsItem
-import com.example.holmi_production.recycleview_4.db.entity.News
+import com.example.holmi_production.recycleview_4.source.db.entity.News
 import java.text.DateFormat
 
 import java.text.SimpleDateFormat

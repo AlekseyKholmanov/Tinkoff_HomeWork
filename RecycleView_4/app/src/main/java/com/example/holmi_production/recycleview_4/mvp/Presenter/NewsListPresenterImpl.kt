@@ -1,9 +1,9 @@
-package com.example.holmi_production.recycleview_4.Presenter
+package com.example.holmi_production.recycleview_4.mvp.Presenter
 
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
-import com.example.holmi_production.recycleview_4.MvpView.NewsListView
-import com.example.holmi_production.recycleview_4.db.entity.News
+import com.example.holmi_production.recycleview_4.mvp.view.NewsListView
+import com.example.holmi_production.recycleview_4.source.db.entity.News
 
 @InjectViewState
 class NewsListPresenterImpl : MvpPresenter<NewsListView>(), NewsListPresenter {

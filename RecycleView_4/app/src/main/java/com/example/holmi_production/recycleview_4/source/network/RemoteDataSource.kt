@@ -1,4 +1,4 @@
-package com.example.holmi_production.recycleview_4.Model
+package com.example.holmi_production.recycleview_4.source.network
 
 import io.reactivex.Single
 import retrofit2.http.GET

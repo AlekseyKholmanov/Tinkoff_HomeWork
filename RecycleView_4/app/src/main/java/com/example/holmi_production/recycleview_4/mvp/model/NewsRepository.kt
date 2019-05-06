@@ -1,11 +1,12 @@
-package com.example.holmi_production.recycleview_4.db
+package com.example.holmi_production.recycleview_4.mvp.model
 
 
-import com.example.holmi_production.recycleview_4.Model.NewsObject
-import com.example.holmi_production.recycleview_4.Model.RemoteDataSource
-import com.example.holmi_production.recycleview_4.Model.SingleNews
-import com.example.holmi_production.recycleview_4.db.entity.FavoriteNews
-import com.example.holmi_production.recycleview_4.db.entity.News
+import com.example.holmi_production.recycleview_4.source.db.NewsDatabase
+import com.example.holmi_production.recycleview_4.source.db.entity.FavoriteNews
+import com.example.holmi_production.recycleview_4.source.db.entity.News
+import com.example.holmi_production.recycleview_4.source.network.NewsObject
+import com.example.holmi_production.recycleview_4.source.network.RemoteDataSource
+import com.example.holmi_production.recycleview_4.source.network.SingleNews
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Maybe
@@ -18,7 +19,7 @@ import javax.inject.Singleton
 @Singleton
 class NewsRepository @Inject constructor(
     private val newsDatabase: NewsDatabase,
-    private val remoteDataSource:RemoteDataSource
+    private val remoteDataSource: RemoteDataSource
 ) {
     private val newsDao=newsDatabase.newsDao()
     private val favoriteNewsDao = newsDatabase.favoriteNewsDao()

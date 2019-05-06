@@ -7,19 +7,18 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
-import com.example.holmi_production.recycleview_4.MvpView.NewsListView
+import com.example.holmi_production.recycleview_4.mvp.view.NewsListView
 import com.example.holmi_production.recycleview_4.NewsItems.ListItem
-import com.example.holmi_production.recycleview_4.Presenter.NewsListPresenterImpl
+import com.example.holmi_production.recycleview_4.mvp.Presenter.NewsListPresenterImpl
 import com.example.holmi_production.recycleview_4.R
-import com.example.holmi_production.recycleview_4.Model.NewsObject
-import com.example.holmi_production.recycleview_4.db.NewsRepository
-import com.example.holmi_production.recycleview_4.db.entity.News
+import com.example.holmi_production.recycleview_4.source.network.NewsObject
+import com.example.holmi_production.recycleview_4.mvp.model.NewsRepository
+import com.example.holmi_production.recycleview_4.source.db.entity.News
 import com.example.holmi_production.recycleview_4.di.App
 import com.example.holmi_production.recycleview_4.utils.DateUtils
 import io.reactivex.Flowable
@@ -31,7 +30,8 @@ import java.util.*
 import javax.inject.Inject
 
 
-class ListFragment : MvpAppCompatFragment(), ClickOnNewsCallback, NewsListView {
+class ListFragment : MvpAppCompatFragment(), ClickOnNewsCallback,
+    NewsListView {
 
     companion object {
         private const val ARG_FAVORITE = "isFavorite"
@@ -83,11 +83,9 @@ class ListFragment : MvpAppCompatFragment(), ClickOnNewsCallback, NewsListView {
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        Log.d("TAG1", "attach")
     }
 
     override fun onDetach() {
-        Log.d("TAG1", "detach")
         super.onDetach()
         compositeDisposable.dispose()
     }
@@ -110,7 +108,6 @@ class ListFragment : MvpAppCompatFragment(), ClickOnNewsCallback, NewsListView {
                     DateUtils.reformateItem(t)
                 }
                 .subscribe {
-                    Log.d("Qwerty", "size ${it.size}")
                     mAdapter.setNews(it)
                 }
             )
@@ -133,7 +130,6 @@ class ListFragment : MvpAppCompatFragment(), ClickOnNewsCallback, NewsListView {
     }
 
     override fun onItemClicked(newsId: Int) {
-        Log.d("qwerty1", "clicked")
         newsListPresenter.openSingleNews(newsId)
     }
 
@@ -146,7 +142,6 @@ class ListFragment : MvpAppCompatFragment(), ClickOnNewsCallback, NewsListView {
     }
 
     override fun showSingleNews(newsId: Int) {
-        Log.d("RecyclerView", "CLICK!")
         val intent = Intent(context, NewsActivity::class.java).apply {
             putExtra(MainActivity.ARG_ID, newsId)
         }

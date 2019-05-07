@@ -15,32 +15,37 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.example.holmi_production.recycleview_4.NewsItems.ListItem
 import com.example.holmi_production.recycleview_4.R
 import com.example.holmi_production.recycleview_4.di.App
-import com.example.holmi_production.recycleview_4.mvp.Presenter.NewsListPresenter
-import com.example.holmi_production.recycleview_4.mvp.view.NewsListView
+import com.example.holmi_production.recycleview_4.mvp.Presenter.ListNewsPresenter
+import com.example.holmi_production.recycleview_4.mvp.view.ListNewsView
 import kotlinx.android.synthetic.main.fragment_list.*
 import java.util.*
 
 
-class ListFragment : MvpAppCompatFragment(), ClickOnNewsCallback,
-    NewsListView {
+class FragmentList : MvpAppCompatFragment(), ClickOnNewsCallback,
+    ListNewsView {
 
     companion object {
         private const val ARG_FAVORITE = "isFavorite"
         @JvmStatic
-        fun newInstance(isFavorite: Boolean): ListFragment {
+        fun newInstance(isFavorite: Boolean): FragmentList {
             val args = Bundle()
             args.putBoolean(ARG_FAVORITE, isFavorite)
-            val fragment = ListFragment()
+            val fragment = FragmentList()
             fragment.arguments = args
             return fragment
         }
     }
 
     @InjectPresenter
-    lateinit var newsListPresenter: NewsListPresenter
+    lateinit var listNewsPresenter: ListNewsPresenter
 
     private lateinit var mAdapter: NewsAdapter
     private var isFavorite: Boolean? = null
+
+    @ProvidePresenter
+    fun initPresenter(): ListNewsPresenter {
+        return App.mPresenterComponent.listPresenter()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -64,15 +69,15 @@ class ListFragment : MvpAppCompatFragment(), ClickOnNewsCallback,
     override fun onCreate(savedInstanceState: Bundle?) {
         isFavorite = arguments?.getBoolean(ARG_FAVORITE)
         super.onCreate(savedInstanceState)
-        returnPresenter()
+        initPresenter()
     }
 
     private fun setNewsToAdapter() {
-        newsListPresenter.getNews(isFavorite!!)
+        listNewsPresenter.getNews(isFavorite!!)
     }
 
     override fun onItemClicked(newsId: Int) {
-        newsListPresenter.openSingleNews(newsId)
+        listNewsPresenter.openSingleNews(newsId)
     }
 
     override fun showNetworkAlertDialog() {
@@ -92,11 +97,6 @@ class ListFragment : MvpAppCompatFragment(), ClickOnNewsCallback,
 
     override fun updateListNews() {
         mAdapter.notifyDataSetChanged()
-    }
-
-    @ProvidePresenter
-    fun returnPresenter(): NewsListPresenter {
-        return App.mPresenterComponent.presenter()
     }
 }
 

@@ -1,24 +1,26 @@
 package com.example.holmi_production.recycleview_4.mvp.Presenter
 
+import android.annotation.SuppressLint
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import com.example.holmi_production.recycleview_4.mvp.model.NewsRepository
-import com.example.holmi_production.recycleview_4.mvp.view.NewsListView
+import com.example.holmi_production.recycleview_4.mvp.view.ListNewsView
 import com.example.holmi_production.recycleview_4.utils.DateUtils
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 @InjectViewState
-class NewsListPresenter @Inject constructor(private val newsRepository: NewsRepository) : MvpPresenter<NewsListView>(), INewsListPresenter {
-
+class ListNewsPresenter @Inject constructor(private val newsRepository: NewsRepository) :
+    MvpPresenter<ListNewsView>(), INewsListPresenter {
 
     override fun openSingleNews(newsId:Int) {
         viewState.showSingleNews(newsId)
     }
 
+    @SuppressLint("CheckResult")
     override fun getNews(isFavorite: Boolean) {
-        if (!isFavorite)
+        if (!isFavorite){
         newsRepository.getNewsFromNetwork()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -27,7 +29,7 @@ class NewsListPresenter @Inject constructor(private val newsRepository: NewsRepo
             }
             .subscribe { listItem ->
                 viewState.showNews(listItem)
-            }
+            }}
         else{
             newsRepository.getAllFavoriteNews()
                 .subscribeOn(Schedulers.io())
@@ -39,7 +41,6 @@ class NewsListPresenter @Inject constructor(private val newsRepository: NewsRepo
                     viewState.showNews(it)
                 }
         }
-
     }
 
 }

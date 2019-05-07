@@ -3,51 +3,51 @@ package com.example.holmi_production.recycleview_4.ui
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v4.text.HtmlCompat
-import android.support.v7.app.AppCompatActivity
 import android.text.Html
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
 import android.widget.Toast
+import com.arellomobile.mvp.MvpAppCompatActivity
+import com.arellomobile.mvp.presenter.InjectPresenter
+import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.example.holmi_production.recycleview_4.R
-import com.example.holmi_production.recycleview_4.mvp.model.NewsRepository
+import com.example.holmi_production.recycleview_4.di.App
+import com.example.holmi_production.recycleview_4.mvp.Presenter.SingleNewsPresenter
+import com.example.holmi_production.recycleview_4.mvp.view.SingleNewsView
 import com.example.holmi_production.recycleview_4.source.db.entity.FavoriteNews
+import com.example.holmi_production.recycleview_4.source.network.NewsItem
 import com.example.holmi_production.recycleview_4.utils.DateUtils
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 
-class NewsActivity : AppCompatActivity() {
-
+class NewsActivity : MvpAppCompatActivity(), SingleNewsView {
 
     private var isFavorite: Boolean = false
     var newsId: Int? = null
-    private lateinit var newsRepository: NewsRepository
     private val favoriteIcon = R.drawable.favorite_enable
     private val nonFavoriteIcon = R.drawable.favorite_none
     private val compositeDisposable = CompositeDisposable()
+    lateinit var content:TextView
+    lateinit var date:TextView
 
+
+    @InjectPresenter
+    lateinit var singleNewsPresenter: SingleNewsPresenter
+
+    @ProvidePresenter
+    fun initPresenter(): SingleNewsPresenter {
+        return App.mPresenterComponent.singlePresenter()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_news_item)
-
         newsId = intent.getIntExtra(MainActivity.ARG_ID, 0)
-        //newsRepository = NewsRepository(applicationContext)
-        val content = findViewById<TextView>(R.id.activity_content)
-        val date = findViewById<TextView>(R.id.activity_date)
-        compositeDisposable.add(newsRepository.getNewsFromNetworkById(newsId!!)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { it ->
-                title = it.newsItem.newsHeader.theme
-                content.text = HtmlCompat.fromHtml(it.newsItem.content, Html.FROM_HTML_MODE_COMPACT)
-                date.text = DateUtils.formatDate(it.newsItem.newsHeader.date.timeInMilliseconds)
-            })
-        compositeDisposable.add(
-            newsRepository.getFavoriteNewsById(newsId!!)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { it ->
-                    isFavorite = it != null
-                })
+        content = findViewById(R.id.activity_content)
+        date = findViewById(R.id.activity_date)
+        initPresenter()
+        singleNewsPresenter.getSingleNews(newsId!!)
+        singleNewsPresenter.isFavoteNews(newsId!!)
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
@@ -65,28 +65,38 @@ class NewsActivity : AppCompatActivity() {
                 this,
                 R.drawable.favorite_none
             )
-            compositeDisposable.add(
-                newsRepository.deleteFavotiteNews(newsId!!)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe()
-            )
+            singleNewsPresenter.deletefromFavorite(newsId!!)
+//            compositeDisposable.add(
+//                newsRepository.deleteFavotiteNews(newsId!!)
+//                    .observeOn(AndroidSchedulers.mainThread())
+//                    .subscribe()
+//            )
             isFavorite = false
             Toast.makeText(this, "убрано $newsId", Toast.LENGTH_SHORT).show()
         } else {
+
+            singleNewsPresenter.addToFavorite(newsId!!)
             item!!.icon = ContextCompat.getDrawable(
                 this,
                 R.drawable.favorite_enable
             )
-            compositeDisposable.add(
-                newsRepository.insertFavoriteNews(favNews)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe()
-            )
+            singleNewsPresenter.addToFavorite(newsId!!)
             isFavorite = true
             Toast.makeText(this, "добавлено $newsId", Toast.LENGTH_SHORT).show()
         }
         return true
     }
+
+    override fun showNews(newsItem: NewsItem) {
+        title = newsItem.newsHeader.theme
+        content.text = HtmlCompat.fromHtml(newsItem.newsHeader.content!!, Html.FROM_HTML_MODE_COMPACT)
+        date.text = DateUtils.formatDate(newsItem.newsHeader.date.timeInMilliseconds)
+    }
+
+    override fun showToast() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
 
     override fun onDestroy() {
         super.onDestroy()

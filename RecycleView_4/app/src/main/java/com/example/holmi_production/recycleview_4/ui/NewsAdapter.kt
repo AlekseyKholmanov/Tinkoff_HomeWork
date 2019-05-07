@@ -9,7 +9,7 @@ import com.example.holmi_production.recycleview_4.NewsItems.HeaderItem
 import com.example.holmi_production.recycleview_4.NewsItems.ListItem
 import com.example.holmi_production.recycleview_4.NewsItems.NewsItem
 import com.example.holmi_production.recycleview_4.R
-import com.example.holmi_production.recycleview_4.db.entity.News
+import com.example.holmi_production.recycleview_4.source.db.entity.News
 import com.example.holmi_production.recycleview_4.utils.DateUtils
 
 
@@ -35,7 +35,6 @@ class NewsAdapter(
 
     fun setNews(news: List<ListItem>) {
         this.listItem = news
-        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int = listItem.size
@@ -47,16 +46,17 @@ class NewsAdapter(
             ListItem.TYPE_HEADER -> {
                 val headerItem = listItem[position] as HeaderItem
                 val holder = viewHolder as HeaderViewHolder
-                val dateText = (DateUtils().formatDate(headerItem.date))
+                //TODO вынести отображение даты в Utils
+                val dateText = DateUtils.formatDate(headerItem.date)
 //                {
-//                    DateUtils().buildDate(currentDay) -> {
+//                    DateUtils.buildDate(currentDay) -> {
 //                        "Сегодня"
 //                    }
-//                    DateUtils().buildDate(currentDay - 1) -> {
+//                    DateUtils.buildDate(currentDay - 1) -> {
 //                        "Вчера"
 //                    }
 //                    else -> {
-//                        DateUtils().formatDate(headerItem.date)
+//                        DateUtils.formatDate(headerItem.date)
 //                    }
 //                }
                 holder.txt_header.text = dateText
@@ -65,7 +65,6 @@ class NewsAdapter(
                 val newsItem = listItem[position] as NewsItem
                 val viewHolder1 = viewHolder as NewsViewHolder
                 viewHolder1.bind(newsItem.content, clickOnNewsCallback)
-
             }
         }
     }
@@ -85,7 +84,7 @@ class NewsAdapter(
             clickOnNewsCallback: ClickOnNewsCallback
         ) {
             theme.text = news.theme
-            date = DateUtils().formatDate(news.date.timeInMilliseconds)
+            date = DateUtils.formatDate(news.date.timeInMilliseconds)
             content.text = news.content
             v.setOnClickListener {
                 clickOnNewsCallback.onItemClicked(news.newsId)

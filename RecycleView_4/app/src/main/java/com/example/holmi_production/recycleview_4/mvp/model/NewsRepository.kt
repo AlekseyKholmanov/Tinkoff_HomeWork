@@ -18,20 +18,20 @@ import javax.inject.Singleton
 
 @Singleton
 class NewsRepository @Inject constructor(
-    private val newsDatabase: NewsDatabase,
+    newsDatabase: NewsDatabase,
     private val remoteDataSource: RemoteDataSource
 ) {
-    private val newsDao=newsDatabase.newsDao()
+    private val newsDao = newsDatabase.newsDao()
     private val favoriteNewsDao = newsDatabase.favoriteNewsDao()
     private val favorite = newsDatabase.favorite()
 
 
     fun getNewsFromNetwork(): Single<NewsObject> {
         return remoteDataSource.getNews()
-            .doAfterSuccess { t ->
-                insertListNews(t.news)
-                    .subscribe()
-            }
+//            .doAfterSuccess { t ->
+//                insertListNews(t.news)
+//                    .subscribe()
+//            }
     }
 
     fun getNewsFromNetworkById(id: Int): Single<SingleNews> {

@@ -26,7 +26,6 @@ class NewsActivity : MvpAppCompatActivity(), SingleNewsView {
     var newsId: Int? = null
     private val favoriteIcon = R.drawable.favorite_enable
     private val nonFavoriteIcon = R.drawable.favorite_none
-    private val compositeDisposable = CompositeDisposable()
     lateinit var content:TextView
     lateinit var date:TextView
 
@@ -89,7 +88,7 @@ class NewsActivity : MvpAppCompatActivity(), SingleNewsView {
 
     override fun showNews(newsItem: NewsItem) {
         title = newsItem.newsHeader.theme
-        content.text = HtmlCompat.fromHtml(newsItem.newsHeader.content!!, Html.FROM_HTML_MODE_COMPACT)
+        content.text = newsItem.newsHeader.content
         date.text = DateUtils.formatDate(newsItem.newsHeader.date.timeInMilliseconds)
     }
 
@@ -97,9 +96,4 @@ class NewsActivity : MvpAppCompatActivity(), SingleNewsView {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-
-    override fun onDestroy() {
-        super.onDestroy()
-        compositeDisposable.dispose()
-    }
 }

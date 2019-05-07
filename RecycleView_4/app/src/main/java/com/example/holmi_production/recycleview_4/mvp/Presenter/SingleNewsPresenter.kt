@@ -30,6 +30,5 @@ class SingleNewsPresenter @Inject constructor(private val newsRepository: NewsRe
             .subscribe { listItem ->
                 viewState.showNews(listItem.newsItem)
             }
-
     }
 }

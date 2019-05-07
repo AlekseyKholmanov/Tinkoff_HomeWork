@@ -1,5 +1,6 @@
 package com.example.holmi_production.recycleview_4.di.modules
 
+import android.util.Log
 import com.example.holmi_production.recycleview_4.di.scope.PresenterScope
 import com.example.holmi_production.recycleview_4.mvp.Presenter.ListNewsPresenter
 import com.example.holmi_production.recycleview_4.mvp.Presenter.SingleNewsPresenter

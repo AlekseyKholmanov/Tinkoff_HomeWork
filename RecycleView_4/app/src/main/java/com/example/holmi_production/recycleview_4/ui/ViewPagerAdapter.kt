@@ -15,7 +15,6 @@ class ViewPagerAdapter(fm: FragmentManager?) : FragmentStatePagerAdapter(fm) {
         return mFragmentTitleList.size
     }
 
-
     override fun getPageTitle(position: Int): CharSequence? {
         return mFragmentTitleList[position]
     }

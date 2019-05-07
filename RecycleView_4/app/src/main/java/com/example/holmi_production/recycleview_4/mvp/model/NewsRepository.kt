@@ -28,10 +28,12 @@ class NewsRepository @Inject constructor(
 
     fun getNewsFromNetwork(): Single<NewsObject> {
         return remoteDataSource.getNews()
-//            .doAfterSuccess { t ->
-//                insertListNews(t.news)
-//                    .subscribe()
-//            }
+            .doAfterSuccess { t ->
+                insertListNews(t.news
+                    .sortedByDescending{ news -> news.date.timeInMilliseconds }
+                    .take(100))
+                    .subscribe()
+            }
     }
 
     fun getNewsFromNetworkById(id: Int): Single<SingleNews> {

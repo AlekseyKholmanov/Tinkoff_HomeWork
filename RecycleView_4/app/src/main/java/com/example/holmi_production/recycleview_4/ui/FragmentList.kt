@@ -16,7 +16,7 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.example.holmi_production.recycleview_4.NewsItems.ListItem
 import com.example.holmi_production.recycleview_4.R
 import com.example.holmi_production.recycleview_4.di.App
-import com.example.holmi_production.recycleview_4.mvp.Presenter.ListNewsPresenter
+import com.example.holmi_production.recycleview_4.mvp.Presenter.NewsFragmentPresenterImp
 import com.example.holmi_production.recycleview_4.mvp.view.ListNewsView
 import kotlinx.android.synthetic.main.fragment_list.*
 import java.util.*
@@ -41,11 +41,11 @@ class FragmentList : MvpAppCompatFragment(), ClickOnNewsCallback,
     private var isFavorite: Boolean? = null
 
     @InjectPresenter
-    lateinit var listNewsPresenter: ListNewsPresenter
+    lateinit var newsFragmentPresenterImp: NewsFragmentPresenterImp
     lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
 
     @ProvidePresenter
-    fun initPresenter(): ListNewsPresenter {
+    fun initPresenter(): NewsFragmentPresenterImp {
         return App.mPresenterComponent.listPresenter()
     }
 
@@ -78,7 +78,7 @@ class FragmentList : MvpAppCompatFragment(), ClickOnNewsCallback,
     }
 
     override fun onRefresh() {
-        listNewsPresenter.updateNews(isFavorite!!)
+        newsFragmentPresenterImp.updateNews(isFavorite!!)
     }
 
     override fun showRefreshingStart() {
@@ -95,11 +95,11 @@ class FragmentList : MvpAppCompatFragment(), ClickOnNewsCallback,
     }
 
     private fun getNews() {
-        listNewsPresenter.getNews(isFavorite!!)
+        newsFragmentPresenterImp.getNews(isFavorite!!)
     }
 
     override fun onItemClicked(newsId: Int) {
-        listNewsPresenter.openSingleNews(newsId)
+        newsFragmentPresenterImp.openSingleNews(newsId)
     }
 
     override fun showNetworkAlertDialog() {

@@ -1,7 +1,5 @@
 package com.example.holmi_production.recycleview_4.mvp.Presenter
 
-import android.annotation.SuppressLint
-import android.util.Log
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import com.example.holmi_production.recycleview_4.mvp.model.NewsRepository
@@ -13,8 +11,8 @@ import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 @InjectViewState
-class ListNewsPresenter @Inject constructor(private val newsRepository: NewsRepository) :
-    MvpPresenter<ListNewsView>(), INewsListPresenter {
+class NewsFragmentPresenterImp @Inject constructor(private val newsRepository: NewsRepository) :
+    MvpPresenter<ListNewsView>(), NewsFragmentsPresenter {
     override fun updateNews(isFavorite: Boolean) {
         if (!isFavorite) {
             viewState.showRefreshingStart()
@@ -62,10 +60,6 @@ class ListNewsPresenter @Inject constructor(private val newsRepository: NewsRepo
                         viewState.showFavoriteNews(it)
                     })
         }
-    }
-
-    override fun getFavoriteNews() {
-
     }
 
     override fun onDestroy() {

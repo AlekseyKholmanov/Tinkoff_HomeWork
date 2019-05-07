@@ -2,8 +2,6 @@ package com.example.holmi_production.recycleview_4.ui
 
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
-import android.support.v4.text.HtmlCompat
-import android.text.Html
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
@@ -13,12 +11,11 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.example.holmi_production.recycleview_4.R
 import com.example.holmi_production.recycleview_4.di.App
-import com.example.holmi_production.recycleview_4.mvp.Presenter.SingleNewsPresenter
+import com.example.holmi_production.recycleview_4.mvp.Presenter.SingleNewsPresenterImp
 import com.example.holmi_production.recycleview_4.mvp.view.SingleNewsView
 import com.example.holmi_production.recycleview_4.source.db.entity.FavoriteNews
 import com.example.holmi_production.recycleview_4.source.network.NewsItem
 import com.example.holmi_production.recycleview_4.utils.DateUtils
-import io.reactivex.disposables.CompositeDisposable
 
 class NewsActivity : MvpAppCompatActivity(), SingleNewsView {
 
@@ -31,10 +28,10 @@ class NewsActivity : MvpAppCompatActivity(), SingleNewsView {
 
 
     @InjectPresenter
-    lateinit var singleNewsPresenter: SingleNewsPresenter
+    lateinit var singleNewsPresenterImp: SingleNewsPresenterImp
 
     @ProvidePresenter
-    fun initPresenter(): SingleNewsPresenter {
+    fun initPresenter(): SingleNewsPresenterImp {
         return App.mPresenterComponent.singlePresenter()
     }
 
@@ -45,8 +42,8 @@ class NewsActivity : MvpAppCompatActivity(), SingleNewsView {
         content = findViewById(R.id.activity_content)
         date = findViewById(R.id.activity_date)
         initPresenter()
-        singleNewsPresenter.getSingleNews(newsId!!)
-        singleNewsPresenter.isFavoteNews(newsId!!)
+        singleNewsPresenterImp.getSingleNews(newsId!!)
+        singleNewsPresenterImp.isFavoteNews(newsId!!)
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
@@ -64,7 +61,7 @@ class NewsActivity : MvpAppCompatActivity(), SingleNewsView {
                 this,
                 R.drawable.favorite_none
             )
-            singleNewsPresenter.deletefromFavorite(newsId!!)
+            singleNewsPresenterImp.deletefromFavorite(newsId!!)
 //            compositeDisposable.add(
 //                newsRepository.deleteFavotiteNews(newsId!!)
 //                    .observeOn(AndroidSchedulers.mainThread())
@@ -74,12 +71,12 @@ class NewsActivity : MvpAppCompatActivity(), SingleNewsView {
             Toast.makeText(this, "убрано $newsId", Toast.LENGTH_SHORT).show()
         } else {
 
-            singleNewsPresenter.addToFavorite(newsId!!)
+            singleNewsPresenterImp.addToFavorite(newsId!!)
             item!!.icon = ContextCompat.getDrawable(
                 this,
                 R.drawable.favorite_enable
             )
-            singleNewsPresenter.addToFavorite(newsId!!)
+            singleNewsPresenterImp.addToFavorite(newsId!!)
             isFavorite = true
             Toast.makeText(this, "добавлено $newsId", Toast.LENGTH_SHORT).show()
         }

@@ -23,7 +23,6 @@ class ListNewsPresenter @Inject constructor(private val newsRepository: NewsRepo
     }
 
     override fun getNews() {
-        Log.d("qwerty", "presenterNews")
         compositeDisposable.add(
             newsRepository.getNewsFromNetwork()
                 .subscribeOn(Schedulers.io())
@@ -37,7 +36,6 @@ class ListNewsPresenter @Inject constructor(private val newsRepository: NewsRepo
     }
 
     override fun getFavoriteNews() {
-        Log.d("qwerty","presenterFavNews")
         compositeDisposable.add(
             newsRepository.getAllFavoriteNews()
                 .subscribeOn(Schedulers.io())
@@ -46,10 +44,9 @@ class ListNewsPresenter @Inject constructor(private val newsRepository: NewsRepo
                     DateUtils.reformateItem(t)
                 }
                 .subscribe {it->
-                    viewState.showNews(it)
+                    viewState.showFavoriteNews(it)
                 })
     }
-
 
     override fun onDestroy() {
         super.onDestroy()

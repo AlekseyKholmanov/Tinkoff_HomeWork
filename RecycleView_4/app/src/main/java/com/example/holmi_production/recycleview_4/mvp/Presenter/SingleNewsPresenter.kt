@@ -5,12 +5,15 @@ import com.arellomobile.mvp.MvpPresenter
 import com.example.holmi_production.recycleview_4.mvp.model.NewsRepository
 import com.example.holmi_production.recycleview_4.mvp.view.SingleNewsView
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 @InjectViewState
-class SingleNewsPresenter @Inject constructor(private val newsRepository: NewsRepository):
-    MvpPresenter<SingleNewsView>(), ISingleNewsPresenter{
+class SingleNewsPresenter @Inject constructor(private val newsRepository: NewsRepository) :
+    MvpPresenter<SingleNewsView>(), ISingleNewsPresenter {
+
+    private val compositeDisposable = CompositeDisposable()
     override fun isFavoteNews(newsId: Int) {
 
     }
@@ -24,11 +27,12 @@ class SingleNewsPresenter @Inject constructor(private val newsRepository: NewsRe
     }
 
     override fun getSingleNews(newsId: Int) {
-        newsRepository.getNewsFromNetworkById(newsId)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { listItem ->
-                viewState.showNews(listItem.newsItem)
-            }
+        compositeDisposable.add(
+            newsRepository.getNewsFromNetworkById(newsId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { listItem ->
+                    viewState.showNews(listItem.newsItem)
+                })
     }
 }

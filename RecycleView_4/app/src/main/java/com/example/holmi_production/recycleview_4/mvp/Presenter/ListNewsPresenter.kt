@@ -15,6 +15,22 @@ import javax.inject.Inject
 @InjectViewState
 class ListNewsPresenter @Inject constructor(private val newsRepository: NewsRepository) :
     MvpPresenter<ListNewsView>(), INewsListPresenter {
+    override fun updateNews(isFavorite: Boolean) {
+        if (!isFavorite) {
+            viewState.showRefreshingStart()
+            compositeDisposable.add(
+                newsRepository.getNewsFromNetwork()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .map { newsObject ->
+                        DateUtils.reformateItem(newsObject.news)
+                    }
+                    .subscribe { listItem ->
+                        viewState.showRefreshingEnd()
+                        viewState.showNews(listItem)
+                    })
+        }
+    }
 
     private val compositeDisposable = CompositeDisposable()
 
@@ -22,30 +38,34 @@ class ListNewsPresenter @Inject constructor(private val newsRepository: NewsRepo
         viewState.showSingleNews(newsId)
     }
 
-    override fun getNews() {
-        compositeDisposable.add(
-            newsRepository.getNewsFromNetwork()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .map { newsObject ->
-                    DateUtils.reformateItem(newsObject.news)
-                }
-                .subscribe { listItem ->
-                    viewState.showNews(listItem)
-                })
+    override fun getNews(isFavorite: Boolean) {
+        if (!isFavorite) {
+            compositeDisposable.add(
+                newsRepository.getNewsFromNetwork()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .map { newsObject ->
+                        DateUtils.reformateItem(newsObject.news)
+                    }
+                    .subscribe { listItem ->
+                        viewState.showNews(listItem)
+                    })
+        } else {
+            compositeDisposable.add(
+                newsRepository.getAllFavoriteNews()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .map { t ->
+                        DateUtils.reformateItem(t)
+                    }
+                    .subscribe { it ->
+                        viewState.showFavoriteNews(it)
+                    })
+        }
     }
 
     override fun getFavoriteNews() {
-        compositeDisposable.add(
-            newsRepository.getAllFavoriteNews()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .map { t ->
-                    DateUtils.reformateItem(t)
-                }
-                .subscribe {it->
-                    viewState.showFavoriteNews(it)
-                })
+
     }
 
     override fun onDestroy() {

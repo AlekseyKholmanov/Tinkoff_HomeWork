@@ -3,6 +3,7 @@ package com.example.holmi_production.recycleview_4.ui
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
+import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -22,11 +23,7 @@ import java.util.*
 
 
 class FragmentList : MvpAppCompatFragment(), ClickOnNewsCallback,
-    ListNewsView {
-    override fun showFavoriteNews(news: ArrayList<ListItem>) {
-        mAdapter.setNews(news)
-        mAdapter.notifyDataSetChanged()
-    }
+    ListNewsView, SwipeRefreshLayout.OnRefreshListener {
 
     companion object {
         private const val ARG_FAVORITE = "isFavorite"
@@ -45,6 +42,7 @@ class FragmentList : MvpAppCompatFragment(), ClickOnNewsCallback,
 
     @InjectPresenter
     lateinit var listNewsPresenter: ListNewsPresenter
+    lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
 
     @ProvidePresenter
     fun initPresenter(): ListNewsPresenter {
@@ -56,10 +54,14 @@ class FragmentList : MvpAppCompatFragment(), ClickOnNewsCallback,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_list, container, false)
-        val recyclerView = view.findViewById<RecyclerView>(R.id.listRecyclerView)
+        val rootView = inflater.inflate(R.layout.fragment_list, container, false)
+        val recyclerView = rootView.findViewById<RecyclerView>(R.id.listRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(activity)
-        return view
+        mSwipeRefreshLayout = rootView.findViewById(R.id.fragment_list)
+        mSwipeRefreshLayout.setOnRefreshListener(this)
+        if (isFavorite!!)
+            mSwipeRefreshLayout.isEnabled = false
+        return rootView
     }
 
     override fun onActivityCreated(bundle: Bundle?) {
@@ -75,12 +77,25 @@ class FragmentList : MvpAppCompatFragment(), ClickOnNewsCallback,
         isFavorite = arguments?.getBoolean(ARG_FAVORITE)
     }
 
+    override fun onRefresh() {
+        listNewsPresenter.updateNews(isFavorite!!)
+    }
+
+    override fun showRefreshingStart() {
+        mSwipeRefreshLayout.isRefreshing = true
+    }
+
+    override fun showRefreshingEnd() {
+        mSwipeRefreshLayout.isRefreshing = false
+    }
+
+    override fun showFavoriteNews(news: ArrayList<ListItem>) {
+        mAdapter.setNews(news)
+        mAdapter.notifyDataSetChanged()
+    }
+
     private fun getNews() {
-        if (!isFavorite!!) {
-            listNewsPresenter.getNews()
-        } else {
-            listNewsPresenter.getFavoriteNews()
-        }
+        listNewsPresenter.getNews(isFavorite!!)
     }
 
     override fun onItemClicked(newsId: Int) {
@@ -90,6 +105,7 @@ class FragmentList : MvpAppCompatFragment(), ClickOnNewsCallback,
     override fun showNetworkAlertDialog() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
+
     override fun showNews(news: ArrayList<ListItem>) {
         mAdapter.setNews(news)
         mAdapter.notifyDataSetChanged()

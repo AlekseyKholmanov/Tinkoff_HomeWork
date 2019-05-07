@@ -9,7 +9,8 @@ import java.util.ArrayList
 interface ListNewsView : MvpView {
     fun showNews(news: ArrayList<ListItem>)
     fun showFavoriteNews(news: ArrayList<ListItem>)
-
+    fun showRefreshingStart()
+    fun showRefreshingEnd()
     @StateStrategyType(SkipStrategy::class)
     fun showSingleNews(newsId: Int)
     fun updateListNews()

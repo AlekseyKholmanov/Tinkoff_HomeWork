@@ -45,7 +45,7 @@ class NewsActivity : MvpAppCompatActivity(), SingleNewsView {
         date = findViewById(R.id.activity_date)
         initPresenter()
         singleNewsPresenterImp.getSingleNews(newsId!!)
-        singleNewsPresenterImp.isFavoteNews(newsId!!)
+        singleNewsPresenterImp.checkFavorite(newsId!!)
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {

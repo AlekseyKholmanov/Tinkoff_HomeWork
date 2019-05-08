@@ -9,7 +9,7 @@ import javax.inject.Singleton
 
 @Module
 class RoomModule(context: Context) {
-    val mContext = context
+    private val mContext = context
     private val DATABASE_NAME = "basic-sample-db"
     @Provides
     @Singleton

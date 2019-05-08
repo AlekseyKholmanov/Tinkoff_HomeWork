@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v4.widget.SwipeRefreshLayout
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -41,7 +42,7 @@ class FragmentList : MvpAppCompatFragment(), ClickOnNewsCallback,
     private var isFavorite: Boolean? = null
 
     @InjectPresenter
-    lateinit var newsFragmentPresenterImp: NewsFragmentPresenterImp
+    lateinit var presenter: NewsFragmentPresenterImp
     lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
 
     @ProvidePresenter
@@ -59,8 +60,6 @@ class FragmentList : MvpAppCompatFragment(), ClickOnNewsCallback,
         recyclerView.layoutManager = LinearLayoutManager(activity)
         mSwipeRefreshLayout = rootView.findViewById(R.id.fragment_list)
         mSwipeRefreshLayout.setOnRefreshListener(this)
-        if (isFavorite!!)
-            mSwipeRefreshLayout.isEnabled = false
         return rootView
     }
 
@@ -68,7 +67,7 @@ class FragmentList : MvpAppCompatFragment(), ClickOnNewsCallback,
         mAdapter = NewsAdapter(clickOnNewsCallback = this as ClickOnNewsCallback)
         listRecyclerView.adapter = mAdapter
         listRecyclerView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-        getNews()
+        presenter.getNews(isFavorite!!)
         super.onActivityCreated(bundle)
     }
 
@@ -78,7 +77,7 @@ class FragmentList : MvpAppCompatFragment(), ClickOnNewsCallback,
     }
 
     override fun onRefresh() {
-        newsFragmentPresenterImp.updateNews(isFavorite!!)
+        presenter.updateNews(isFavorite!!)
     }
 
     override fun showRefreshingStart() {
@@ -94,16 +93,17 @@ class FragmentList : MvpAppCompatFragment(), ClickOnNewsCallback,
         mAdapter.notifyDataSetChanged()
     }
 
-    private fun getNews() {
-        newsFragmentPresenterImp.getNews(isFavorite!!)
-    }
-
     override fun onItemClicked(newsId: Int) {
-        newsFragmentPresenterImp.openSingleNews(newsId)
+        presenter.openSingleNews(newsId)
     }
 
     override fun showNetworkAlertDialog() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            val dialog = AlertDialog.Builder(context!!)
+                .setTitle("Подключение к сети отсутствует")
+                .setMessage("Для работы программы необходимо подключение к  сети")
+                .setCancelable(false)
+                .setPositiveButton("Ok", null)
+            dialog.create().show()
     }
 
     override fun showNews(news: ArrayList<NewsContainer>) {

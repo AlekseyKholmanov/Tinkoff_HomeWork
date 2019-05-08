@@ -14,7 +14,7 @@ class SingleNewsPresenterImp @Inject constructor(private val newsRepository: New
     MvpPresenter<SingleNewsView>(), SingleNewsPresenter {
 
     private val compositeDisposable = CompositeDisposable()
-    override fun isFavoteNews(newsId: Int) {
+    override fun checkFavorite(newsId: Int) {
 
     }
 

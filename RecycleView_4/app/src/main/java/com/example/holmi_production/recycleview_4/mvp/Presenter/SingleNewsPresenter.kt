@@ -4,5 +4,5 @@ interface SingleNewsPresenter{
     fun addToFavorite(newsId:Int)
     fun deletefromFavorite(newsId: Int)
     fun getSingleNews(newsId: Int)
-    fun isFavoteNews(newsId: Int)
+    fun checkFavorite(newsId: Int)
 }

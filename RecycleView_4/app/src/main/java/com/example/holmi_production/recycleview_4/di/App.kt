@@ -21,6 +21,7 @@ class App : Application() {
     private fun setup() {
         mAppComponent = DaggerAppComponent.builder()
             .roomModule(RoomModule(this))
+            .connectivityManagerModule((ConnectivityManagerModule(this)))
             .netModule(NetModule(BASE_URL, this))
             .build()
 

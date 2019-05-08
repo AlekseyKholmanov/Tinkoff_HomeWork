@@ -21,7 +21,7 @@ class NewsFragmentPresenterImp @Inject constructor(private val newsRepository: N
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .map { newsObject ->
-                        DateUtils.reformateItem(newsObject.news)
+                        DateUtils.reformateItem(newsObject.listNews)
                     }
                     .subscribe { listItem ->
                         viewState.showRefreshingEnd()
@@ -43,7 +43,7 @@ class NewsFragmentPresenterImp @Inject constructor(private val newsRepository: N
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .map { newsObject ->
-                        DateUtils.reformateItem(newsObject.news)
+                        DateUtils.reformateItem(newsObject.listNews)
                     }
                     .subscribe { listItem ->
                         viewState.showNews(listItem)

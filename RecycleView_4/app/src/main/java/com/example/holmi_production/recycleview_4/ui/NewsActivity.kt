@@ -2,6 +2,8 @@ package com.example.holmi_production.recycleview_4.ui
 
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
+import android.support.v4.text.HtmlCompat
+import android.text.Html
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
@@ -85,7 +87,7 @@ class NewsActivity : MvpAppCompatActivity(), SingleNewsView {
 
     override fun showNews(newsItem: NewsItem) {
         title = newsItem.newsHeader.theme
-        content.text = newsItem.newsHeader.content
+        content.text = HtmlCompat.fromHtml(newsItem.content, Html.FROM_HTML_MODE_COMPACT)
         date.text = DateUtils.formatDate(newsItem.newsHeader.date.timeInMilliseconds)
     }
 

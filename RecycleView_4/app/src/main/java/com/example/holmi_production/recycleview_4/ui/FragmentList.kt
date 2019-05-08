@@ -13,7 +13,7 @@ import android.view.ViewGroup
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import com.example.holmi_production.recycleview_4.NewsItems.ListItem
+import com.example.holmi_production.recycleview_4.NewsItems.NewsContainer
 import com.example.holmi_production.recycleview_4.R
 import com.example.holmi_production.recycleview_4.di.App
 import com.example.holmi_production.recycleview_4.mvp.Presenter.NewsFragmentPresenterImp
@@ -89,7 +89,7 @@ class FragmentList : MvpAppCompatFragment(), ClickOnNewsCallback,
         mSwipeRefreshLayout.isRefreshing = false
     }
 
-    override fun showFavoriteNews(news: ArrayList<ListItem>) {
+    override fun showFavoriteNews(news: ArrayList<NewsContainer>) {
         mAdapter.setNews(news)
         mAdapter.notifyDataSetChanged()
     }
@@ -106,7 +106,7 @@ class FragmentList : MvpAppCompatFragment(), ClickOnNewsCallback,
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun showNews(news: ArrayList<ListItem>) {
+    override fun showNews(news: ArrayList<NewsContainer>) {
         mAdapter.setNews(news)
         mAdapter.notifyDataSetChanged()
     }

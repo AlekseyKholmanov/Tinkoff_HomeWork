@@ -32,7 +32,7 @@ class SingleNewsPresenterImp @Inject constructor(private val newsRepository: New
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { listItem ->
-                    viewState.showNews(listItem.newsItem)
+                    viewState.showNews(listItem.listNews)
                 })
     }
 }

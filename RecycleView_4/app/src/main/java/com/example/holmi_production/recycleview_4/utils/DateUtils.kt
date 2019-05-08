@@ -1,9 +1,9 @@
 package com.example.holmi_production.recycleview_4.utils
 
 import android.support.annotation.IntRange
-import com.example.holmi_production.recycleview_4.NewsItems.HeaderItem
-import com.example.holmi_production.recycleview_4.NewsItems.ListItem
-import com.example.holmi_production.recycleview_4.NewsItems.NewsItem
+import com.example.holmi_production.recycleview_4.NewsItems.HeaderContainer
+import com.example.holmi_production.recycleview_4.NewsItems.NewsContainer
+import com.example.holmi_production.recycleview_4.NewsItems.NewsType
 import com.example.holmi_production.recycleview_4.source.db.entity.News
 import java.text.DateFormat
 
@@ -60,13 +60,13 @@ object DateUtils {
         return DateFormat.getDateInstance(SimpleDateFormat.LONG, Locale("ru")).format(Date(timeinMilis))
     }
 
-    fun setHeader(events: Map<Long, List<News>>): ArrayList<ListItem> {
-        val news: ArrayList<ListItem> = arrayListOf()
+    fun setHeader(events: Map<Long, List<News>>): ArrayList<NewsContainer> {
+        val news: ArrayList<NewsContainer> = arrayListOf()
         for (date in events.keys) {
-            val header = HeaderItem(date)
+            val header = HeaderContainer(date)
             news.add(header)
             for (event in events.getValue(date)) {
-                val item = NewsItem(event)
+                val item = NewsType(event)
                 news.add(item)
             }
         }
@@ -88,7 +88,7 @@ object DateUtils {
         return map.descendingMap()
     }
 
-    fun reformateItem(items: List<News>?): ArrayList<ListItem> {
+    fun reformateItem(items: List<News>?): ArrayList<NewsContainer> {
         return setHeader(toMap(items))
     }
 }

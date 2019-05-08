@@ -14,12 +14,15 @@ import okhttp3.OkHttpClient
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
+import java.util.concurrent.TimeUnit
 
 @Module
 class NetModule(baseUrl:String, application: Application){
 
-    var mBaseUrl:String = baseUrl
+    var BASE_URL:String = baseUrl
     val mApplication = application
+    val REQUEST_TIMEOUT = 40L
+
     @Provides
     @Singleton
     fun provideOkHttpCache():Cache{
@@ -39,6 +42,7 @@ class NetModule(baseUrl:String, application: Application){
     @Singleton
     fun provideOkHttpClient(cache: Cache): OkHttpClient {
         val client = OkHttpClient.Builder()
+            .connectTimeout(REQUEST_TIMEOUT,TimeUnit.SECONDS)
         client.cache(cache)
         return client.build()
     }
@@ -49,7 +53,7 @@ class NetModule(baseUrl:String, application: Application){
         return Retrofit.Builder()
             .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
             .addConverterFactory(GsonConverterFactory.create(gson))
-            .baseUrl(mBaseUrl)
+            .baseUrl(BASE_URL)
             .client(okHttpClient)
             .build()
     }

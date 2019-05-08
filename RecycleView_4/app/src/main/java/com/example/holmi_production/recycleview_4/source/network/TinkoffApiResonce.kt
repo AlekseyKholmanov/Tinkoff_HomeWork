@@ -2,20 +2,16 @@ package com.example.holmi_production.recycleview_4.source.network
 
 import com.example.holmi_production.recycleview_4.source.db.entity.News
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
-class NewsObject(
+data class TinkoffApiResonce<T>(
     @SerializedName("payload")
-    val news: List<News>
-)
-
-class SingleNews(
-    @SerializedName("payload")
-    val newsItem: NewsItem
-)
+    val listNews:T
+):Serializable
 
 class NewsItem(
     @SerializedName("title")
-    val newsHeader: News,
+    val newsHeader:News,
     @SerializedName("content")
-    val content: String
+    val content:String
 )

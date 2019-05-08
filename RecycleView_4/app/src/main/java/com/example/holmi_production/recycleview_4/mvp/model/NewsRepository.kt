@@ -4,9 +4,9 @@ package com.example.holmi_production.recycleview_4.mvp.model
 import com.example.holmi_production.recycleview_4.source.db.NewsDatabase
 import com.example.holmi_production.recycleview_4.source.db.entity.FavoriteNews
 import com.example.holmi_production.recycleview_4.source.db.entity.News
-import com.example.holmi_production.recycleview_4.source.network.NewsObject
+import com.example.holmi_production.recycleview_4.source.network.NewsItem
 import com.example.holmi_production.recycleview_4.source.network.RemoteDataSource
-import com.example.holmi_production.recycleview_4.source.network.SingleNews
+import com.example.holmi_production.recycleview_4.source.network.TinkoffApiResonce
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Maybe
@@ -26,17 +26,17 @@ class NewsRepository @Inject constructor(
     private val favorite = newsDatabase.favorite()
 
 
-    fun getNewsFromNetwork(): Single<NewsObject> {
+    fun getNewsFromNetwork(): Single<TinkoffApiResonce<List<News>>> {
         return remoteDataSource.getNews()
             .doAfterSuccess { t ->
-                insertListNews(t.news
+                insertListNews(t.listNews
                     .sortedByDescending{ news -> news.date.timeInMilliseconds }
                     .take(100))
                     .subscribe()
             }
     }
 
-    fun getNewsFromNetworkById(id: Int): Single<SingleNews> {
+    fun getNewsFromNetworkById(id: Int): Single<TinkoffApiResonce<NewsItem>> {
         return remoteDataSource.getNewsById(id)
             .subscribeOn(Schedulers.io())
     }

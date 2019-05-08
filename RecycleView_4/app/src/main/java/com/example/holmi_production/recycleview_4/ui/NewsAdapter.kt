@@ -5,27 +5,27 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.example.holmi_production.recycleview_4.NewsItems.HeaderItem
-import com.example.holmi_production.recycleview_4.NewsItems.ListItem
-import com.example.holmi_production.recycleview_4.NewsItems.NewsItem
+import com.example.holmi_production.recycleview_4.NewsItems.HeaderContainer
+import com.example.holmi_production.recycleview_4.NewsItems.NewsContainer
+import com.example.holmi_production.recycleview_4.NewsItems.NewsType
 import com.example.holmi_production.recycleview_4.R
 import com.example.holmi_production.recycleview_4.source.db.entity.News
 import com.example.holmi_production.recycleview_4.utils.DateUtils
 
 
 class NewsAdapter(
-    private var listItem: List<ListItem> = listOf(),
+    private var newsContainer: List<NewsContainer> = listOf(),
     private var clickOnNewsCallback: ClickOnNewsCallback
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
-            ListItem.TYPE_HEADER -> {
+            NewsContainer.TYPE_HEADER -> {
                 val itemView = inflater.inflate(R.layout.view_list_item_header, parent, false)
                 HeaderViewHolder(itemView)
             }
-            ListItem.TYPE_NEWS -> {
+            NewsContainer.TYPE_NEWS -> {
                 val itemView = inflater.inflate(R.layout.view_list_item_news, parent, false)
                 NewsViewHolder(itemView)
             }
@@ -33,18 +33,18 @@ class NewsAdapter(
         }
     }
 
-    fun setNews(news: List<ListItem>) {
-        this.listItem = news
+    fun setNews(news: List<NewsContainer>) {
+        this.newsContainer = news
     }
 
-    override fun getItemCount(): Int = listItem.size
+    override fun getItemCount(): Int = newsContainer.size
 
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
         val viewType = getItemViewType(position)
         val currentDay = DateUtils.currentDay
         when (viewType) {
-            ListItem.TYPE_HEADER -> {
-                val headerItem = listItem[position] as HeaderItem
+            NewsContainer.TYPE_HEADER -> {
+                val headerItem = newsContainer[position] as HeaderContainer
                 val holder = viewHolder as HeaderViewHolder
                 //TODO вынести отображение даты в Utils
                 val dateText = DateUtils.formatDate(headerItem.date)
@@ -61,8 +61,8 @@ class NewsAdapter(
 //                }
                 holder.txt_header.text = dateText
             }
-            ListItem.TYPE_NEWS -> {
-                val newsItem = listItem[position] as NewsItem
+            NewsContainer.TYPE_NEWS -> {
+                val newsItem = newsContainer[position] as NewsType
                 val viewHolder1 = viewHolder as NewsViewHolder
                 viewHolder1.bind(newsItem.content, clickOnNewsCallback)
             }
@@ -70,7 +70,7 @@ class NewsAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        return listItem[position].getType()
+        return newsContainer[position].getType()
     }
 
     class NewsViewHolder internal constructor(var v: View) : RecyclerView.ViewHolder(v) {

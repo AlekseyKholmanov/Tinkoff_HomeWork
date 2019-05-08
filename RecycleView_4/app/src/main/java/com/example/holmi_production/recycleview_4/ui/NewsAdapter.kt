@@ -77,7 +77,6 @@ class NewsAdapter(
     class NewsViewHolder internal constructor(var v: View) : RecyclerView.ViewHolder(v) {
 
         private val theme = v.findViewById<TextView>(R.id.theme)
-        private val content = v.findViewById<TextView>(R.id.content)
         private var date = ""
 
         fun bind(
@@ -86,7 +85,6 @@ class NewsAdapter(
         ) {
             theme.text = news.theme
             date = DateUtils.formatDate(news.date.timeInMilliseconds)
-            content.text = news.content
             v.setOnClickListener {
                 clickOnNewsCallback.onItemClicked(news.newsId)
             }

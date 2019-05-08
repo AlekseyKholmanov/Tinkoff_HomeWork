@@ -17,7 +17,7 @@ class PresenterModule{
     }
 
     @Provides
-    fun provideSinglePresenter(newsRepository: NewsRepository):SingleNewsPresenterImp{
-        return SingleNewsPresenterImp(newsRepository)
+    fun provideSinglePresenter(newsRepository: NewsRepository, cm:ConnectivityManager):SingleNewsPresenterImp{
+        return SingleNewsPresenterImp(newsRepository,cm)
     }
 }

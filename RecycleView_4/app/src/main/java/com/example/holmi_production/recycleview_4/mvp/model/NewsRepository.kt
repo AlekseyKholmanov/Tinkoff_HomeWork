@@ -1,6 +1,7 @@
 package com.example.holmi_production.recycleview_4.mvp.model
 
 
+import android.util.Log
 import com.example.holmi_production.recycleview_4.source.db.NewsDatabase
 import com.example.holmi_production.recycleview_4.source.db.entity.FavoriteNews
 import com.example.holmi_production.recycleview_4.source.db.entity.News
@@ -30,10 +31,24 @@ class NewsRepository @Inject constructor(
         return remoteDataSource.getNews()
             .doAfterSuccess { t ->
                 insertListNews(t.listNews
-                    .sortedByDescending{ news -> news.date.timeInMilliseconds }
+                    .sortedByDescending { news -> news.date.timeInMilliseconds }
                     .take(100))
-                    .subscribe()
+                    .subscribe {
+                        Log.d("qqwerty", "inserted")
+                    }
             }
+    }
+
+    fun insertNews(news: News): Completable {
+        return Completable.fromCallable { newsDao.insert(news) }
+    }
+
+    fun getNewsById(newsId: Int): Single<News> {
+        return newsDao.getNewsById(newsId)
+    }
+
+    private fun deleteAllNews() {
+        return newsDao.deleteAll()
     }
 
     fun getNewsFromNetworkById(id: Int): Single<TinkoffApiResonce<NewsItem>> {

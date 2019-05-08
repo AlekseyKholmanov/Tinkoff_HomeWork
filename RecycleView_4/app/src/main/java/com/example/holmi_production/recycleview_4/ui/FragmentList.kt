@@ -53,7 +53,7 @@ class FragmentList : MvpAppCompatFragment(), ClickOnNewsCallback,
     lateinit var presenter: NewsFragmentPresenterImp
     lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
     lateinit var mRecyclerView: RecyclerView
-    lateinit var mProgressBar:ProgressBar
+    lateinit var mProgressBar: ProgressBar
 
     @ProvidePresenter
     fun initPresenter(): NewsFragmentPresenterImp {
@@ -70,16 +70,29 @@ class FragmentList : MvpAppCompatFragment(), ClickOnNewsCallback,
         mRecyclerView.layoutManager = LinearLayoutManager(activity)
         mProgressBar = rootView.findViewById(R.id.progressBar)
         mSwipeRefreshLayout = rootView.findViewById(R.id.fragment_list)
+        if (isFavorite!!)
+            mSwipeRefreshLayout.isEnabled = false
         mSwipeRefreshLayout.setOnRefreshListener(this)
         return rootView
     }
 
     override fun onActivityCreated(bundle: Bundle?) {
+        super.onActivityCreated(bundle)
         mAdapter = NewsAdapter(clickOnNewsCallback = this as ClickOnNewsCallback)
         listRecyclerView.adapter = mAdapter
         listRecyclerView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-        presenter.getNews(isFavorite!!)
-        super.onActivityCreated(bundle)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        getNews()
+    }
+
+    fun getNews() {
+        if (!isFavorite!!)
+            presenter.getNews()
+        else
+            presenter.getFavoriteNews()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -109,12 +122,13 @@ class FragmentList : MvpAppCompatFragment(), ClickOnNewsCallback,
     }
 
     override fun showNetworkAlertDialog() {
-            val dialog = AlertDialog.Builder(context!!)
-                .setTitle("Подключение к сети отсутствует")
-                .setMessage("Для работы программы необходимо подключение к  сети")
-                .setCancelable(false)
-                .setPositiveButton("Ok", null)
-            dialog.create().show()
+        mProgressBar.visibility = ProgressBar.INVISIBLE
+        val dialog = AlertDialog.Builder(context!!)
+            .setTitle("Подключение к сети отсутствует")
+            .setMessage("Для работы программы необходимо подключение к  сети")
+            .setCancelable(false)
+            .setPositiveButton("Ok", null)
+        dialog.create().show()
     }
 
     override fun showNews(news: ArrayList<NewsContainer>) {

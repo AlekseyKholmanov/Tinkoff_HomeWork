@@ -23,15 +23,6 @@
                     android:paddingTop="5dp"
                     android:paddingBottom="5dp"
                     android:textSize="24sp"/>
-            <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/content"
-                    android:layout_below="@id/theme"
-                    android:ellipsize="end"
-                    android:maxLines="4"
-                    android:text="@string/lorem"
-                    android:paddingHorizontal="8dp"/>
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 </LinearLayout>

@@ -23,6 +23,14 @@ class NewsFragmentPresenterImp @Inject constructor(
 ) :
     MvpPresenter<ListNewsView>(), NewsFragmentsPresenter {
 
+    override fun getFavoriteNews() {
+        compositeDisposable.add(
+            callFavoriteNews().subscribe { listItem ->
+                viewState.dismissProgressBar()
+                viewState.showNews(listItem)
+            })
+    }
+
     private fun isInternetConnected(): Boolean {
         val netInfo = cm.activeNetworkInfo
         return netInfo != null && netInfo.isConnected
@@ -30,21 +38,12 @@ class NewsFragmentPresenterImp @Inject constructor(
 
     override fun updateNews(isFavorite: Boolean) {
         if (isInternetConnected()) {
-            if (!isFavorite) {
-                viewState.showRefreshingStart()
-                compositeDisposable.add(callNews()
-                    .subscribe { listItem ->
-                        viewState.showRefreshingEnd()
-                        viewState.showNews(listItem)
-                    })
-            } else {
-                viewState.showRefreshingStart()
-                compositeDisposable.add(
-                    callFavoriteNews().subscribe { listItem ->
-                        viewState.showRefreshingEnd()
-                        viewState.showNews(listItem)
-                    })
-            }
+            viewState.showRefreshingStart()
+            compositeDisposable.add(callNews()
+                .subscribe { listItem ->
+                    viewState.showRefreshingEnd()
+                    viewState.showNews(listItem)
+                })
 
         } else {
             viewState.showRefreshingEnd()
@@ -58,33 +57,29 @@ class NewsFragmentPresenterImp @Inject constructor(
         viewState.showSingleNews(newsId)
     }
 
-    override fun getNews(isFavorite: Boolean) {
+    override fun getNews() {
         if (isInternetConnected()) {
-            if (!isFavorite) {
                 compositeDisposable.add(callNews()
                     .subscribe { listItem ->
                         viewState.dismissProgressBar()
                         viewState.showNews(listItem)
                     })
-            } else {
-                compositeDisposable.add(callFavoriteNews()
-                    .subscribe { it ->
-                        viewState.dismissProgressBar()
-                        viewState.showFavoriteNews(it)
-                    })
-            }
-        } else
+
+        } else {
+            viewState.dismissProgressBar()
             viewState.showNetworkAlertDialog()
+        }
     }
 
     private fun callNews(): Single<ArrayList<NewsContainer>> {
         return newsRepository.getNewsFromNetwork()
-            .delay(4,TimeUnit.SECONDS)
+//            .delay(4, TimeUnit.SECONDS)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .map { newsObject ->
                 DateUtils.reformateItem(newsObject.listNews)
             }
+
     }
 
     private fun callFavoriteNews(): Flowable<ArrayList<NewsContainer>> {

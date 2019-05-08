@@ -24,8 +24,8 @@ class NewsActivity : MvpAppCompatActivity(), SingleNewsView {
 
     private var isFavorite: Boolean = false
     var newsId: Int? = null
-    private val favoriteIcon = R.drawable.favorite_enable
-    private val unFavoriteIcon = R.drawable.favorite_none
+    private val favoriteIcon = R.drawable.fav_icon
+    private val unFavoriteIcon = R.drawable.unfav_icon
     private lateinit var favIcon: MenuItem
     lateinit var content: TextView
     lateinit var date: TextView

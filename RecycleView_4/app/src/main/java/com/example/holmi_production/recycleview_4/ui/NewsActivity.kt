@@ -15,18 +15,20 @@ import com.example.holmi_production.recycleview_4.R
 import com.example.holmi_production.recycleview_4.di.App
 import com.example.holmi_production.recycleview_4.mvp.Presenter.SingleNewsPresenterImp
 import com.example.holmi_production.recycleview_4.mvp.view.SingleNewsView
-import com.example.holmi_production.recycleview_4.source.db.entity.FavoriteNews
 import com.example.holmi_production.recycleview_4.source.network.NewsItem
 import com.example.holmi_production.recycleview_4.utils.DateUtils
 
 class NewsActivity : MvpAppCompatActivity(), SingleNewsView {
 
+
+
     private var isFavorite: Boolean = false
     var newsId: Int? = null
     private val favoriteIcon = R.drawable.favorite_enable
-    private val nonFavoriteIcon = R.drawable.favorite_none
-    lateinit var content:TextView
-    lateinit var date:TextView
+    private val unFavoriteIcon = R.drawable.favorite_none
+    private lateinit var favIcon: MenuItem
+    lateinit var content: TextView
+    lateinit var date: TextView
 
 
     @InjectPresenter
@@ -50,49 +52,49 @@ class NewsActivity : MvpAppCompatActivity(), SingleNewsView {
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.activity_item_menu, menu)
-        val favoriteIcon = if (isFavorite) favoriteIcon else nonFavoriteIcon
-        menu.getItem(0).icon = ContextCompat.getDrawable(this, favoriteIcon)
+        favIcon = menu.getItem(0)
+        if(isFavorite)
+            favIcon.icon = ContextCompat.getDrawable(this, favoriteIcon)
+        else
+            favIcon.icon = ContextCompat.getDrawable(this, unFavoriteIcon)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        val favNews = FavoriteNews(null, newsId!!)
-
-        if (isFavorite) {
-            item!!.icon = ContextCompat.getDrawable(
-                this,
-                R.drawable.favorite_none
-            )
+        isFavorite = if (isFavorite) {
             singleNewsPresenterImp.deletefromFavorite(newsId!!)
-//            compositeDisposable.add(
-//                newsRepository.deleteFavotiteNews(newsId!!)
-//                    .observeOn(AndroidSchedulers.mainThread())
-//                    .subscribe()
-//            )
-            isFavorite = false
-            Toast.makeText(this, "убрано $newsId", Toast.LENGTH_SHORT).show()
+            false
         } else {
-
             singleNewsPresenterImp.addToFavorite(newsId!!)
-            item!!.icon = ContextCompat.getDrawable(
-                this,
-                R.drawable.favorite_enable
-            )
-            singleNewsPresenterImp.addToFavorite(newsId!!)
-            isFavorite = true
-            Toast.makeText(this, "добавлено $newsId", Toast.LENGTH_SHORT).show()
+            true
         }
         return true
     }
 
-    override fun showNews(newsItem: NewsItem) {
-        title = newsItem.newsHeader.theme
-        content.text = HtmlCompat.fromHtml(newsItem.content, Html.FROM_HTML_MODE_COMPACT)
-        date.text = DateUtils.formatDate(newsItem.newsHeader.date.timeInMilliseconds)
+    override fun showNews(listItem: NewsItem) {
+        title = listItem.newsHeader.theme
+        content.text = HtmlCompat.fromHtml(listItem.content, Html.FROM_HTML_MODE_COMPACT)
+        date.text = DateUtils.formatDate(listItem.newsHeader.date.timeInMilliseconds)
     }
 
     override fun showToast() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (isFavorite)
+            Toast.makeText(this, "добавлено $newsId", Toast.LENGTH_SHORT).show()
+        else
+            Toast.makeText(this, "убрано $newsId", Toast.LENGTH_SHORT).show()
     }
+
+    override fun setFavorite(isFavorite: Boolean) {
+        this.isFavorite = isFavorite
+    }
+
+    override fun showFavoriteIcon() {
+        favIcon.icon = ContextCompat.getDrawable(this, favoriteIcon)
+    }
+
+    override fun showUnfavoriteIcon() {
+        favIcon.icon = ContextCompat.getDrawable(this, unFavoriteIcon)
+    }
+
 
 }

@@ -47,19 +47,20 @@ class NewsAdapter(
                 val headerItem = newsContainer[position] as HeaderContainer
                 val holder = viewHolder as HeaderViewHolder
                 //TODO вынести отображение даты в Utils
-                val dateText = DateUtils.formatDate(headerItem.date)
-//                {
-//                    DateUtils.buildDate(currentDay) -> {
-//                        "Сегодня"
-//                    }
-//                    DateUtils.buildDate(currentDay - 1) -> {
-//                        "Вчера"
-//                    }
-//                    else -> {
-//                        DateUtils.formatDate(headerItem.date)
-//                    }
-//                }
-                holder.txt_header.text = dateText
+                val dateText = DateUtils.convertToDate(headerItem.date)
+                val headerDate: String
+                headerDate = when (dateText) {
+                    DateUtils.buildDate(currentDay) -> {
+                        "Сегодня"
+                    }
+                    DateUtils.buildDate(currentDay - 1) -> {
+                        "Вчера"
+                    }
+                    else -> {
+                        DateUtils.formatDate(headerItem.date)
+                    }
+                }
+                holder.txt_header.text = headerDate
             }
             NewsContainer.TYPE_NEWS -> {
                 val newsItem = newsContainer[position] as NewsType

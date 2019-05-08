@@ -14,14 +14,14 @@ import java.util.*
 object DateUtils {
     var calendar = GregorianCalendar()
     var now = Date(System.currentTimeMillis())
-    val currentMonth: Int
+    private val currentMonth: Int
         @IntRange(from = 0, to = 11)
         get() {
             calendar.time = now
             return calendar.get(Calendar.MONTH)
         }
 
-    val currentYear: Int
+    private val currentYear: Int
         @IntRange(from = 0)
         get() {
 
@@ -56,11 +56,20 @@ object DateUtils {
         return calendar.time
     }
 
+    fun convertToDate(date: Long): Date {
+        calendar.time = Date(date)
+        return DateUtils.buildDate(
+            calendar.get(Calendar.DAY_OF_MONTH),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.YEAR)
+        )
+    }
+
     fun formatDate(timeinMilis: Long): String {
         return DateFormat.getDateInstance(SimpleDateFormat.LONG, Locale("ru")).format(Date(timeinMilis))
     }
 
-    fun setHeader(events: Map<Long, List<News>>): ArrayList<NewsContainer> {
+    private fun setHeader(events: Map<Long, List<News>>): ArrayList<NewsContainer> {
         val news: ArrayList<NewsContainer> = arrayListOf()
         for (date in events.keys) {
             val header = HeaderContainer(date)
@@ -73,7 +82,7 @@ object DateUtils {
         return news
     }
 
-    fun toMap(events: List<News>?): Map<Long, List<News>> {
+    private fun toMap(events: List<News>?): Map<Long, List<News>> {
         val map = TreeMap<Long, MutableList<News>>()
         if (events != null) {
             for (event in events) {

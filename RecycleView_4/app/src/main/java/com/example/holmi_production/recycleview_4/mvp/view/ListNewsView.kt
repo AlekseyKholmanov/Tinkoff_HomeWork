@@ -24,4 +24,7 @@ interface ListNewsView : MvpView {
 
     @StateStrategyType(SkipStrategy::class)
     fun showNetworkAlertDialog()
+
+    fun showProgessBar()
+    fun dismissProgressBar()
 }

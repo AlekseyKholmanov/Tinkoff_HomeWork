@@ -38,7 +38,6 @@ class NewsRepository @Inject constructor(
 
     fun getNewsFromNetworkById(id: Int): Single<TinkoffApiResonce<NewsItem>> {
         return remoteDataSource.getNewsById(id)
-            .subscribeOn(Schedulers.io())
     }
 
     fun insertFavoriteNews(news: FavoriteNews): Completable {
@@ -53,6 +52,7 @@ class NewsRepository @Inject constructor(
         return Completable.fromCallable { favoriteNewsDao.delete(newsId) }
     }
 
+    //Todo будет использовано при смешенном получении новостей
     fun getAllNews(): Flowable<List<News>> {
         return newsDao.getAll()
     }

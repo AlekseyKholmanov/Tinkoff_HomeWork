@@ -13,6 +13,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import java.util.ArrayList
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @InjectViewState
@@ -62,11 +63,13 @@ class NewsFragmentPresenterImp @Inject constructor(
             if (!isFavorite) {
                 compositeDisposable.add(callNews()
                     .subscribe { listItem ->
+                        viewState.dismissProgressBar()
                         viewState.showNews(listItem)
                     })
             } else {
                 compositeDisposable.add(callFavoriteNews()
                     .subscribe { it ->
+                        viewState.dismissProgressBar()
                         viewState.showFavoriteNews(it)
                     })
             }
@@ -76,6 +79,7 @@ class NewsFragmentPresenterImp @Inject constructor(
 
     private fun callNews(): Single<ArrayList<NewsContainer>> {
         return newsRepository.getNewsFromNetwork()
+            .delay(4,TimeUnit.SECONDS)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .map { newsObject ->

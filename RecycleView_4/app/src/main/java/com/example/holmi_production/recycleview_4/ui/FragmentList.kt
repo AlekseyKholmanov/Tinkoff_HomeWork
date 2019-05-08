@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -25,6 +26,13 @@ import java.util.*
 
 class FragmentList : MvpAppCompatFragment(), ClickOnNewsCallback,
     ListNewsView, SwipeRefreshLayout.OnRefreshListener {
+    override fun showProgessBar() {
+        mProgressBar.visibility = ProgressBar.VISIBLE
+    }
+
+    override fun dismissProgressBar() {
+        mProgressBar.visibility = ProgressBar.INVISIBLE
+    }
 
     companion object {
         private const val ARG_FAVORITE = "isFavorite"
@@ -44,6 +52,8 @@ class FragmentList : MvpAppCompatFragment(), ClickOnNewsCallback,
     @InjectPresenter
     lateinit var presenter: NewsFragmentPresenterImp
     lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
+    lateinit var mRecyclerView: RecyclerView
+    lateinit var mProgressBar:ProgressBar
 
     @ProvidePresenter
     fun initPresenter(): NewsFragmentPresenterImp {
@@ -56,8 +66,9 @@ class FragmentList : MvpAppCompatFragment(), ClickOnNewsCallback,
         savedInstanceState: Bundle?
     ): View? {
         val rootView = inflater.inflate(R.layout.fragment_list, container, false)
-        val recyclerView = rootView.findViewById<RecyclerView>(R.id.listRecyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(activity)
+        mRecyclerView = rootView.findViewById(R.id.listRecyclerView)
+        mRecyclerView.layoutManager = LinearLayoutManager(activity)
+        mProgressBar = rootView.findViewById(R.id.progressBar)
         mSwipeRefreshLayout = rootView.findViewById(R.id.fragment_list)
         mSwipeRefreshLayout.setOnRefreshListener(this)
         return rootView

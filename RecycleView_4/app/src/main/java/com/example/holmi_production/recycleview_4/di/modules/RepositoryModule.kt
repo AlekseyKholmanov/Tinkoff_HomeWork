@@ -10,7 +10,6 @@ import javax.inject.Singleton
 @Module
 class RepositoryModule{
 
-
     @Provides
     @Singleton
     fun provideRepository(newsDatabase: NewsDatabase, remoteDataSource: RemoteDataSource): NewsRepository {

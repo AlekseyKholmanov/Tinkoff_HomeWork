@@ -11,14 +11,13 @@ import io.reactivex.Single
 
 @Dao
 interface NewsDao{
-    @Nullable
-    @Query("SELECT * FROM news WHERE newsId=:idToSelect")
+    @Query("SELECT * FROM News WHERE newsId=:idToSelect")
     fun getNewsById(idToSelect: Int): Single<News>
 
-    @Query("Select * from news where newsId in (:newsIds)")
+    @Query("Select * from News where newsId in (:newsIds)")
     fun getNewsByIds(newsIds:List<Int>):Flowable<List<News>>
 
-    @Query("SELECT * FROM news")
+    @Query("SELECT * FROM News")
     fun  getAll():Flowable<List<News>>
 
     @Insert(onConflict = REPLACE)

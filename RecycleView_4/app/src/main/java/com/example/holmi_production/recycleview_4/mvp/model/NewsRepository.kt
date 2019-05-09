@@ -5,6 +5,7 @@ import android.util.Log
 import com.example.holmi_production.recycleview_4.source.db.NewsDatabase
 import com.example.holmi_production.recycleview_4.source.db.entity.FavoriteNews
 import com.example.holmi_production.recycleview_4.source.db.entity.News
+import com.example.holmi_production.recycleview_4.source.db.entity.ViewedNews
 import com.example.holmi_production.recycleview_4.source.network.NewsItem
 import com.example.holmi_production.recycleview_4.source.network.RemoteDataSource
 import com.example.holmi_production.recycleview_4.source.network.TinkoffApiResonce
@@ -25,6 +26,7 @@ class NewsRepository @Inject constructor(
     private val newsDao = newsDatabase.newsDao()
     private val favoriteNewsDao = newsDatabase.favoriteNewsDao()
     private val favorite = newsDatabase.favorite()
+    private val viewedDao = newsDatabase.viewedNews()
 
 
     fun getNewsFromNetwork(): Single<TinkoffApiResonce<List<News>>> {
@@ -37,6 +39,18 @@ class NewsRepository @Inject constructor(
                         Log.d("qqwerty", "inserted")
                     }
             }
+    }
+
+    fun getViewedNewsById(id: Int): Maybe<News> {
+        return viewedDao.getSingleVieved(id)
+    }
+
+    fun getViewedNewsAll(): Flowable<List<News>> {
+        return viewedDao.getAllViewed()
+    }
+
+    fun insertViewedNews(viewedNews: ViewedNews): Completable {
+        return Completable.fromCallable { viewedDao.insert(viewedNews) }
     }
 
     fun insertNews(news: News): Completable {
@@ -65,11 +79,6 @@ class NewsRepository @Inject constructor(
 
     fun deleteFavotiteNews(newsId: Int): Completable {
         return Completable.fromCallable { favoriteNewsDao.delete(newsId) }
-    }
-
-    //Todo будет использовано при смешенном получении новостей
-    fun getAllNews(): Flowable<List<News>> {
-        return newsDao.getAll()
     }
 
     fun getAllFavoriteNews(): Flowable<List<News>> {

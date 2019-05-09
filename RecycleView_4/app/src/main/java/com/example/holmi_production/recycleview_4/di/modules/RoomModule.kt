@@ -18,6 +18,8 @@ class RoomModule(context: Context) {
             mContext,
             NewsDatabase::class.java,
             DATABASE_NAME
-        ).build()
+        )
+            .fallbackToDestructiveMigration()
+            .build()
     }
 }

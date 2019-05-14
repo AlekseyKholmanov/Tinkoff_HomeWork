@@ -40,8 +40,13 @@ class NewsRepository @Inject constructor(
             }
     }
 
-    fun getViewedNewsById(id: Int): Single<ViewedContent> {
+    fun getViewedNewsById(id: Int): Maybe<ViewedContent> {
         return viewedDao.getNewsWithContent(id)
+    }
+
+
+    fun getAllContentIds(): Single<List<Int>> {
+        return viewedDao.getAllIdsWithContent()
     }
 
     fun insertViewedNews(viewedContent: ViewedContent): Completable {

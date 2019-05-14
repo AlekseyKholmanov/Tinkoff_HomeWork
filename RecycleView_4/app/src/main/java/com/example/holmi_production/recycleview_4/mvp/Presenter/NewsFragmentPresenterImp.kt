@@ -4,6 +4,7 @@ import android.net.ConnectivityManager
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import com.example.holmi_production.recycleview_4.NewsItems.NewsContainer
+import com.example.holmi_production.recycleview_4.async
 import com.example.holmi_production.recycleview_4.mvp.model.NewsRepository
 import com.example.holmi_production.recycleview_4.mvp.view.ListNewsView
 import com.example.holmi_production.recycleview_4.utils.DateUtils
@@ -20,14 +21,13 @@ class NewsFragmentPresenterImp @Inject constructor(
     private val newsRepository: NewsRepository,
     private val cm: ConnectivityManager
 ) :
-    MvpPresenter<ListNewsView>(), NewsFragmentsPresenter {
+    BasePresenter<ListNewsView>() {
 
-    override fun getFavoriteNews() {
-        compositeDisposable.add(
-            callFavoriteNews().subscribe { listItem ->
-                viewState.dismissProgressBar()
-                viewState.showNews(listItem)
-            })
+    fun getFavoriteNews() {
+        callFavoriteNews().subscribe { listItem ->
+            viewState.dismissProgressBar()
+            viewState.showNews(listItem)
+        }.keep()
     }
 
     private fun isInternetConnected(): Boolean {
@@ -35,14 +35,15 @@ class NewsFragmentPresenterImp @Inject constructor(
         return netInfo != null && netInfo.isConnected
     }
 
-    override fun updateNews(isFavorite: Boolean) {
+    fun updateNews(isFavorite: Boolean) {
         if (isInternetConnected()) {
             viewState.showRefreshingStart()
-            compositeDisposable.add(callNews()
+            callNews()
                 .subscribe { listItem ->
                     viewState.showRefreshingEnd()
                     viewState.showNews(listItem)
-                })
+                }
+                .keep()
 
         } else {
             viewState.showRefreshingEnd()
@@ -50,19 +51,21 @@ class NewsFragmentPresenterImp @Inject constructor(
         }
     }
 
-    private val compositeDisposable = CompositeDisposable()
-
-    override fun openSingleNews(newsId: Int) {
-        viewState.showSingleNews(newsId)
+    fun openSingleNews(newsId: Int) {
+//        isHaveContent(newsId)
+        if (!isInternetConnected() && a)
+            viewState.showNetworkAlertDialog()
+        else
+            viewState.showSingleNews(newsId)
     }
 
-    override fun getNews() {
-        if (isInternetConnected()) {
-                compositeDisposable.add(callNews()
-                    .subscribe { listItem ->
-                        viewState.dismissProgressBar()
-                        viewState.showNews(listItem)
-                    })
+    fun getNews() {
+        if (isInternetConnected()) {callNews()
+                .subscribe { listItem ->
+                    viewState.dismissProgressBar()
+                    viewState.showNews(listItem)
+                }
+            .keep()
 
         } else {
             viewState.dismissProgressBar()
@@ -73,25 +76,31 @@ class NewsFragmentPresenterImp @Inject constructor(
     private fun callNews(): Single<ArrayList<NewsContainer>> {
         return newsRepository.getNewsFromNetwork()
 //            .delay(4, TimeUnit.SECONDS)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+            .async()
             .map { newsObject ->
                 DateUtils.reformateItem(newsObject.listNews)
             }
 
     }
 
+    var a: Boolean = false
+//    private fun isHaveContent(newsId: Int): Boolean {
+//        return (newsRepository.getAllContentIds()
+//            .async()
+//            .contains {
+//                newsId
+//            }
+//            .subscribe { it->
+//                return@subscribe {it}
+//            }
+//            .keep())
+//    }
+
     private fun callFavoriteNews(): Flowable<ArrayList<NewsContainer>> {
         return newsRepository.getAllFavoriteNews()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+            .async()
             .map { t ->
                 DateUtils.reformateItem(t)
             }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        compositeDisposable.dispose()
     }
 }

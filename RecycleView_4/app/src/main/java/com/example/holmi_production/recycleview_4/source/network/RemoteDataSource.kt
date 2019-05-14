@@ -1,6 +1,5 @@
 package com.example.holmi_production.recycleview_4.source.network
 
-import com.example.holmi_production.recycleview_4.NewsItems.NewsType
 import com.example.holmi_production.recycleview_4.source.db.entity.News
 import io.reactivex.Single
 import retrofit2.http.GET

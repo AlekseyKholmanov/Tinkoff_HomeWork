@@ -5,7 +5,7 @@ import android.util.Log
 import com.example.holmi_production.recycleview_4.source.db.NewsDatabase
 import com.example.holmi_production.recycleview_4.source.db.entity.FavoriteNews
 import com.example.holmi_production.recycleview_4.source.db.entity.News
-import com.example.holmi_production.recycleview_4.source.db.entity.ViewedNews
+import com.example.holmi_production.recycleview_4.source.db.entity.ViewedContent
 import com.example.holmi_production.recycleview_4.source.network.NewsItem
 import com.example.holmi_production.recycleview_4.source.network.RemoteDataSource
 import com.example.holmi_production.recycleview_4.source.network.TinkoffApiResonce
@@ -13,7 +13,6 @@ import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Maybe
 import io.reactivex.Single
-import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -41,16 +40,12 @@ class NewsRepository @Inject constructor(
             }
     }
 
-    fun getViewedNewsById(id: Int): Maybe<News> {
-        return viewedDao.getSingleVieved(id)
+    fun getViewedNewsById(id: Int): Single<ViewedContent> {
+        return viewedDao.getNewsWithContent(id)
     }
 
-    fun getViewedNewsAll(): Flowable<List<News>> {
-        return viewedDao.getAllViewed()
-    }
-
-    fun insertViewedNews(viewedNews: ViewedNews): Completable {
-        return Completable.fromCallable { viewedDao.insert(viewedNews) }
+    fun insertViewedNews(viewedContent: ViewedContent): Completable {
+        return Completable.fromCallable { viewedDao.insert(viewedContent) }
     }
 
     fun insertNews(news: News): Completable {

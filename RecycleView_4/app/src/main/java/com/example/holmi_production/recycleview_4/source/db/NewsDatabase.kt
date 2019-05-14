@@ -8,9 +8,9 @@ import com.example.holmi_production.recycleview_4.source.db.dao.NewsDao
 import com.example.holmi_production.recycleview_4.source.db.dao.ViewedNewsDao
 import com.example.holmi_production.recycleview_4.source.db.entity.FavoriteNews
 import com.example.holmi_production.recycleview_4.source.db.entity.News
-import com.example.holmi_production.recycleview_4.source.db.entity.ViewedNews
+import com.example.holmi_production.recycleview_4.source.db.entity.ViewedContent
 
-@Database(entities = [News::class, FavoriteNews::class, ViewedNews::class], version = 6, exportSchema = false)
+@Database(entities = [News::class, FavoriteNews::class, ViewedContent::class], version = 9, exportSchema = false)
 abstract class NewsDatabase : RoomDatabase() {
 
     abstract fun newsDao(): NewsDao

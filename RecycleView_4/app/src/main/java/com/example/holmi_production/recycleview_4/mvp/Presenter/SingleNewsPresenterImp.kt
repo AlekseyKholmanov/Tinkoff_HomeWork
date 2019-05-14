@@ -7,11 +7,11 @@ import com.arellomobile.mvp.MvpPresenter
 import com.example.holmi_production.recycleview_4.mvp.model.NewsRepository
 import com.example.holmi_production.recycleview_4.mvp.view.SingleNewsView
 import com.example.holmi_production.recycleview_4.source.db.entity.FavoriteNews
-import com.example.holmi_production.recycleview_4.source.db.entity.News
-import com.example.holmi_production.recycleview_4.source.db.entity.ViewedNews
+import com.example.holmi_production.recycleview_4.source.db.entity.ViewedContent
 import com.example.holmi_production.recycleview_4.source.network.NewsItem
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.Singles
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
@@ -71,31 +71,32 @@ class SingleNewsPresenterImp @Inject constructor(
                 newsRepository.getNewsFromNetworkById(newsId)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
+                    .map { it->
+                        NewsItem(it.listNews.newsHeader,it.listNews.content)
+                    }
                     .doAfterSuccess { it ->
                         //сохранение полученной новости в локальный репозиторий
-                        val viewedNews = ViewedNews(
-                            it.listNews.newsHeader.newsId,
-                            it.listNews.content
+                        val viewedNews = ViewedContent(
+                            it.newsHeader.newsId,
+                            it.content
                         )
                         newsRepository.insertViewedNews(viewedNews)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .doOnError { Log.d("qwerty", it.toString()) }
                             .subscribe {
-                                Log.d("qwerty", "inserted" + it.listNews.newsHeader.newsId)
+                                Log.d("qwerty", "inserted" + it.newsHeader.newsId)
                             }
                     }
                     .subscribe { listItem ->
-                        viewState.showNews(listItem.listNews)
+                        viewState.showNews(listItem)
                     })
         } else {
             compositeDisposable.add(
-                newsRepository.getViewedNewsById(newsId)
+                Singles.zip(newsRepository.getViewedNewsById(newsId),newsRepository.getNewsById(newsId))
+                    .map { it-> NewsItem(newsHeader = it.second, content = it.first.viewedContent) }
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .map {
-                        NewsItem(newsHeader = it, content = it.content!!)
-                    }
                     .doOnError {
                         Log.d("qwerty", it.toString()) }
                     .subscribe { news ->

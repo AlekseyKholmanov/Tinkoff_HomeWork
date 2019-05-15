@@ -1,14 +1,9 @@
-package com.example.holmi_production.recycleview_4.mvp.model
+package com.example.holmi_production.recycleview_4.model
 
 
 import android.util.Log
-import com.example.holmi_production.recycleview_4.source.db.NewsDatabase
-import com.example.holmi_production.recycleview_4.source.db.entity.FavoriteNews
-import com.example.holmi_production.recycleview_4.source.db.entity.News
-import com.example.holmi_production.recycleview_4.source.db.entity.ViewedContent
-import com.example.holmi_production.recycleview_4.source.network.NewsItem
-import com.example.holmi_production.recycleview_4.source.network.RemoteDataSource
-import com.example.holmi_production.recycleview_4.source.network.TinkoffApiResonce
+import com.example.holmi_production.recycleview_4.orm.NewsDatabase
+import com.example.holmi_production.recycleview_4.api.RemoteDataSource
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Maybe

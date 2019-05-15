@@ -1,4 +1,4 @@
-package com.example.holmi_production.recycleview_4.ui
+package com.example.holmi_production.recycleview_4.detail
 
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
@@ -11,11 +11,10 @@ import android.widget.Toast
 import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import com.example.holmi_production.recycleview_4.MainActivity
 import com.example.holmi_production.recycleview_4.R
-import com.example.holmi_production.recycleview_4.di.App
-import com.example.holmi_production.recycleview_4.mvp.Presenter.SingleNewsPresenterImp
-import com.example.holmi_production.recycleview_4.mvp.view.SingleNewsView
-import com.example.holmi_production.recycleview_4.source.network.NewsItem
+import com.example.holmi_production.recycleview_4.App
+import com.example.holmi_production.recycleview_4.model.NewsItem
 import com.example.holmi_production.recycleview_4.utils.DateUtils
 
 class NewsActivity : MvpAppCompatActivity(), SingleNewsView {

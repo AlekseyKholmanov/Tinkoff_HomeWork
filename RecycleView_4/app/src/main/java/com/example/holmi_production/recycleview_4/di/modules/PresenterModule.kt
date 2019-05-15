@@ -1,9 +1,9 @@
 package com.example.holmi_production.recycleview_4.di.modules
 
 import android.net.ConnectivityManager
-import com.example.holmi_production.recycleview_4.mvp.Presenter.NewsFragmentPresenterImp
-import com.example.holmi_production.recycleview_4.mvp.Presenter.SingleNewsPresenterImp
-import com.example.holmi_production.recycleview_4.mvp.model.NewsRepository
+import com.example.holmi_production.recycleview_4.TypeElement.NewsFragmentPresenterImp
+import com.example.holmi_production.recycleview_4.detail.SingleNewsPresenterImp
+import com.example.holmi_production.recycleview_4.model.NewsRepository
 import dagger.Module
 import dagger.Provides
 
@@ -17,7 +17,7 @@ class PresenterModule{
     }
 
     @Provides
-    fun provideSinglePresenter(newsRepository: NewsRepository, cm:ConnectivityManager):SingleNewsPresenterImp{
-        return SingleNewsPresenterImp(newsRepository,cm)
+    fun provideSinglePresenter(newsRepository: NewsRepository, cm:ConnectivityManager): SingleNewsPresenterImp {
+        return SingleNewsPresenterImp(newsRepository, cm)
     }
 }

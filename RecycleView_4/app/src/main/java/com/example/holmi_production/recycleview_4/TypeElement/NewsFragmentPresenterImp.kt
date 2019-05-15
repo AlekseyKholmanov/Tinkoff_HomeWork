@@ -1,18 +1,14 @@
-package com.example.holmi_production.recycleview_4.mvp.Presenter
+package com.example.holmi_production.recycleview_4.TypeElement
 
 import android.net.ConnectivityManager
 import com.arellomobile.mvp.InjectViewState
-import com.arellomobile.mvp.MvpPresenter
 import com.example.holmi_production.recycleview_4.NewsItems.NewsContainer
 import com.example.holmi_production.recycleview_4.async
-import com.example.holmi_production.recycleview_4.mvp.model.NewsRepository
-import com.example.holmi_production.recycleview_4.mvp.view.ListNewsView
+import com.example.holmi_production.recycleview_4.mvp.Presenter1.BasePresenter
+import com.example.holmi_production.recycleview_4.model.NewsRepository
 import com.example.holmi_production.recycleview_4.utils.DateUtils
 import io.reactivex.Flowable
 import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import java.util.*
 import javax.inject.Inject
 

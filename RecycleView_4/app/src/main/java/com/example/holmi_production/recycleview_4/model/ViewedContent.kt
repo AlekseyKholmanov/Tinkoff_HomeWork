@@ -1,7 +1,6 @@
-package com.example.holmi_production.recycleview_4.source.db.entity
+package com.example.holmi_production.recycleview_4.model
 
 import android.arch.persistence.room.Entity
-import android.arch.persistence.room.ForeignKey
 import android.arch.persistence.room.PrimaryKey
 
 @Entity

@@ -1,10 +1,9 @@
-package com.example.holmi_production.recycleview_4.ui
+package com.example.holmi_production.recycleview_4
 
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
-import com.example.holmi_production.recycleview_4.R
 
 
 class MainActivity : AppCompatActivity() {

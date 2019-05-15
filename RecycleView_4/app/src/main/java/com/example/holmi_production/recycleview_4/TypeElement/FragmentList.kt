@@ -1,4 +1,4 @@
-package com.example.holmi_production.recycleview_4.ui
+package com.example.holmi_production.recycleview_4.TypeElement
 
 import android.content.Intent
 import android.os.Bundle
@@ -17,9 +17,10 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.example.holmi_production.recycleview_4.NewsItems.NewsContainer
 import com.example.holmi_production.recycleview_4.R
-import com.example.holmi_production.recycleview_4.di.App
-import com.example.holmi_production.recycleview_4.mvp.Presenter.NewsFragmentPresenterImp
-import com.example.holmi_production.recycleview_4.mvp.view.ListNewsView
+import com.example.holmi_production.recycleview_4.App
+import com.example.holmi_production.recycleview_4.MainActivity
+import com.example.holmi_production.recycleview_4.detail.NewsActivity
+import com.example.holmi_production.recycleview_4.detail.NewsAdapter
 import kotlinx.android.synthetic.main.fragment_list.*
 import java.util.*
 
@@ -78,7 +79,8 @@ class FragmentList : MvpAppCompatFragment(), ClickOnNewsCallback,
 
     override fun onActivityCreated(bundle: Bundle?) {
         super.onActivityCreated(bundle)
-        mAdapter = NewsAdapter(clickOnNewsCallback = this as ClickOnNewsCallback)
+        mAdapter =
+            NewsAdapter(clickOnNewsCallback = this as ClickOnNewsCallback)
         listRecyclerView.adapter = mAdapter
         listRecyclerView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
     }

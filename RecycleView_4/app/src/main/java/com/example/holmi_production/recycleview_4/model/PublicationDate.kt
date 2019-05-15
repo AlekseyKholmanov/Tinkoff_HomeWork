@@ -1,4 +1,4 @@
-package com.example.holmi_production.recycleview_4.source.db.entity
+package com.example.holmi_production.recycleview_4.model
 
 import com.google.gson.annotations.SerializedName
 

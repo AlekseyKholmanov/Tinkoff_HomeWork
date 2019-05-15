@@ -1,4 +1,4 @@
-package com.example.holmi_production.recycleview_4.mvp.Presenter
+package com.example.holmi_production.recycleview_4.mvp
 
 import com.arellomobile.mvp.MvpPresenter
 import com.arellomobile.mvp.MvpView

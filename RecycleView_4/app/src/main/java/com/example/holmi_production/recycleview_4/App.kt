@@ -1,4 +1,4 @@
-package com.example.holmi_production.recycleview_4.di
+package com.example.holmi_production.recycleview_4
 
 import android.app.Application
 import com.example.holmi_production.recycleview_4.di.components.*

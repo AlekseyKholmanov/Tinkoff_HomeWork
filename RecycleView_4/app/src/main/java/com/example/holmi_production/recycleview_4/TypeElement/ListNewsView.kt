@@ -1,4 +1,4 @@
-package com.example.holmi_production.recycleview_4.mvp.view
+package com.example.holmi_production.recycleview_4.TypeElement
 
 import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.viewstate.strategy.*

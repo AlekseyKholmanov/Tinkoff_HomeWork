@@ -1,7 +1,7 @@
 package com.example.holmi_production.recycleview_4.di.modules
 
 import android.app.Application
-import com.example.holmi_production.recycleview_4.source.network.RemoteDataSource
+import com.example.holmi_production.recycleview_4.api.RemoteDataSource
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder

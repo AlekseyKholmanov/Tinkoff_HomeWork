@@ -2,9 +2,9 @@ package com.example.holmi_production.recycleview_4.di.components
 
 import android.net.ConnectivityManager
 import com.example.holmi_production.recycleview_4.di.modules.*
-import com.example.holmi_production.recycleview_4.source.network.RemoteDataSource
-import com.example.holmi_production.recycleview_4.source.db.NewsDatabase
-import com.example.holmi_production.recycleview_4.mvp.model.NewsRepository
+import com.example.holmi_production.recycleview_4.api.RemoteDataSource
+import com.example.holmi_production.recycleview_4.orm.NewsDatabase
+import com.example.holmi_production.recycleview_4.model.NewsRepository
 import dagger.Component
 import javax.inject.Singleton
 

@@ -1,11 +1,11 @@
-package com.example.holmi_production.recycleview_4.source.db.dao
+package com.example.holmi_production.recycleview_4.orm
 
 import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Query
 import android.arch.persistence.room.*
 import android.arch.persistence.room.OnConflictStrategy.REPLACE
 import android.support.annotation.Nullable
-import com.example.holmi_production.recycleview_4.source.db.entity.FavoriteNews
+import com.example.holmi_production.recycleview_4.model.FavoriteNews
 import io.reactivex.Flowable
 import io.reactivex.Maybe
 

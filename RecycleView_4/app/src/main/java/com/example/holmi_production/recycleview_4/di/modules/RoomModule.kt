@@ -2,7 +2,7 @@ package com.example.holmi_production.recycleview_4.di.modules
 
 import android.arch.persistence.room.Room
 import android.content.Context
-import com.example.holmi_production.recycleview_4.source.db.NewsDatabase
+import com.example.holmi_production.recycleview_4.orm.NewsDatabase
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton

@@ -1,10 +1,10 @@
-package com.example.holmi_production.recycleview_4.source.db.dao
+package com.example.holmi_production.recycleview_4.orm
 
 import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Insert
 import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.Query
-import com.example.holmi_production.recycleview_4.source.db.entity.ViewedContent
+import com.example.holmi_production.recycleview_4.model.ViewedContent
 import io.reactivex.Maybe
 import io.reactivex.Single
 

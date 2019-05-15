@@ -1,4 +1,4 @@
-package com.example.holmi_production.recycleview_4.ui
+package com.example.holmi_production.recycleview_4.detail
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -9,7 +9,8 @@ import com.example.holmi_production.recycleview_4.NewsItems.HeaderContainer
 import com.example.holmi_production.recycleview_4.NewsItems.NewsContainer
 import com.example.holmi_production.recycleview_4.NewsItems.NewsType
 import com.example.holmi_production.recycleview_4.R
-import com.example.holmi_production.recycleview_4.source.db.entity.News
+import com.example.holmi_production.recycleview_4.TypeElement.ClickOnNewsCallback
+import com.example.holmi_production.recycleview_4.model.News
 import com.example.holmi_production.recycleview_4.utils.DateUtils
 
 

@@ -15,4 +15,5 @@
     <string name="todayDate">"Сегодня"</string>
     <string name="yesterdayDate">Вчера</string>
     <string name="preview_date">22 сенятбря 2008г.</string>
+    <string name="actity_theme">THEME</string>
 </resources>

@@ -4,8 +4,10 @@ import android.net.ConnectivityManager
 import com.arellomobile.mvp.InjectViewState
 import com.example.holmi_production.recycleview_4.NewsItems.NewsContainer
 import com.example.holmi_production.recycleview_4.async
+import com.example.holmi_production.recycleview_4.model.News
 import com.example.holmi_production.recycleview_4.model.NewsRepository
 import com.example.holmi_production.recycleview_4.mvp.BasePresenter
+import com.example.holmi_production.recycleview_4.network.NetworkStateListener
 import com.example.holmi_production.recycleview_4.utils.DateUtils
 import io.reactivex.Flowable
 import io.reactivex.Single
@@ -15,24 +17,34 @@ import javax.inject.Inject
 @InjectViewState
 class NewsListPresenter @Inject constructor(
     private val newsRepository: NewsRepository,
-    private val cm: ConnectivityManager
+    private val networkStateListener: NetworkStateListener
 ) :
     BasePresenter<NewsListView>() {
 
+    private var isInternetConnected: Boolean = false
+
     fun getFavoriteNews() {
-        callFavoriteNews().subscribe { listItem ->
-            viewState.dismissProgressBar()
-            viewState.showNews(listItem)
-        }.keep()
+        newsRepository.getAllFavoriteNews()
+            .async()
+            .map { t ->
+                DateUtils.reformateItem(t)
+            }.subscribe { listItem ->
+                viewState.dismissProgressBar()
+                viewState.showNews(listItem)
+            }.keep()
     }
 
-    private fun isInternetConnected(): Boolean {
-        val netInfo = cm.activeNetworkInfo
-        return netInfo != null && netInfo.isConnected
+    fun subscribeToNetworkChanges() {
+        networkStateListener.ObserveNewtworkState()
+            .subscribe { connected ->
+                isInternetConnected = connected
+                viewState.onInternetStateChanged(connected)
+            }
+            .keep()
     }
 
     fun updateNews(isFavorite: Boolean) {
-        if (isInternetConnected()) {
+        if (isInternetConnected) {
             viewState.showRefreshingStart()
             callNews()
                 .subscribe { listItem ->
@@ -47,21 +59,18 @@ class NewsListPresenter @Inject constructor(
         }
     }
 
-    fun openSingleNews(newsId: Int) {
-//        isHaveContent(newsId)
-        if (!isInternetConnected() && a)
-            viewState.showNetworkAlertDialog()
-        else
-            viewState.showSingleNews(newsId)
+    fun openSingleNews(news: News) {
+            viewState.showSingleNews(news)
     }
 
     fun getNews() {
-        if (isInternetConnected()) {callNews()
+        if (isInternetConnected) {
+            callNews()
                 .subscribe { listItem ->
                     viewState.dismissProgressBar()
                     viewState.showNews(listItem)
                 }
-            .keep()
+                .keep()
 
         } else {
             viewState.dismissProgressBar()
@@ -71,32 +80,10 @@ class NewsListPresenter @Inject constructor(
 
     private fun callNews(): Single<ArrayList<NewsContainer>> {
         return newsRepository.getNewsFromNetwork()
-//            .delay(4, TimeUnit.SECONDS)
             .async()
             .map { newsObject ->
                 DateUtils.reformateItem(newsObject.listNews)
             }
 
-    }
-
-    var a: Boolean = false
-//    private fun isHaveContent(newsId: Int): Boolean {
-//        return (newsRepository.getAllContentIds()
-//            .async()
-//            .contains {
-//                newsId
-//            }
-//            .subscribe { it->
-//                return@subscribe {it}
-//            }
-//            .keep())
-//    }
-
-    private fun callFavoriteNews(): Flowable<ArrayList<NewsContainer>> {
-        return newsRepository.getAllFavoriteNews()
-            .async()
-            .map { t ->
-                DateUtils.reformateItem(t)
-            }
     }
 }

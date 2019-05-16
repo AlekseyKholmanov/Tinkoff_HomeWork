@@ -6,19 +6,22 @@ import android.support.v4.text.HtmlCompat
 import android.text.Html
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.TextView
 import android.widget.Toast
 import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import com.example.holmi_production.recycleview_4.MainActivity
-import com.example.holmi_production.recycleview_4.R
 import com.example.holmi_production.recycleview_4.App
+import com.example.holmi_production.recycleview_4.R
 import com.example.holmi_production.recycleview_4.model.NewsItem
 import com.example.holmi_production.recycleview_4.utils.DateUtils
+import kotlinx.android.synthetic.main.activity_news_item.*
 
 class NewsDetailDetailActivity : MvpAppCompatActivity(), NewsDetailView {
-
+companion object{
+    val ARG_ID = "id"
+    val ARG_Theme = "theme"
+    val ARG_DATE = "date"
+}
 
 
     private var isFavorite: Boolean = false
@@ -26,8 +29,6 @@ class NewsDetailDetailActivity : MvpAppCompatActivity(), NewsDetailView {
     private val favoriteIcon = R.drawable.fav_icon
     private val unFavoriteIcon = R.drawable.unfav_icon
     private lateinit var favIcon: MenuItem
-    lateinit var content: TextView
-    lateinit var date: TextView
 
 
     @InjectPresenter
@@ -41,9 +42,14 @@ class NewsDetailDetailActivity : MvpAppCompatActivity(), NewsDetailView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_news_item)
-        newsId = intent.getIntExtra(MainActivity.ARG_ID, 0)
-        content = findViewById(R.id.activity_content)
-        date = findViewById(R.id.activity_date)
+        newsId = intent.getIntExtra(ARG_ID, 0)
+
+        val newsTheme  = intent.getStringExtra(ARG_Theme)
+        val newsDate = intent.getLongExtra(ARG_DATE,0L)
+
+        activity_theme.text = newsTheme
+        activity_date.text = newsDate.toString()
+
         initPresenter()
         newsDetailPresenter.getSingleNews(newsId!!)
         newsDetailPresenter.checkFavorite(newsId!!)
@@ -72,8 +78,8 @@ class NewsDetailDetailActivity : MvpAppCompatActivity(), NewsDetailView {
 
     override fun showNews(listItem: NewsItem) {
         title = listItem.newsHeader.theme
-        content.text = HtmlCompat.fromHtml(listItem.content, Html.FROM_HTML_MODE_COMPACT)
-        date.text = DateUtils.formatDate(listItem.newsHeader.date.timeInMilliseconds)
+        activity_content.text = HtmlCompat.fromHtml(listItem.content, Html.FROM_HTML_MODE_COMPACT)
+        activity_date.text = DateUtils.formatDate(listItem.newsHeader.date.timeInMilliseconds)
     }
 
     override fun showToast() {

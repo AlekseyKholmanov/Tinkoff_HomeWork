@@ -2,6 +2,7 @@ package com.example.holmi_production.recycleview_4.list
 
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AlertDialog
@@ -20,12 +21,15 @@ import com.example.holmi_production.recycleview_4.R
 import com.example.holmi_production.recycleview_4.App
 import com.example.holmi_production.recycleview_4.MainActivity
 import com.example.holmi_production.recycleview_4.detail.NewsDetailDetailActivity
+import com.example.holmi_production.recycleview_4.model.News
 import kotlinx.android.synthetic.main.fragment_list.*
 import java.util.*
 
 
 class FragmentList : MvpAppCompatFragment(), ClickOnNewsCallback,
     NewsListView, SwipeRefreshLayout.OnRefreshListener {
+
+
     override fun showProgessBar() {
         mProgressBar.visibility = ProgressBar.VISIBLE
     }
@@ -118,8 +122,8 @@ class FragmentList : MvpAppCompatFragment(), ClickOnNewsCallback,
         mAdapter.notifyDataSetChanged()
     }
 
-    override fun onItemClicked(newsId: Int) {
-        presenter.openSingleNews(newsId)
+    override fun onItemClicked(news: News) {
+        presenter.openSingleNews(news)
     }
 
     override fun showNetworkAlertDialog() {
@@ -137,9 +141,20 @@ class FragmentList : MvpAppCompatFragment(), ClickOnNewsCallback,
         mAdapter.notifyDataSetChanged()
     }
 
-    override fun showSingleNews(newsId: Int) {
+    override fun onInternetStateChanged(connected: Boolean) {
+        mSwipeRefreshLayout.isEnabled = isFavorite!! && connected
+                if (connected) {
+                    Snackbar.make(mSwipeRefreshLayout, "есть", Snackbar.LENGTH_SHORT).show()
+                } else {
+                    Snackbar.make(mSwipeRefreshLayout,"нету", Snackbar.LENGTH_SHORT).show()
+                }
+    }
+
+    override fun showSingleNews(news: News) {
         val intent = Intent(context, NewsDetailDetailActivity::class.java).apply {
-            putExtra(MainActivity.ARG_ID, newsId)
+            putExtra(NewsDetailDetailActivity.ARG_ID, news.newsId)
+            putExtra(NewsDetailDetailActivity.ARG_Theme, news.theme)
+            putExtra(NewsDetailDetailActivity.ARG_DATE, news.date.timeInMilliseconds)
         }
         ContextCompat.startActivity(context!!, intent, null)
     }
@@ -150,7 +165,7 @@ class FragmentList : MvpAppCompatFragment(), ClickOnNewsCallback,
 }
 
 interface ClickOnNewsCallback {
-    fun onItemClicked(newsId: Int)
+    fun onItemClicked(newsId: News)
 }
 
 

@@ -86,7 +86,7 @@ class NewsAdapter(
             theme.text = news.theme
             date = DateUtils.formatDate(news.date.timeInMilliseconds)
             v.setOnClickListener {
-                clickOnNewsCallback.onItemClicked(news.newsId)
+                clickOnNewsCallback.onItemClicked(news)
             }
         }
     }

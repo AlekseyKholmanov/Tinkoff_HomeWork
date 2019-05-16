@@ -3,6 +3,7 @@ package com.example.holmi_production.recycleview_4.list
 import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.viewstate.strategy.*
 import com.example.holmi_production.recycleview_4.NewsItems.NewsContainer
+import com.example.holmi_production.recycleview_4.model.News
 import java.util.ArrayList
 
 @StateStrategyType(AddToEndSingleStrategy::class)
@@ -18,7 +19,7 @@ interface NewsListView : MvpView {
     fun showRefreshingEnd()
 
     @StateStrategyType(SkipStrategy::class)
-    fun showSingleNews(newsId: Int)
+    fun showSingleNews(news: News)
 
     fun updateListNews()
 
@@ -27,4 +28,6 @@ interface NewsListView : MvpView {
 
     fun showProgessBar()
     fun dismissProgressBar()
+
+    fun onInternetStateChanged(connected: Boolean)
 }

@@ -11,11 +11,9 @@ data class News(
     var newsId: Int,
 
     @SerializedName("text")
-    var theme: String?,
+    var theme: String,
 
     @SerializedName("publicationDate")
     @Embedded
-    var date: PublicationDate,
-
-    var content: String?
+    var date: PublicationDate
 )

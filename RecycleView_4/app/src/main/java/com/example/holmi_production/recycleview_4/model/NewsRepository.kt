@@ -3,7 +3,7 @@ package com.example.holmi_production.recycleview_4.model
 
 import android.util.Log
 import com.example.holmi_production.recycleview_4.orm.NewsDatabase
-import com.example.holmi_production.recycleview_4.api.RemoteDataSource
+import com.example.holmi_production.recycleview_4.api.NewsService
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Maybe
@@ -15,7 +15,7 @@ import javax.inject.Singleton
 @Singleton
 class NewsRepository @Inject constructor(
     newsDatabase: NewsDatabase,
-    private val remoteDataSource: RemoteDataSource
+    private val newsService: NewsService
 ) {
     private val newsDao = newsDatabase.newsDao()
     private val favoriteNewsDao = newsDatabase.favoriteNewsDao()
@@ -24,7 +24,7 @@ class NewsRepository @Inject constructor(
 
 
     fun getNewsFromNetwork(): Single<TinkoffApiResonce<List<News>>> {
-        return remoteDataSource.getNews()
+        return newsService.getNews()
             .doAfterSuccess { t ->
                 insertListNews(t.listNews
                     .sortedByDescending { news -> news.date.timeInMilliseconds }
@@ -61,7 +61,7 @@ class NewsRepository @Inject constructor(
     }
 
     fun getNewsFromNetworkById(id: Int): Single<TinkoffApiResonce<NewsItem>> {
-        return remoteDataSource.getNewsById(id)
+        return newsService.getNewsById(id)
     }
 
     fun insertFavoriteNews(news: FavoriteNews): Completable {

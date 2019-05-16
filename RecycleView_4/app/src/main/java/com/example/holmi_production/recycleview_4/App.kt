@@ -2,32 +2,28 @@ package com.example.holmi_production.recycleview_4
 
 import android.app.Application
 import com.example.holmi_production.recycleview_4.di.components.*
-import com.example.holmi_production.recycleview_4.di.modules.*
+import com.example.holmi_production.recycleview_4.di.modules.ApplicationModule
+import com.example.holmi_production.recycleview_4.di.modules.ContextModule
+import com.example.holmi_production.recycleview_4.di.modules.NetModule
 
 class App : Application() {
 
     companion object {
-        lateinit var mPresenterComponent: PresenterComponent
-        lateinit var mAppComponent: AppComponent
+        lateinit var component: ApplicationComponent
     }
 
     private val BASE_URL = "https://api.tinkoff.ru/v1/"
 
     override fun onCreate() {
         super.onCreate()
-        setup()
+        initDi()
     }
 
-    private fun setup() {
-        mAppComponent = DaggerAppComponent.builder()
-            .roomModule(RoomModule(this))
-            .connectivityManagerModule((ConnectivityManagerModule(this)))
-            .netModule(NetModule(BASE_URL, this))
-            .build()
-
-        mPresenterComponent = DaggerPresenterComponent.builder()
-            .appComponent(mAppComponent)
-            .presenterModule(PresenterModule())
+    private fun initDi() {
+        component = DaggerApplicationComponent.builder()
+            .applicationModule(ApplicationModule(this))
+            .contextModule(ContextModule(this))
+            .netModule(NetModule(BASE_URL,this))
             .build()
     }
 

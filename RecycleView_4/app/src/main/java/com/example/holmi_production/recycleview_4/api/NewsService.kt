@@ -7,7 +7,7 @@ import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface RemoteDataSource{
+interface NewsService{
     @GET("news")
     fun getNews():Single<TinkoffApiResonce<List<News>>>
 

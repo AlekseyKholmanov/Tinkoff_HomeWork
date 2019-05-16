@@ -1,7 +1,7 @@
 package com.example.holmi_production.recycleview_4.di.modules
 
 import android.app.Application
-import com.example.holmi_production.recycleview_4.api.RemoteDataSource
+import com.example.holmi_production.recycleview_4.api.NewsService
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -20,14 +20,13 @@ import java.util.concurrent.TimeUnit
 class NetModule(baseUrl:String, application: Application){
 
     var BASE_URL:String = baseUrl
-    val mApplication = application
     val REQUEST_TIMEOUT = 40L
 
     @Provides
     @Singleton
-    fun provideOkHttpCache():Cache{
+    fun provideOkHttpCache(application: Application):Cache{
         val cacheSize = 10 * 1024 * 1024L // 10 MiB
-        return Cache(mApplication.cacheDir,cacheSize)
+        return Cache(application.cacheDir,cacheSize)
     }
 
     @Provides
@@ -60,8 +59,8 @@ class NetModule(baseUrl:String, application: Application){
 
     @Provides
     @Singleton
-    fun provideRemoteDataSource(retrofit:Retrofit): RemoteDataSource {
-        return retrofit.create(RemoteDataSource::class.java)
+    fun provideRemoteDataSource(retrofit:Retrofit): NewsService {
+        return retrofit.create(NewsService::class.java)
     }
 
 }

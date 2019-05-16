@@ -3,7 +3,7 @@ package com.example.holmi_production.recycleview_4
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
-import com.example.holmi_production.recycleview_4.TypeElement.FragmentList
+import com.example.holmi_production.recycleview_4.list.FragmentList
 
 class ViewPagerAdapter(fm: FragmentManager?) : FragmentStatePagerAdapter(fm) {
     override fun getItem(position: Int): Fragment {

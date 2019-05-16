@@ -1,4 +1,4 @@
-package com.example.holmi_production.recycleview_4.TypeElement
+package com.example.holmi_production.recycleview_4.list
 
 import android.content.Intent
 import android.os.Bundle
@@ -19,14 +19,13 @@ import com.example.holmi_production.recycleview_4.NewsItems.NewsContainer
 import com.example.holmi_production.recycleview_4.R
 import com.example.holmi_production.recycleview_4.App
 import com.example.holmi_production.recycleview_4.MainActivity
-import com.example.holmi_production.recycleview_4.detail.NewsActivity
-import com.example.holmi_production.recycleview_4.detail.NewsAdapter
+import com.example.holmi_production.recycleview_4.detail.NewsDetailDetailActivity
 import kotlinx.android.synthetic.main.fragment_list.*
 import java.util.*
 
 
 class FragmentList : MvpAppCompatFragment(), ClickOnNewsCallback,
-    ListNewsView, SwipeRefreshLayout.OnRefreshListener {
+    NewsListView, SwipeRefreshLayout.OnRefreshListener {
     override fun showProgessBar() {
         mProgressBar.visibility = ProgressBar.VISIBLE
     }
@@ -51,14 +50,14 @@ class FragmentList : MvpAppCompatFragment(), ClickOnNewsCallback,
     private var isFavorite: Boolean? = null
 
     @InjectPresenter
-    lateinit var presenter: NewsFragmentPresenterImp
+    lateinit var presenter: NewsListPresenter
     lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
     lateinit var mRecyclerView: RecyclerView
     lateinit var mProgressBar: ProgressBar
 
     @ProvidePresenter
-    fun initPresenter(): NewsFragmentPresenterImp {
-        return App.mPresenterComponent.listPresenter()
+    fun initPresenter(): NewsListPresenter {
+        return App.component.getNewsListPresenter()
     }
 
     override fun onCreateView(
@@ -139,7 +138,7 @@ class FragmentList : MvpAppCompatFragment(), ClickOnNewsCallback,
     }
 
     override fun showSingleNews(newsId: Int) {
-        val intent = Intent(context, NewsActivity::class.java).apply {
+        val intent = Intent(context, NewsDetailDetailActivity::class.java).apply {
             putExtra(MainActivity.ARG_ID, newsId)
         }
         ContextCompat.startActivity(context!!, intent, null)

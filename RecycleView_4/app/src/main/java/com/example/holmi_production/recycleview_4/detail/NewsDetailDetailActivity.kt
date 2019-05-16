@@ -17,7 +17,7 @@ import com.example.holmi_production.recycleview_4.App
 import com.example.holmi_production.recycleview_4.model.NewsItem
 import com.example.holmi_production.recycleview_4.utils.DateUtils
 
-class NewsActivity : MvpAppCompatActivity(), SingleNewsView {
+class NewsDetailDetailActivity : MvpAppCompatActivity(), NewsDetailView {
 
 
 
@@ -31,11 +31,11 @@ class NewsActivity : MvpAppCompatActivity(), SingleNewsView {
 
 
     @InjectPresenter
-    lateinit var singleNewsPresenterImp: SingleNewsPresenterImp
+    lateinit var newsDetailPresenter: NewsDetailPresenter
 
     @ProvidePresenter
-    fun initPresenter(): SingleNewsPresenterImp {
-        return App.mPresenterComponent.singlePresenter()
+    fun initPresenter(): NewsDetailPresenter {
+        return App.component.getNewsItemDetailsPresenter()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,8 +45,8 @@ class NewsActivity : MvpAppCompatActivity(), SingleNewsView {
         content = findViewById(R.id.activity_content)
         date = findViewById(R.id.activity_date)
         initPresenter()
-        singleNewsPresenterImp.getSingleNews(newsId!!)
-        singleNewsPresenterImp.checkFavorite(newsId!!)
+        newsDetailPresenter.getSingleNews(newsId!!)
+        newsDetailPresenter.checkFavorite(newsId!!)
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
@@ -61,10 +61,10 @@ class NewsActivity : MvpAppCompatActivity(), SingleNewsView {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         isFavorite = if (isFavorite) {
-            singleNewsPresenterImp.deletefromFavorite(newsId!!)
+            newsDetailPresenter.deletefromFavorite(newsId!!)
             false
         } else {
-            singleNewsPresenterImp.addToFavorite(newsId!!)
+            newsDetailPresenter.addToFavorite(newsId!!)
             true
         }
         return true

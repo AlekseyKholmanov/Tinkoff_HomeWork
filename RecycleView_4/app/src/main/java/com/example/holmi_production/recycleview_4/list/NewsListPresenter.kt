@@ -1,11 +1,11 @@
-package com.example.holmi_production.recycleview_4.TypeElement
+package com.example.holmi_production.recycleview_4.list
 
 import android.net.ConnectivityManager
 import com.arellomobile.mvp.InjectViewState
 import com.example.holmi_production.recycleview_4.NewsItems.NewsContainer
 import com.example.holmi_production.recycleview_4.async
-import com.example.holmi_production.recycleview_4.mvp.Presenter1.BasePresenter
 import com.example.holmi_production.recycleview_4.model.NewsRepository
+import com.example.holmi_production.recycleview_4.mvp.BasePresenter
 import com.example.holmi_production.recycleview_4.utils.DateUtils
 import io.reactivex.Flowable
 import io.reactivex.Single
@@ -13,11 +13,11 @@ import java.util.*
 import javax.inject.Inject
 
 @InjectViewState
-class NewsFragmentPresenterImp @Inject constructor(
+class NewsListPresenter @Inject constructor(
     private val newsRepository: NewsRepository,
     private val cm: ConnectivityManager
 ) :
-    BasePresenter<ListNewsView>() {
+    BasePresenter<NewsListView>() {
 
     fun getFavoriteNews() {
         callFavoriteNews().subscribe { listItem ->

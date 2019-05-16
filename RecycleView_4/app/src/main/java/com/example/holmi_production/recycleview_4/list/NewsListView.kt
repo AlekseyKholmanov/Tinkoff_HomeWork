@@ -1,4 +1,4 @@
-package com.example.holmi_production.recycleview_4.TypeElement
+package com.example.holmi_production.recycleview_4.list
 
 import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.viewstate.strategy.*
@@ -6,7 +6,7 @@ import com.example.holmi_production.recycleview_4.NewsItems.NewsContainer
 import java.util.ArrayList
 
 @StateStrategyType(AddToEndSingleStrategy::class)
-interface ListNewsView : MvpView {
+interface NewsListView : MvpView {
     fun showNews(news: ArrayList<NewsContainer>)
 
     fun showFavoriteNews(news: ArrayList<NewsContainer>)

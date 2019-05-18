@@ -12,7 +12,7 @@ import io.reactivex.Single
 interface ViewedNewsDao{
 
     @Query("SELECT * FROM ViewedContent WHERE id=:newsId")
-    fun getNewsWithContent(newsId:Int):Maybe<ViewedContent>
+    fun getNewsWithContent(newsId:String):Maybe<ViewedContent>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(viewedContent: ViewedContent)

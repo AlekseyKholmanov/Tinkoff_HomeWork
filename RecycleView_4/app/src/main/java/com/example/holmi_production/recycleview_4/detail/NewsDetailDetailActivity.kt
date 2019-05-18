@@ -1,6 +1,7 @@
 package com.example.holmi_production.recycleview_4.detail
 
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat
 import android.support.v4.text.HtmlCompat
 import android.text.Html
@@ -17,7 +18,16 @@ import com.example.holmi_production.recycleview_4.utils.DateUtils
 import kotlinx.android.synthetic.main.activity_news_item.*
 
 class NewsDetailDetailActivity : MvpAppCompatActivity(), NewsDetailView {
-companion object{
+    override fun showFavoriteChangedToast(isFavorite: Boolean) {
+        val message: Int = if ( isFavorite) {
+            R.string.added_to_favourite
+        } else {
+            R.string.removed_from_favourite
+        }
+        Snackbar.make(scrollView, message, Snackbar.LENGTH_SHORT).show()
+    }
+
+    companion object{
     val ARG_ID = "id"
     val ARG_Theme = "theme"
     val ARG_DATE = "date"
@@ -42,17 +52,12 @@ companion object{
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_news_item)
-        newsId = intent.getIntExtra(ARG_ID, 0)
 
-        val newsTheme  = intent.getStringExtra(ARG_Theme)
-        val newsDate = intent.getLongExtra(ARG_DATE,0L)
-
-        activity_theme.text = newsTheme
-        activity_date.text = newsDate.toString()
+        activity_theme.text = intent.getStringExtra(ARG_Theme)
+        activity_date.text = intent.getLongExtra(ARG_DATE,0L).toString()
 
         initPresenter()
-        newsDetailPresenter.getSingleNews(newsId!!)
-        newsDetailPresenter.checkFavorite(newsId!!)
+        newsDetailPresenter.getSingleNews(intent.getIntExtra(ARG_ID, 0))
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
@@ -70,7 +75,7 @@ companion object{
             newsDetailPresenter.deletefromFavorite(newsId!!)
             false
         } else {
-            newsDetailPresenter.addToFavorite(newsId!!)
+            newsDetailPresenter.changeFavoriteState(newsId!!)
             true
         }
         return true

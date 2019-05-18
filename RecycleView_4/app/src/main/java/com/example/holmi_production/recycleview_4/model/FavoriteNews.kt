@@ -5,7 +5,6 @@ import android.arch.persistence.room.PrimaryKey
 
 @Entity
 data class FavoriteNews(
-    @PrimaryKey(autoGenerate = true)
-    var id: Int?,
-    var newsId: Int
+    @PrimaryKey(autoGenerate = false)
+    val newsId: String
 )

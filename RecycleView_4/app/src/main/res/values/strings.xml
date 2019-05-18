@@ -16,4 +16,6 @@
     <string name="yesterdayDate">Вчера</string>
     <string name="preview_date">22 сенятбря 2008г.</string>
     <string name="actity_theme">THEME</string>
+    <string name="added_to_favourite">добавлено</string>
+    <string name="removed_from_favourite">удалено</string>
 </resources>

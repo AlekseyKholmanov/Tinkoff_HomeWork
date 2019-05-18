@@ -8,6 +8,7 @@ import android.support.annotation.Nullable
 import com.example.holmi_production.recycleview_4.model.FavoriteNews
 import io.reactivex.Flowable
 import io.reactivex.Maybe
+import io.reactivex.Single
 
 @Dao
 interface FavoriteNewsDao{
@@ -17,14 +18,14 @@ interface FavoriteNewsDao{
     fun getAllFavoriteIds(): Flowable<List<Int>>
 
     @Nullable
-    @Query("select * from FavoriteNews where newsId Like :newsId")
-    fun getNewsById(newsId: Int):Maybe<FavoriteNews>
+    @Query("select count(*) from FavoriteNews where newsId = :newsId")
+    fun contains(newsId: Int):Single<Boolean>
 
     @Insert(onConflict = REPLACE)
     fun insert(favoriteNews: FavoriteNews)
 
     @Query("Delete from FavoriteNews where newsId=:newsId ")
-    fun delete(newsId: Int)
+    fun delete(newsId: String)
 
     @Query("DELETE FROM FavoriteNews")
     fun deleteAll()

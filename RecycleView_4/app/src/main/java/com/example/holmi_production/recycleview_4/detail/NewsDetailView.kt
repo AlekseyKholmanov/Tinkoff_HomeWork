@@ -15,8 +15,7 @@ interface NewsDetailView : MvpView {
     fun setFavorite(isFavorite: Boolean)
 
     @StateStrategyType(SkipStrategy::class)
-    fun showFavoriteIcon()
+    fun showFavoriteChangedToast(isFavorite:Boolean)
 
-    @StateStrategyType(SkipStrategy::class)
-    fun showUnfavoriteIcon()
+    fun showDetails(details:Viewe)
 }

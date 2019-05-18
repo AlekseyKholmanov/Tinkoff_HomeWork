@@ -12,5 +12,5 @@ interface NewsService{
     fun getNews():Single<TinkoffApiResonce<List<News>>>
 
     @GET("news_content?")
-    fun getNewsById(@Query("id") newsId:Int):Single<TinkoffApiResonce<NewsItem>>
+    fun getNewsById(@Query("id") newsId:String):Single<TinkoffApiResonce<NewsItem>>
 }

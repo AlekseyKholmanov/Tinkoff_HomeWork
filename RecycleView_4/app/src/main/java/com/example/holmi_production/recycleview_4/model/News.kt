@@ -7,8 +7,8 @@ import com.google.gson.annotations.SerializedName
 data class News(
 
     @SerializedName("id")
-    @PrimaryKey(autoGenerate = false)
-    var newsId: Int,
+    @PrimaryKey
+    var newsId: String,
 
     @SerializedName("text")
     var theme: String,

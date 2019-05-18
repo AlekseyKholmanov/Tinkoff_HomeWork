@@ -35,10 +35,23 @@ class NewsRepository @Inject constructor(
             }
     }
 
-    fun getViewedNewsById(id: Int): Maybe<ViewedContent> {
-        return viewedDao.getNewsWithContent(id)
+    fun getViewedNewsById(id: String): Single<ViewedContent> {
+        return getDetailsFromDb(id)
+            .switchIfEmpty(getNewsFromNetworkById(id))
+            .onErrorResumeNext(getDetailsFromDb(id).toSingle())
+
     }
 
+    private fun getDetailsFromDb(id:String):Maybe<ViewedContent> = viewedDao.getNewsWithContent(id)
+
+    fun changeFavoriteState(newsId:String, isFavorite:Boolean): Completable {
+        return Completable.fromCallable {
+            if(isFavorite)
+                favoriteNewsDao.insert(FavoriteNews(newsId))
+            else
+                favoriteNewsDao.delete(newsId)
+        }
+    }
 
     fun getAllContentIds(): Single<List<Int>> {
         return viewedDao.getAllIdsWithContent()
@@ -60,7 +73,7 @@ class NewsRepository @Inject constructor(
         return newsDao.deleteAll()
     }
 
-    fun getNewsFromNetworkById(id: Int): Single<TinkoffApiResonce<NewsItem>> {
+    fun getNewsFromNetworkById(id: String): Single<TinkoffApiResonce<NewsItem>> {
         return newsService.getNewsById(id)
     }
 
@@ -80,7 +93,7 @@ class NewsRepository @Inject constructor(
         return favorite.getFavorite()
     }
 
-    fun getFavoriteNewsById(newsId: Int): Maybe<FavoriteNews> {
-        return favoriteNewsDao.getNewsById(newsId)
+    fun isFavorite(newsId: Int): Single<Boolean> {
+        return favoriteNewsDao.contains(newsId)
     }
 }

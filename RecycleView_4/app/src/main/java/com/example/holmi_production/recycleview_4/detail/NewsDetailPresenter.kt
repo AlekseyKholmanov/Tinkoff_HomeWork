@@ -1,15 +1,10 @@
 package com.example.holmi_production.recycleview_4.detail
 
 import android.net.ConnectivityManager
-import android.util.Log
 import com.arellomobile.mvp.InjectViewState
 import com.example.holmi_production.recycleview_4.async
-import com.example.holmi_production.recycleview_4.model.NewsRepository
-import com.example.holmi_production.recycleview_4.model.FavoriteNews
-import com.example.holmi_production.recycleview_4.model.ViewedContent
-import com.example.holmi_production.recycleview_4.model.NewsItem
+import com.example.holmi_production.recycleview_4.storage.NewsRepository
 import com.example.holmi_production.recycleview_4.mvp.BasePresenter
-import io.reactivex.functions.BiConsumer
 import io.reactivex.rxkotlin.Singles
 import javax.inject.Inject
 

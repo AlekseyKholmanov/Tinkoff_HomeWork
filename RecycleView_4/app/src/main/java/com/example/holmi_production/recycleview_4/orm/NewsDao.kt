@@ -16,7 +16,7 @@ interface NewsDao{
     fun getNewsByIds(newsIds:List<Int>):Flowable<List<News>>
 
     @Query("SELECT * FROM News")
-    fun  getAll():Flowable<List<News>>
+    fun  getAllNews():Single<List<News>>
 
     @Insert(onConflict = REPLACE)
     fun insert(news: News)
@@ -26,9 +26,6 @@ interface NewsDao{
 
     @Delete
     fun delete(news: News)
-
-    @Update
-    fun update(news: News)
 
     @Query("DELETE FROM news")
     fun deleteAll()

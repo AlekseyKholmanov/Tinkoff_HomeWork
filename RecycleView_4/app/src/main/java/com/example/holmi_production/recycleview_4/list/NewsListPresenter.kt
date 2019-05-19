@@ -4,7 +4,7 @@ import com.arellomobile.mvp.InjectViewState
 import com.example.holmi_production.recycleview_4.NewsItems.NewsContainer
 import com.example.holmi_production.recycleview_4.async
 import com.example.holmi_production.recycleview_4.model.News
-import com.example.holmi_production.recycleview_4.model.NewsRepository
+import com.example.holmi_production.recycleview_4.storage.NewsRepository
 import com.example.holmi_production.recycleview_4.mvp.BasePresenter
 import com.example.holmi_production.recycleview_4.network.NetworkStateListener
 import com.example.holmi_production.recycleview_4.utils.DateUtils

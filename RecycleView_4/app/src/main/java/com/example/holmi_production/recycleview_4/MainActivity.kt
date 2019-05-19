@@ -8,10 +8,6 @@ import android.support.v7.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
 
-    companion object {
-        const val ARG_ID = "id"
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)

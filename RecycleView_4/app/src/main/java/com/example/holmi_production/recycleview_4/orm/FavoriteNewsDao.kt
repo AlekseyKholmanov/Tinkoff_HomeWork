@@ -12,14 +12,9 @@ import io.reactivex.Single
 
 @Dao
 interface FavoriteNewsDao{
-
-    @Nullable
-    @Query("select newsId from FavoriteNews")
-    fun getAllFavoriteIds(): Flowable<List<Int>>
-
     @Nullable
     @Query("select count(*) from FavoriteNews where newsId = :newsId")
-    fun contains(newsId: Int):Single<Boolean>
+    fun contains(newsId: String):Single<Boolean>
 
     @Insert(onConflict = REPLACE)
     fun insert(favoriteNews: FavoriteNews)

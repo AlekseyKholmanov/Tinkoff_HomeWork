@@ -36,17 +36,16 @@ class NewsRepository @Inject constructor(
     }
 
     fun getViewedNewsById(id: String): Single<ViewedContent> {
-        return getDetailsFromDb(id)
-            .switchIfEmpty(getNewsFromNetworkById(id))
-            .onErrorResumeNext(getDetailsFromDb(id).toSingle())
-
+        return getNewsFromNetworkById(id)
+            .map { ViewedContent(id = null, viewedContent = it.listNews.content) }
+            .onErrorResumeNext { getDetailsFromDb(id).toSingle() }
     }
 
-    private fun getDetailsFromDb(id:String):Maybe<ViewedContent> = viewedDao.getNewsWithContent(id)
+    private fun getDetailsFromDb(id: String): Maybe<ViewedContent> = viewedDao.getNewsWithContent(id)
 
-    fun changeFavoriteState(newsId:String, isFavorite:Boolean): Completable {
+    fun changeFavoriteState(newsId: String, isFavorite: Boolean): Completable {
         return Completable.fromCallable {
-            if(isFavorite)
+            if (isFavorite)
                 favoriteNewsDao.insert(FavoriteNews(newsId))
             else
                 favoriteNewsDao.delete(newsId)
@@ -77,23 +76,16 @@ class NewsRepository @Inject constructor(
         return newsService.getNewsById(id)
     }
 
-    fun insertFavoriteNews(news: FavoriteNews): Completable {
-        return Completable.fromCallable { favoriteNewsDao.insert(news) }
-    }
 
     fun insertListNews(news: List<News>): Completable {
         return Completable.fromCallable { newsDao.insertListNews(news) }
-    }
-
-    fun deleteFavotiteNews(newsId: Int): Completable {
-        return Completable.fromCallable { favoriteNewsDao.delete(newsId) }
     }
 
     fun getAllFavoriteNews(): Flowable<List<News>> {
         return favorite.getFavorite()
     }
 
-    fun isFavorite(newsId: Int): Single<Boolean> {
+    fun isFavorite(newsId: String): Single<Boolean> {
         return favoriteNewsDao.contains(newsId)
     }
 }

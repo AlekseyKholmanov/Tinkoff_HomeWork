@@ -69,15 +69,20 @@ class FragmentList : MvpAppCompatFragment(), ClickOnNewsCallback,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val rootView = inflater.inflate(R.layout.fragment_list, container, false)
-        mRecyclerView = rootView.findViewById(R.id.listRecyclerView)
+        return inflater.inflate(R.layout.fragment_list, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        mRecyclerView = fragment_list.findViewById(R.id.listRecyclerView)
         mRecyclerView.layoutManager = LinearLayoutManager(activity)
-        mProgressBar = rootView.findViewById(R.id.progressBar)
-        mSwipeRefreshLayout = rootView.findViewById(R.id.fragment_list)
+        mProgressBar = fragment_list.findViewById(R.id.progressBar)
+        mSwipeRefreshLayout = fragment_list.findViewById(R.id.fragment_list)
         if (isFavorite!!)
             mSwipeRefreshLayout.isEnabled = false
         mSwipeRefreshLayout.setOnRefreshListener(this)
-        return rootView
+        presenter.subscribeToNetworkChanges()
     }
 
     override fun onActivityCreated(bundle: Bundle?) {
@@ -86,17 +91,10 @@ class FragmentList : MvpAppCompatFragment(), ClickOnNewsCallback,
             NewsAdapter(clickOnNewsCallback = this as ClickOnNewsCallback)
         listRecyclerView.adapter = mAdapter
         listRecyclerView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-    }
-
-    override fun onStart() {
-        super.onStart()
-        getNews()
-    }
-
-    fun getNews() {
-        if (!isFavorite!!)
+        if (!isFavorite!!) {
+            presenter.subscribeToNetworkChanges()
             presenter.getNews()
-        else
+        } else
             presenter.getFavoriteNews()
     }
 
@@ -143,11 +141,11 @@ class FragmentList : MvpAppCompatFragment(), ClickOnNewsCallback,
 
     override fun onInternetStateChanged(connected: Boolean) {
         mSwipeRefreshLayout.isEnabled = isFavorite!! && connected
-                if (connected) {
-                    Snackbar.make(mSwipeRefreshLayout, "есть", Snackbar.LENGTH_SHORT).show()
-                } else {
-                    Snackbar.make(mSwipeRefreshLayout,"нету", Snackbar.LENGTH_SHORT).show()
-                }
+        if (connected) {
+            Snackbar.make(mSwipeRefreshLayout, "есть", Snackbar.LENGTH_SHORT).show()
+        } else {
+            Snackbar.make(mSwipeRefreshLayout, "нету", Snackbar.LENGTH_SHORT).show()
+        }
     }
 
     override fun showSingleNews(news: News) {

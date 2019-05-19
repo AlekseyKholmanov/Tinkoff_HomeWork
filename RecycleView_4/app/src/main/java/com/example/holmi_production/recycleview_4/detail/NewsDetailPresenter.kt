@@ -36,16 +36,16 @@ class NewsDetailPresenter @Inject constructor(
             .keep()
     }
 
-    fun getSingleNews(newsId: Int) {
+    fun getSingleNews(newsId: String) {
         this.newsItemId = newsId.toString()
         Singles.zip(
             newsRepository.getViewedNewsById(newsId),
             newsRepository.isFavorite(newsId)
         )
             .async()
-            .subscribe({ t1, t2 ->
-                viewState.showDetails(details, isFavourite)
-            })
+            .subscribe { t1, _ ->
+                viewState.showDetails(t1.first, t1.second)
+            }
             .keep()
 
     }

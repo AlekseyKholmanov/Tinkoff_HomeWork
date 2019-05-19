@@ -1,6 +1,5 @@
 package com.example.holmi_production.recycleview_4.list
 
-import android.net.ConnectivityManager
 import com.arellomobile.mvp.InjectViewState
 import com.example.holmi_production.recycleview_4.NewsItems.NewsContainer
 import com.example.holmi_production.recycleview_4.async
@@ -9,7 +8,6 @@ import com.example.holmi_production.recycleview_4.model.NewsRepository
 import com.example.holmi_production.recycleview_4.mvp.BasePresenter
 import com.example.holmi_production.recycleview_4.network.NetworkStateListener
 import com.example.holmi_production.recycleview_4.utils.DateUtils
-import io.reactivex.Flowable
 import io.reactivex.Single
 import java.util.*
 import javax.inject.Inject
@@ -21,7 +19,7 @@ class NewsListPresenter @Inject constructor(
 ) :
     BasePresenter<NewsListView>() {
 
-    private var isInternetConnected: Boolean = false
+    private var internetState: Boolean = false
 
     fun getFavoriteNews() {
         newsRepository.getAllFavoriteNews()
@@ -36,15 +34,19 @@ class NewsListPresenter @Inject constructor(
 
     fun subscribeToNetworkChanges() {
         networkStateListener.ObserveNewtworkState()
+            .filter { it != internetState }
+            .doOnNext {
+                internetState = it
+            }
             .subscribe { connected ->
-                isInternetConnected = connected
+                internetState = connected
                 viewState.onInternetStateChanged(connected)
             }
             .keep()
     }
 
     fun updateNews(isFavorite: Boolean) {
-        if (isInternetConnected) {
+        if (internetState) {
             viewState.showRefreshingStart()
             callNews()
                 .subscribe { listItem ->
@@ -64,7 +66,7 @@ class NewsListPresenter @Inject constructor(
     }
 
     fun getNews() {
-        if (isInternetConnected) {
+        if (internetState) {
             callNews()
                 .subscribe { listItem ->
                     viewState.dismissProgressBar()

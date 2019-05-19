@@ -14,10 +14,16 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.example.holmi_production.recycleview_4.App
 import com.example.holmi_production.recycleview_4.R
 import com.example.holmi_production.recycleview_4.model.NewsItem
+import com.example.holmi_production.recycleview_4.model.ViewedContent
 import com.example.holmi_production.recycleview_4.utils.DateUtils
 import kotlinx.android.synthetic.main.activity_news_item.*
 
 class NewsDetailDetailActivity : MvpAppCompatActivity(), NewsDetailView {
+    override fun showDetails(details: ViewedContent,isFavorite: Boolean) {
+        activity_content.text = details.viewedContent
+        this.isFavorite = isFavorite
+    }
+
     override fun showFavoriteChangedToast(isFavorite: Boolean) {
         val message: Int = if ( isFavorite) {
             R.string.added_to_favourite
@@ -57,7 +63,7 @@ class NewsDetailDetailActivity : MvpAppCompatActivity(), NewsDetailView {
         activity_date.text = intent.getLongExtra(ARG_DATE,0L).toString()
 
         initPresenter()
-        newsDetailPresenter.getSingleNews(intent.getIntExtra(ARG_ID, 0))
+        newsDetailPresenter.getSingleNews(intent.getStringExtra(ARG_ID))
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
@@ -71,20 +77,9 @@ class NewsDetailDetailActivity : MvpAppCompatActivity(), NewsDetailView {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        isFavorite = if (isFavorite) {
-            newsDetailPresenter.deletefromFavorite(newsId!!)
-            false
-        } else {
-            newsDetailPresenter.changeFavoriteState(newsId!!)
-            true
-        }
+        newsDetailPresenter.changeFavoriteState(isFavorite)
+        invalidateOptionsMenu()
         return true
-    }
-
-    override fun showNews(listItem: NewsItem) {
-        title = listItem.newsHeader.theme
-        activity_content.text = HtmlCompat.fromHtml(listItem.content, Html.FROM_HTML_MODE_COMPACT)
-        activity_date.text = DateUtils.formatDate(listItem.newsHeader.date.timeInMilliseconds)
     }
 
     override fun showToast() {
@@ -93,18 +88,5 @@ class NewsDetailDetailActivity : MvpAppCompatActivity(), NewsDetailView {
         else
             Toast.makeText(this, "убрано $newsId", Toast.LENGTH_SHORT).show()
     }
-
-    override fun setFavorite(isFavorite: Boolean) {
-        this.isFavorite = isFavorite
-    }
-
-    override fun showFavoriteIcon() {
-        favIcon.icon = ContextCompat.getDrawable(this, favoriteIcon)
-    }
-
-    override fun showUnfavoriteIcon() {
-        favIcon.icon = ContextCompat.getDrawable(this, unFavoriteIcon)
-    }
-
 
 }

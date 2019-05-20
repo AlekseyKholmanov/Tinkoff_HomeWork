@@ -7,11 +7,11 @@ import com.example.holmi_production.recycleview_4.model.NewsItem
 import com.example.holmi_production.recycleview_4.model.ViewedContent
 
 interface NewsDetailView : MvpView {
-    @StateStrategyType(SkipStrategy::class)
-    fun showToast()
 
-    @StateStrategyType(SkipStrategy::class)
-    fun showFavoriteChangedToast(isFavorite:Boolean)
+    fun showFavoriteChangedToast(isFavorite: Boolean)
 
     fun showDetails(details:ViewedContent, isFavorite: Boolean)
+
+
+    fun showError(error: Throwable)
 }

@@ -9,25 +9,12 @@ import java.util.ArrayList
 @StateStrategyType(AddToEndSingleStrategy::class)
 interface NewsListView : MvpView {
     fun showNews(news: ArrayList<NewsContainer>)
+    fun showError(error:Throwable)
 
-    fun showFavoriteNews(news: ArrayList<NewsContainer>)
-
-    @StateStrategyType(SkipStrategy::class)
-    fun showRefreshingStart()
-
-    @StateStrategyType(SkipStrategy::class)
-    fun showRefreshingEnd()
+    fun showLoading(show:Boolean)
 
     @StateStrategyType(SkipStrategy::class)
     fun showSingleNews(news: News)
-
-    fun updateListNews()
-
-    @StateStrategyType(SkipStrategy::class)
-    fun showNetworkAlertDialog()
-
-    fun showProgessBar()
-    fun dismissProgressBar()
 
     fun onInternetStateChanged(connected: Boolean)
 }

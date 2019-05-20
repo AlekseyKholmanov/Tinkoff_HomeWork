@@ -1,29 +1,23 @@
 package com.example.holmi_production.recycleview_4.detail
 
-import android.net.ConnectivityManager
+
 import com.arellomobile.mvp.InjectViewState
 import com.example.holmi_production.recycleview_4.async
-import com.example.holmi_production.recycleview_4.storage.NewsRepository
 import com.example.holmi_production.recycleview_4.mvp.BasePresenter
+import com.example.holmi_production.recycleview_4.storage.NewsDetailsRepository
 import io.reactivex.rxkotlin.Singles
 import javax.inject.Inject
 
 @InjectViewState
 class NewsDetailPresenter @Inject constructor(
-    private val newsRepository: NewsRepository,
-    private val cm: ConnectivityManager
+    private val repository: NewsDetailsRepository
 ) :
     BasePresenter<NewsDetailView>() {
 
     private lateinit var newsItemId: String
 
-    private fun isInternetConnected(): Boolean {
-        val netInfo = cm.activeNetworkInfo
-        return netInfo != null && netInfo.isConnected
-    }
-
     fun changeFavoriteState(isFavorite: Boolean) {
-        newsRepository.changeFavoriteState(newsItemId, isFavorite)
+        repository.changeFavoriteState(newsItemId, isFavorite)
             .async()
             .subscribe {
                 viewState.showFavoriteChangedToast(isFavorite)
@@ -32,16 +26,17 @@ class NewsDetailPresenter @Inject constructor(
     }
 
     fun getSingleNews(newsId: String) {
-        this.newsItemId = newsId.toString()
+        this.newsItemId = newsId
         Singles.zip(
-            newsRepository.getViewedNewsById(newsId),
-            newsRepository.isFavorite(newsId)
+            repository.getViewedNewsById(newsId),
+            repository.isFavorite(newsId)
         )
             .async()
-            .subscribe { t1, _ ->
-                viewState.showDetails(t1.first, t1.second)
-            }
+            .subscribe ({ (t1, isFavorite) ->
+                viewState.showDetails(t1, isFavorite)
+            },{error->
+                viewState.showError(error)
+            })
             .keep()
-
     }
 }

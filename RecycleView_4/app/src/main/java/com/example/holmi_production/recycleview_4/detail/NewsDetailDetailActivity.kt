@@ -19,13 +19,18 @@ import com.example.holmi_production.recycleview_4.utils.DateUtils
 import kotlinx.android.synthetic.main.activity_news_item.*
 
 class NewsDetailDetailActivity : MvpAppCompatActivity(), NewsDetailView {
-    override fun showDetails(details: ViewedContent,isFavorite: Boolean) {
+    override fun showError(error: Throwable) {
+        Snackbar.make(scrollView, R.string.error, Snackbar.LENGTH_SHORT).show()
+    }
+
+    override fun showDetails(details: ViewedContent, isFavorite: Boolean) {
         activity_content.text = details.viewedContent
         this.isFavorite = isFavorite
+        invalidateOptionsMenu()
     }
 
     override fun showFavoriteChangedToast(isFavorite: Boolean) {
-        val message: Int = if ( isFavorite) {
+        val message: Int = if (isFavorite) {
             R.string.added_to_favourite
         } else {
             R.string.removed_from_favourite
@@ -33,17 +38,15 @@ class NewsDetailDetailActivity : MvpAppCompatActivity(), NewsDetailView {
         Snackbar.make(scrollView, message, Snackbar.LENGTH_SHORT).show()
     }
 
-    companion object{
-    val ARG_ID = "id"
-    val ARG_Theme = "theme"
-    val ARG_DATE = "date"
-}
+    companion object {
+        val ARG_ID = "id"
+        val ARG_Theme = "theme"
+        val ARG_DATE = "date"
+    }
 
 
     private var isFavorite: Boolean = false
     var newsId: Int? = null
-    private val favoriteIcon = R.drawable.fav_icon
-    private val unFavoriteIcon = R.drawable.unfav_icon
     private lateinit var favIcon: MenuItem
 
 
@@ -60,33 +63,30 @@ class NewsDetailDetailActivity : MvpAppCompatActivity(), NewsDetailView {
         setContentView(R.layout.activity_news_item)
 
         activity_theme.text = intent.getStringExtra(ARG_Theme)
-        activity_date.text = intent.getLongExtra(ARG_DATE,0L).toString()
+        activity_date.text = intent.getLongExtra(ARG_DATE, 0L).toString()
 
         initPresenter()
         newsDetailPresenter.getSingleNews(intent.getStringExtra(ARG_ID))
     }
 
-    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.activity_item_menu, menu)
-        favIcon = menu.getItem(0)
-        if(isFavorite)
-            favIcon.icon = ContextCompat.getDrawable(this, favoriteIcon)
-        else
-            favIcon.icon = ContextCompat.getDrawable(this, unFavoriteIcon)
-        return true
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
+        favIcon = menu.findItem(R.id.menu_addFavorite).apply {
+            val iconPic = if (isFavorite) R.drawable.fav_icon else R.drawable.unfav_icon
+            setIcon(iconPic)
+        }
+        return super.onPrepareOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        isFavorite = !isFavorite
         newsDetailPresenter.changeFavoriteState(isFavorite)
         invalidateOptionsMenu()
         return true
-    }
-
-    override fun showToast() {
-        if (isFavorite)
-            Toast.makeText(this, "добавлено $newsId", Toast.LENGTH_SHORT).show()
-        else
-            Toast.makeText(this, "убрано $newsId", Toast.LENGTH_SHORT).show()
     }
 
 }

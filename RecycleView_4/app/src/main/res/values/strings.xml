@@ -18,4 +18,5 @@
     <string name="actity_theme">THEME</string>
     <string name="added_to_favourite">добавлено</string>
     <string name="removed_from_favourite">удалено</string>
+    <string name="error">\"Произошла ошибка\"</string>
 </resources>

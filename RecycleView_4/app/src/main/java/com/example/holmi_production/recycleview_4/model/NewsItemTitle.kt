@@ -2,9 +2,10 @@ package com.example.holmi_production.recycleview_4.model
 
 import android.arch.persistence.room.*
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 @Entity
-data class News(
+data class NewsItemTitle(
 
     @SerializedName("id")
     @PrimaryKey
@@ -16,4 +17,4 @@ data class News(
     @SerializedName("publicationDate")
     @Embedded
     var date: PublicationDate
-)
+):Serializable

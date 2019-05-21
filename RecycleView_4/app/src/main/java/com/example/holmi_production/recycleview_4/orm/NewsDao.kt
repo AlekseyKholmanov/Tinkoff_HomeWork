@@ -2,31 +2,31 @@ package com.example.holmi_production.recycleview_4.orm
 
 import android.arch.persistence.room.*
 import android.arch.persistence.room.OnConflictStrategy.REPLACE
-import com.example.holmi_production.recycleview_4.model.News
+import com.example.holmi_production.recycleview_4.model.NewsItemTitle
 import io.reactivex.Flowable
 import io.reactivex.Single
 
 
 @Dao
 interface NewsDao{
-    @Query("SELECT * FROM News WHERE newsId=:idToSelect")
-    fun getNewsById(idToSelect: Int): Single<News>
+    @Query("SELECT * FROM NewsItemTitle WHERE newsId=:idToSelect")
+    fun getNewsById(idToSelect: Int): Single<NewsItemTitle>
 
-    @Query("Select * from News where newsId in (:newsIds)")
-    fun getNewsByIds(newsIds:List<Int>):Flowable<List<News>>
+    @Query("Select * from NewsItemTitle where newsId in (:newsIds)")
+    fun getNewsByIds(newsIds:List<Int>):Flowable<List<NewsItemTitle>>
 
-    @Query("SELECT * FROM News")
-    fun  getAllNews():Single<List<News>>
-
-    @Insert(onConflict = REPLACE)
-    fun insert(news: News)
+    @Query("SELECT * FROM NewsItemTitle")
+    fun  getAllNews():Single<List<NewsItemTitle>>
 
     @Insert(onConflict = REPLACE)
-    fun insertListNews(news:List<News>)
+    fun insert(news: NewsItemTitle)
+
+    @Insert(onConflict = REPLACE)
+    fun insertListNews(news:List<NewsItemTitle>)
 
     @Delete
-    fun delete(news: News)
+    fun delete(news: NewsItemTitle)
 
-    @Query("DELETE FROM news")
+    @Query("DELETE FROM NewsItemTitle")
     fun deleteAll()
 }

@@ -16,7 +16,7 @@ import com.example.holmi_production.recycleview_4.NewsItems.NewsContainer
 import com.example.holmi_production.recycleview_4.R
 import com.example.holmi_production.recycleview_4.App
 import com.example.holmi_production.recycleview_4.detail.NewsDetailDetailActivity
-import com.example.holmi_production.recycleview_4.model.News
+import com.example.holmi_production.recycleview_4.model.NewsItemTitle
 import kotlinx.android.synthetic.main.fragment_list.*
 import java.util.*
 
@@ -89,7 +89,7 @@ class FragmentList : MvpAppCompatFragment(), ClickOnNewsCallback,
         isFavorite = arguments?.getBoolean(ARG_FAVORITE)
     }
 
-    override fun onItemClicked(newsId: News) {
+    override fun onItemClicked(newsId: NewsItemTitle) {
         presenter.openSingleNews(newsId)
     }
 
@@ -107,7 +107,7 @@ class FragmentList : MvpAppCompatFragment(), ClickOnNewsCallback,
         }
     }
 
-    override fun showSingleNews(news: News) {
+    override fun showSingleNews(news: NewsItemTitle) {
         val intent = Intent(context, NewsDetailDetailActivity::class.java).apply {
             putExtra(NewsDetailDetailActivity.ARG_ID, news.newsId)
             putExtra(NewsDetailDetailActivity.ARG_Theme, news.theme)
@@ -118,7 +118,7 @@ class FragmentList : MvpAppCompatFragment(), ClickOnNewsCallback,
 }
 
 interface ClickOnNewsCallback {
-    fun onItemClicked(newsId: News)
+    fun onItemClicked(newsId: NewsItemTitle)
 }
 
 

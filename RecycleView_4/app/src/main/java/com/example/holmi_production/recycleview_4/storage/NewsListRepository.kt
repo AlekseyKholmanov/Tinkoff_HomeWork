@@ -1,7 +1,7 @@
 package com.example.holmi_production.recycleview_4.storage
 
 import com.example.holmi_production.recycleview_4.api.NewsService
-import com.example.holmi_production.recycleview_4.model.News
+import com.example.holmi_production.recycleview_4.model.NewsItemTitle
 import com.example.holmi_production.recycleview_4.orm.NewsDatabase
 import io.reactivex.Flowable
 import io.reactivex.Single
@@ -14,7 +14,7 @@ class NewsListRepository @Inject constructor(
     private val newsDao by lazy { database.newsDao() }
     private val favorite by lazy { database.favorite() }
 
-    fun getNews(force: Boolean): Single<List<News>> {
+    fun getNews(force: Boolean): Single<List<NewsItemTitle>> {
         return if (force)
             getNewsFromNetwork()
         else {
@@ -25,7 +25,7 @@ class NewsListRepository @Inject constructor(
         }
     }
 
-    private fun getNewsFromNetwork(): Single<List<News>> {
+    private fun getNewsFromNetwork(): Single<List<NewsItemTitle>> {
         return newsService.getNews()
             .map { it.listNews }
             .doOnSuccess {
@@ -33,11 +33,11 @@ class NewsListRepository @Inject constructor(
             }
     }
 
-    private fun getAllNewsFromDb(): Single<List<News>> {
+    private fun getAllNewsFromDb(): Single<List<NewsItemTitle>> {
         return newsDao.getAllNews()
     }
 
-    fun getAllFavoriteNews(): Flowable<List<News>> {
+    fun getAllFavoriteNews(): Flowable<List<NewsItemTitle>> {
         return favorite.getFavorite()
     }
 }

@@ -24,7 +24,7 @@ class NetworkStateListener @Inject constructor(
         emitter.setCancellable{context.unregisterReceiver(receiver)}
     }
 
-    fun ObserveNewtworkState():Observable<Boolean> = stateObservable
+    fun observeNewtworkState():Observable<Boolean> = stateObservable
 
 
     private fun isInternetConnected(): Boolean = cm.activeNetworkInfo?.isConnected == true

@@ -2,9 +2,7 @@ package com.example.holmi_production.recycleview_4.storage
 
 import com.example.holmi_production.recycleview_4.api.NewsService
 import com.example.holmi_production.recycleview_4.model.FavoriteNews
-import com.example.holmi_production.recycleview_4.model.NewsItem
-import com.example.holmi_production.recycleview_4.model.TinkoffApiResonce
-import com.example.holmi_production.recycleview_4.model.ViewedContent
+import com.example.holmi_production.recycleview_4.model.NewsItemDetails
 import com.example.holmi_production.recycleview_4.orm.NewsDatabase
 import io.reactivex.Completable
 import io.reactivex.Maybe
@@ -27,14 +25,8 @@ class NewsDetailsRepository @Inject constructor(
         }
     }
 
-    fun getViewedNewsById(id: String): Single<ViewedContent> {
+    fun getViewedNewsById(id: String): Single<NewsItemDetails> {
         return getNewsFromNetworkById(id)
-            .map {
-                ViewedContent(
-                    id = id,
-                    viewedContent = it.listNews.content
-                )
-            }
             .onErrorResumeNext { getDetailsFromDb(id).toSingle() }
     }
 
@@ -42,13 +34,14 @@ class NewsDetailsRepository @Inject constructor(
         return favoriteNewsDao.contains(newsId)
     }
 
-    private fun getNewsFromNetworkById(id: String): Single<TinkoffApiResonce<NewsItem>> {
+    private fun getNewsFromNetworkById(id: String): Single<NewsItemDetails> {
         return newsService.getNewsById(id)
+            .map { it.listNews }
             .doOnSuccess {
-                viewedDao.insert(ViewedContent(id, it.listNews.content))
+                viewedDao.insert(it)
             }
     }
 
 
-    private fun getDetailsFromDb(id: String): Maybe<ViewedContent> = viewedDao.getNewsWithContent(id)
+    private fun getDetailsFromDb(id: String): Maybe<NewsItemDetails> = viewedDao.getNewsWithContent(id)
 }

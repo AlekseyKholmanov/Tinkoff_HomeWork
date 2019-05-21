@@ -8,9 +8,3 @@ data class TinkoffApiResonce<T>(
     val listNews:T
 ):Serializable
 
-class NewsItem(
-    @SerializedName("title")
-    val newsHeader: News,
-    @SerializedName("content")
-    val content:String
-)

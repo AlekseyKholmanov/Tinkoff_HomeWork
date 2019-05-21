@@ -4,16 +4,15 @@ import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Insert
 import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.Query
-import com.example.holmi_production.recycleview_4.model.ViewedContent
+import com.example.holmi_production.recycleview_4.model.NewsItemDetails
 import io.reactivex.Maybe
-import io.reactivex.Single
 
 @Dao
 interface ViewedNewsDao{
 
-    @Query("SELECT * FROM ViewedContent WHERE id=:newsId")
-    fun getNewsWithContent(newsId:String):Maybe<ViewedContent>
+    @Query("SELECT * FROM NewsItemDetails WHERE newsId=:newsId")
+    fun getNewsWithContent(newsId:String):Maybe<NewsItemDetails>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(viewedContent: ViewedContent)
+    fun insert(viewedContent: NewsItemDetails)
 }

@@ -9,7 +9,7 @@ import com.example.holmi_production.recycleview_4.NewsItems.HeaderContainer
 import com.example.holmi_production.recycleview_4.NewsItems.NewsContainer
 import com.example.holmi_production.recycleview_4.NewsItems.NewsType
 import com.example.holmi_production.recycleview_4.R
-import com.example.holmi_production.recycleview_4.model.News
+import com.example.holmi_production.recycleview_4.model.NewsItemTitle
 import com.example.holmi_production.recycleview_4.utils.DateUtils
 
 
@@ -80,7 +80,7 @@ class NewsAdapter(
         private var date = ""
 
         fun bind(
-            news: News,
+            news: NewsItemTitle,
             clickOnNewsCallback: ClickOnNewsCallback
         ) {
             theme.text = news.theme

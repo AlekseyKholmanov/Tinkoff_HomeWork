@@ -2,7 +2,7 @@ package com.example.holmi_production.recycleview_4.list
 
 import com.arellomobile.mvp.InjectViewState
 import com.example.holmi_production.recycleview_4.async
-import com.example.holmi_production.recycleview_4.model.News
+import com.example.holmi_production.recycleview_4.model.NewsItemTitle
 import com.example.holmi_production.recycleview_4.mvp.BasePresenter
 import com.example.holmi_production.recycleview_4.network.NetworkStateListener
 import com.example.holmi_production.recycleview_4.storage.NewsListRepository
@@ -34,7 +34,7 @@ class NewsListPresenter @Inject constructor(
     }
 
     fun subscribeToNetworkChanges() {
-        networkStateListener.ObserveNewtworkState()
+        networkStateListener.observeNewtworkState()
             .filter { it != internetState }
             .doOnNext {
                 internetState = it
@@ -46,7 +46,7 @@ class NewsListPresenter @Inject constructor(
             .keep()
     }
 
-    fun openSingleNews(news: News) {
+    fun openSingleNews(news: NewsItemTitle) {
         viewState.showSingleNews(news)
     }
 

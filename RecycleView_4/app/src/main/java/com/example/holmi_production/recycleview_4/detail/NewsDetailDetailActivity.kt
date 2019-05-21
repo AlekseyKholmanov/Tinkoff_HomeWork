@@ -2,20 +2,14 @@ package com.example.holmi_production.recycleview_4.detail
 
 import android.os.Bundle
 import android.support.design.widget.Snackbar
-import android.support.v4.content.ContextCompat
-import android.support.v4.text.HtmlCompat
-import android.text.Html
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.example.holmi_production.recycleview_4.App
 import com.example.holmi_production.recycleview_4.R
-import com.example.holmi_production.recycleview_4.model.NewsItem
-import com.example.holmi_production.recycleview_4.model.ViewedContent
-import com.example.holmi_production.recycleview_4.utils.DateUtils
+import com.example.holmi_production.recycleview_4.model.NewsItemDetails
 import kotlinx.android.synthetic.main.activity_news_item.*
 
 class NewsDetailDetailActivity : MvpAppCompatActivity(), NewsDetailView {
@@ -66,8 +60,10 @@ class NewsDetailDetailActivity : MvpAppCompatActivity(), NewsDetailView {
         Snackbar.make(scrollView, R.string.error, Snackbar.LENGTH_SHORT).show()
     }
 
-    override fun showDetails(details: ViewedContent, isFavorite: Boolean) {
-        activity_content.text = details.viewedContent
+    override fun showDetails(details: NewsItemDetails, isFavorite: Boolean) {
+        activity_content.text = details.content
+        activity_date.text = details.title.date.timeInMilliseconds.toString()
+        activity_theme.text = details.title.theme
         this.isFavorite = isFavorite
         invalidateOptionsMenu()
     }

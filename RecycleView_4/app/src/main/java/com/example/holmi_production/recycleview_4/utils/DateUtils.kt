@@ -4,7 +4,7 @@ import android.support.annotation.IntRange
 import com.example.holmi_production.recycleview_4.NewsItems.HeaderContainer
 import com.example.holmi_production.recycleview_4.NewsItems.NewsContainer
 import com.example.holmi_production.recycleview_4.NewsItems.NewsType
-import com.example.holmi_production.recycleview_4.model.News
+import com.example.holmi_production.recycleview_4.model.NewsItemTitle
 import java.text.DateFormat
 
 import java.text.SimpleDateFormat
@@ -69,7 +69,7 @@ object DateUtils {
         return DateFormat.getDateInstance(SimpleDateFormat.LONG, Locale("ru")).format(Date(timeinMilis))
     }
 
-    private fun setHeader(events: Map<Long, List<News>>): ArrayList<NewsContainer> {
+    private fun setHeader(events: Map<Long, List<NewsItemTitle>>): ArrayList<NewsContainer> {
         val news: ArrayList<NewsContainer> = arrayListOf()
         for (date in events.keys) {
             val header = HeaderContainer(date)
@@ -82,11 +82,11 @@ object DateUtils {
         return news
     }
 
-    private fun toMap(events: List<News>?): Map<Long, List<News>> {
-        val map = TreeMap<Long, MutableList<News>>()
+    private fun toMap(events: List<NewsItemTitle>?): Map<Long, List<NewsItemTitle>> {
+        val map = TreeMap<Long, MutableList<NewsItemTitle>>()
         if (events != null) {
             for (event in events) {
-                var value: MutableList<News>? = map[event.date.timeInMilliseconds]
+                var value: MutableList<NewsItemTitle>? = map[event.date.timeInMilliseconds]
                 if (value == null) {
                     value = ArrayList()
                     map[event.date.timeInMilliseconds] = value
@@ -97,7 +97,7 @@ object DateUtils {
         return map.descendingMap()
     }
 
-    fun reformateItem(items: List<News>?): ArrayList<NewsContainer> {
+    fun reformateItem(items: List<NewsItemTitle>?): ArrayList<NewsContainer> {
         return setHeader(toMap(items))
     }
 }

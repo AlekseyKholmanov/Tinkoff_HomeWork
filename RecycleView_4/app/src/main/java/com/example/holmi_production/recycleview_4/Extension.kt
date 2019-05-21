@@ -1,5 +1,7 @@
 package com.example.holmi_production.recycleview_4
 
+import android.support.v4.text.HtmlCompat
+import android.text.Spanned
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Maybe
@@ -19,13 +21,17 @@ fun <T> Flowable<T>.async(): Flowable<T> {
         .observeOn(AndroidSchedulers.mainThread())
 }
 
-fun Completable.async():Completable{
+fun Completable.async(): Completable {
     return subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
 }
 
-fun <T>Maybe<T>.async():Maybe<T>{
+fun <T> Maybe<T>.async(): Maybe<T> {
     return subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
+}
+
+fun String.fromHtml(): Spanned {
+    return HtmlCompat.fromHtml(this, HtmlCompat.FROM_HTML_MODE_LEGACY)
 }
 

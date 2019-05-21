@@ -13,7 +13,10 @@
             android:id="@+id/txt_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorHeader"
+            android:background="@color/colorPrimary"
+            android:textColor="@color/text_title"
+            android:textAllCaps="true"
+            android:textSize="12sp"
             android:padding="16dp"
             tools:text="Header"/>
 </RelativeLayout>

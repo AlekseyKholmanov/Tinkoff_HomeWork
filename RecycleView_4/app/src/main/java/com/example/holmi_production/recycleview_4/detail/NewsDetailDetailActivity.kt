@@ -9,6 +9,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.example.holmi_production.recycleview_4.App
 import com.example.holmi_production.recycleview_4.R
+import com.example.holmi_production.recycleview_4.fromHtml
 import com.example.holmi_production.recycleview_4.model.NewsItemDetails
 import kotlinx.android.synthetic.main.activity_news_item.*
 
@@ -61,7 +62,7 @@ class NewsDetailDetailActivity : MvpAppCompatActivity(), NewsDetailView {
     }
 
     override fun showDetails(details: NewsItemDetails, isFavorite: Boolean) {
-        activity_content.text = details.content
+        activity_content.text = details.content.fromHtml()
         activity_date.text = details.title.date.timeInMilliseconds.toString()
         activity_theme.text = details.title.theme
         this.isFavorite = isFavorite

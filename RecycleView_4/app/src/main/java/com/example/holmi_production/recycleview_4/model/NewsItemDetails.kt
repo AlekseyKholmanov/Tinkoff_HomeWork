@@ -16,8 +16,5 @@ class NewsItemDetails(
 
     @ColumnInfo(name = "content")
     @SerializedName("content")
-    val content:String
-
-
-
-):Serializable,LisItem
+    val content: String
+) : Serializable, LisItem

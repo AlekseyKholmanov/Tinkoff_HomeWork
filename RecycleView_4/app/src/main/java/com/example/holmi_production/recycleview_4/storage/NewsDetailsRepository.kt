@@ -31,7 +31,7 @@ class NewsDetailsRepository @Inject constructor(
         return getNewsFromNetworkById(id)
             .map {
                 ViewedContent(
-                    id = null,
+                    id = id,
                     viewedContent = it.listNews.content
                 )
             }
@@ -42,12 +42,11 @@ class NewsDetailsRepository @Inject constructor(
         return favoriteNewsDao.contains(newsId)
     }
 
-    fun insertViewedNews(viewedContent: ViewedContent): Completable {
-        return Completable.fromCallable { viewedDao.insert(viewedContent) }
-    }
-
     private fun getNewsFromNetworkById(id: String): Single<TinkoffApiResonce<NewsItem>> {
         return newsService.getNewsById(id)
+            .doOnSuccess {
+                viewedDao.insert(ViewedContent(id, it.listNews.content))
+            }
     }
 
 

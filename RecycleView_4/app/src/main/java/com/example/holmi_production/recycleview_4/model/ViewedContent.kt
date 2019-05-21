@@ -6,7 +6,7 @@ import android.arch.persistence.room.PrimaryKey
 @Entity
 data class ViewedContent(
     @PrimaryKey(autoGenerate = false)
-    val id: Int?,
+    val id: String,
 
     val viewedContent: String
 )

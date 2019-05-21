@@ -10,7 +10,7 @@ import com.example.holmi_production.recycleview_4.orm.FavoriteNewsDao
 import com.example.holmi_production.recycleview_4.orm.NewsDao
 import com.example.holmi_production.recycleview_4.orm.ViewedNewsDao
 
-@Database(entities = [News::class, FavoriteNews::class, ViewedContent::class], version = 10, exportSchema = false)
+@Database(entities = [News::class, FavoriteNews::class, ViewedContent::class], version = 11, exportSchema = false)
 abstract class NewsDatabase : RoomDatabase() {
 
     abstract fun newsDao(): NewsDao

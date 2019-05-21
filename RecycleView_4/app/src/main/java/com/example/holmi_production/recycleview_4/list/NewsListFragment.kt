@@ -99,7 +99,7 @@ class FragmentList : MvpAppCompatFragment(), ClickOnNewsCallback,
     }
 
     override fun onInternetStateChanged(connected: Boolean) {
-        refreshLayout.isEnabled = isFavorite!! && connected
+        refreshLayout.isEnabled = !isFavorite!! && connected
         if (connected) {
             Snackbar.make(refreshLayout, "Подкоючение восстановлено", Snackbar.LENGTH_SHORT).show()
         } else {

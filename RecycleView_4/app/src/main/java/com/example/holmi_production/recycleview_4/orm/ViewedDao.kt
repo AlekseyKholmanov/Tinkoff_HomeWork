@@ -16,7 +16,4 @@ interface ViewedNewsDao{
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(viewedContent: ViewedContent)
-
-    @Query("SELECT id FROM ViewedContent")
-    fun getAllIdsWithContent(): Single<List<Int>>
 }

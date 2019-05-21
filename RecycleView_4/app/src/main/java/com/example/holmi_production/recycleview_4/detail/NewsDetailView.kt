@@ -12,6 +12,5 @@ interface NewsDetailView : MvpView {
 
     fun showDetails(details:ViewedContent, isFavorite: Boolean)
 
-
     fun showError(error: Throwable)
 }

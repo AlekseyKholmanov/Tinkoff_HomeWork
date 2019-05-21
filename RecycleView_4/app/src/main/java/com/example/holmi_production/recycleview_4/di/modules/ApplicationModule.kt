@@ -20,7 +20,7 @@ class ApplicationModule(private val application: Application){
     @Provides
     @Singleton
     fun provideDatabase(context: Context): NewsDatabase {
-        return Room.databaseBuilder( context, NewsDatabase::class.java, "basic-sample-db")
+        return Room.databaseBuilder( context, NewsDatabase::class.java, DATABASE_NAME)
             .fallbackToDestructiveMigration()
             .build()
     }

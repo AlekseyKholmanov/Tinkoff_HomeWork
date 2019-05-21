@@ -17,7 +17,7 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import java.util.concurrent.TimeUnit
 
 @Module
-class NetModule(baseUrl:String, application: Application){
+class NetModule(baseUrl:String){
 
     var BASE_URL:String = baseUrl
     val REQUEST_TIMEOUT = 40L

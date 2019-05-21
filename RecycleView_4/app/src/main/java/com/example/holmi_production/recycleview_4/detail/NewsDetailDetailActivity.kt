@@ -19,36 +19,9 @@ import com.example.holmi_production.recycleview_4.utils.DateUtils
 import kotlinx.android.synthetic.main.activity_news_item.*
 
 class NewsDetailDetailActivity : MvpAppCompatActivity(), NewsDetailView {
-    override fun showError(error: Throwable) {
-        Snackbar.make(scrollView, R.string.error, Snackbar.LENGTH_SHORT).show()
-    }
-
-    override fun showDetails(details: ViewedContent, isFavorite: Boolean) {
-        activity_content.text = details.viewedContent
-        this.isFavorite = isFavorite
-        invalidateOptionsMenu()
-    }
-
-    override fun showFavoriteChangedToast(isFavorite: Boolean) {
-        val message: Int = if (isFavorite) {
-            R.string.added_to_favourite
-        } else {
-            R.string.removed_from_favourite
-        }
-        Snackbar.make(scrollView, message, Snackbar.LENGTH_SHORT).show()
-    }
-
-    companion object {
-        val ARG_ID = "id"
-        val ARG_Theme = "theme"
-        val ARG_DATE = "date"
-    }
-
 
     private var isFavorite: Boolean = false
     var newsId: Int? = null
-    private lateinit var favIcon: MenuItem
-
 
     @InjectPresenter
     lateinit var newsDetailPresenter: NewsDetailPresenter
@@ -75,7 +48,7 @@ class NewsDetailDetailActivity : MvpAppCompatActivity(), NewsDetailView {
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-        favIcon = menu.findItem(R.id.menu_addFavorite).apply {
+        menu.findItem(R.id.menu_addFavorite).apply {
             val iconPic = if (isFavorite) R.drawable.fav_icon else R.drawable.unfav_icon
             setIcon(iconPic)
         }
@@ -89,4 +62,28 @@ class NewsDetailDetailActivity : MvpAppCompatActivity(), NewsDetailView {
         return true
     }
 
+    override fun showError(error: Throwable) {
+        Snackbar.make(scrollView, R.string.error, Snackbar.LENGTH_SHORT).show()
+    }
+
+    override fun showDetails(details: ViewedContent, isFavorite: Boolean) {
+        activity_content.text = details.viewedContent
+        this.isFavorite = isFavorite
+        invalidateOptionsMenu()
+    }
+
+    override fun showFavoriteChangedToast(isFavorite: Boolean) {
+        val message: Int = if (isFavorite) {
+            R.string.added_to_favourite
+        } else {
+            R.string.removed_from_favourite
+        }
+        Snackbar.make(scrollView, message, Snackbar.LENGTH_SHORT).show()
+    }
+
+    companion object {
+        val ARG_ID = "id"
+        val ARG_Theme = "theme"
+        val ARG_DATE = "date"
+    }
 }
